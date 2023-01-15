@@ -14,7 +14,7 @@ Rust中`std::marker::Sync`和`std::marker::Send`并发概念
   - 除了原始指针之外,几乎所有的基础类型都是实现了`Send`
 - `Sync`: 允许从***多线程访问***.
   - 实现了`Sync`的类型可以安全的被多个线程引用
-  - 如果`T`是`Sync`,那`&T`就是`Send`, 引用可以被安全的送往另一个线程
+  - 如果`T`是`Sync`,那`&T`就是`Send`, 引用可以被安全的送往另一个线程.(比如`MutexGuard`)
   - 基本类型都是`Sync`.
     - 但 `Rc<T>`不是`Sync`
     - `RefCell<T>`和`Cell<T>`家族也不是`Sync`的

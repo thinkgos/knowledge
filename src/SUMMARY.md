@@ -11,3 +11,6 @@
   - [内存系统](./rust/03-type-system.md)
   - [并发模型](./rust/04-concurrent.md)
   - [宏](./rust/05-macro.md)
+  - [闭包](./rust/06-closure.md)
+  - [错误处理](./rust/07-error-handling.md)
+  - [智能指针](./rust/08-smart-pointer.md)
