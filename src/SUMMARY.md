@@ -14,3 +14,6 @@
   - [闭包](./rust/06-closure.md)
   - [错误处理](./rust/07-error-handling.md)
   - [智能指针](./rust/08-smart-pointer.md)
+  - [如何阅读源码](./rust/20-how-to-read-code.md)
+  - [类型系统: 泛型](./rust/10-generics.md)
+  - [类型系统: trait](./rust/11-trait.md)
