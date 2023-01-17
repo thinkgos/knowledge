@@ -27,9 +27,9 @@ impl<Store: Storage> Service<Store> {
 }
 ```
 
-### 1.2 使用泛型参数和幽灵数据（PhantomData）提供额外类型
+### 1.2 使用泛型参数和幽灵数据 (PhantomData) 提供额外类型
 
-设计一个 User 和 Product 数据结构，它们都有一个 u64 类型的 id。然而我希望每个数据结构的 id 只能和同种类型的 id 比较. 
+设计一个 User 和 Product 数据结构, 它们都有一个 u64 类型的 id. 然而我希望每个数据结构的 id 只能和同种类型的 id 比较. 
 
 ```rust
 use std::marker::PhantomData;
@@ -59,7 +59,7 @@ mod tests {
         let user = User::default();
         let product = Product::default();
 
-        // 两个 id 不能比较，因为他们属于不同的类型
+        // 两个 id 不能比较, 因为他们属于不同的类型
         // assert_ne!(user.id, product.id);
 
         assert_eq!(user.id.inner, product.id.inner);
@@ -67,10 +67,10 @@ mod tests {
 }
 ```
 
-让我们可以用 `PhantomData` 来持有 **Phantom Type**。`PhantomData` 中文一般翻译成**幽灵数据**，这名字透着一股让人不敢亲近的邪魅，但它被**广泛用在处理，数据结构定义过程中不需要，但是在实现过程中需要的泛型参数。**
+让我们可以用 `PhantomData` 来持有 **Phantom Type**. `PhantomData` 中文一般翻译成**幽灵数据**, 这名字透着一股让人不敢亲近的邪魅, 但它被**广泛用在处理, 数据结构定义过程中不需要, 但是在实现过程中需要的泛型参数. **
 
 ### 1.3 使用泛型参数来提供多个实现
 
-用泛型数据结构来统一相同的逻辑，用泛型参数的具体类型来处理变化的逻辑.
+用泛型数据结构来统一相同的逻辑, 用泛型参数的具体类型来处理变化的逻辑.
 
-我们写代码的首要目标是正确地实现所需要的功能，在正确性的前提下，优雅简洁的表达才有意义。
+我们写代码的首要目标是正确地实现所需要的功能, 在正确性的前提下, 优雅简洁的表达才有意义. 

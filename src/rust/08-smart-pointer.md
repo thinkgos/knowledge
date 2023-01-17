@@ -90,7 +90,7 @@ pub struct Box<T: ?Sized,A: Allocator = Global>(Unique<T>, A)
 
 ## 3. `Cow<'a, B>`
 
-`Cow` 是 `Rust` 下用于提供写时克隆（`Clone-on-Write`）的一个智能指针, 它跟虚拟内存管理的写时复制（`Copy-on-write`）有异曲同工之妙: **包裹一个只读借用, 但如果调用者需要所有权或者需要修改内容, 那么它会 `clone` 借用的数据. **
+`Cow` 是 `Rust` 下用于提供写时克隆 (`Clone-on-Write`) 的一个智能指针, 它跟虚拟内存管理的写时复制 (`Copy-on-write`) 有异曲同工之妙: **包裹一个只读借用, 但如果调用者需要所有权或者需要修改内容, 那么它会 `clone` 借用的数据. **
 
 ```rust
 pub enum Cow<'a, B> 

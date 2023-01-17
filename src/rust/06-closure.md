@@ -142,7 +142,7 @@ fn call_once(arg: u64, c: impl FnOnce(u64) -> u64) -> u64 {
 
   - 使其能表现出其他行为, 而不仅仅作为函数被调用. 比如有些接口既可以传入一个结构体, 又可以传入一个函数或者闭包.
 
-	> [tonic](https://github.com/hyperium/tonic)（Rust 下的 gRPC 库）的[例子](https://docs.rs/tonic/0.5.2/src/tonic/service/interceptor.rs.html#41-53): 
+	> [tonic](https://github.com/hyperium/tonic) (Rust 下的 gRPC 库) 的[例子](https://docs.rs/tonic/0.5.2/src/tonic/service/interceptor.rs.html#41-53): 
 	>
 	> ```rust
 	> pub trait Interceptor {

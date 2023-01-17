@@ -38,8 +38,8 @@
 
 ## 3. 掌握主要的 struct
 
-和 `trait` 类似的, 在左侧的导航栏, 有一些值得关注的信息：这个数据结构有哪些方法（**Methods**）、实现了哪些 **trait**（Trait implementations）, 以及 **Auto trait** / **Blanket trait** 的实现. 可以看到, `Bytes` 除了实现了刚才讲过的 `Buf trait` 外, 还实现了很多标准 `trait`. 
+和 `trait` 类似的, 在左侧的导航栏, 有一些值得关注的信息：这个数据结构有哪些方法 (**Methods**) 、实现了哪些 **trait** (Trait implementations) , 以及 **Auto trait** / **Blanket trait** 的实现. 可以看到, `Bytes` 除了实现了刚才讲过的 `Buf trait` 外, 还实现了很多标准 `trait`. 
 
-所以: **我们自己的数据结构, 也应该尽可能实现需要的标准 trait**, 包括但不限于：`AsRef`、`Borrow`、`Clone`、`Debug`、`Default`、`Deref`、`Drop`、`PartialEq`/`Eq`、`From`、`Hash`、`IntoIterator`（如果是个集合类型）、`PartialOrd`/`Ord` 等
+所以: **我们自己的数据结构, 也应该尽可能实现需要的标准 trait**, 包括但不限于：`AsRef`、`Borrow`、`Clone`、`Debug`、`Default`、`Deref`、`Drop`、`PartialEq`/`Eq`、`From`、`Hash`、`IntoIterator` (如果是个集合类型) 、`PartialOrd`/`Ord` 等
 
 ## 4. 深入研究实现逻辑

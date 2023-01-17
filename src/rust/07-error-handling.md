@@ -69,7 +69,7 @@ pub trait Error: Debug + Display {
 }
 ```
 
-我们可以使用 [`thiserror`](https://github.com/dtolnay/thiserror)和 [`anyhow`](https://github.com/dtolnay/anyhow) 来简化这个步骤. `thiserror` 提供了一个派生宏`（derive macro）`来简化错误类型的定义.
+我们可以使用 [`thiserror`](https://github.com/dtolnay/thiserror)和 [`anyhow`](https://github.com/dtolnay/anyhow) 来简化这个步骤. `thiserror` 提供了一个派生宏` (derive macro) `来简化错误类型的定义.
 
 
 
