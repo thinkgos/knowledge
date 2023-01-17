@@ -2,9 +2,9 @@
 
 ## 0. book
 
-- [Rust book](https://doc.rust-lang.org/book/) 官方
+- [Rust book](https://doc.rust-lang.org/book/) 官方教程
 - [Rust 死灵书](https://doc.rust-lang.org/nomicon/) 官方Rust死灵书,主要是如何何撰写和使用 **unsafe Rust**
-- [Rust标准库](https://doc.rust-lang.org/stable/std/)
+- [Rust标准库](https://doc.rust-lang.org/stable/std/) 标准库
 - [Rustlings](https://github.com/rust-lang/rustlings) 小练习, 用来夯实对知识和概念的理解
 - [This week in Rust](https://github.com/rust-lang/this-week-in-rust)
 - [Rust 语言开源杂志](https://github.com/RustMagazine/rust_magazine_2021) 每月一期, 囊括了大量优秀的 Rust 文章
@@ -14,7 +14,6 @@
 - [Rust for Rustaceans]() Rust for Rustaceans
 
 ## 1. 工具
-
 
 - 代码安全
 
@@ -26,19 +25,20 @@
   - cargo tree (最近集成进了 cargo) 显示了一个依赖树, 它在许多方面都很有用, 但主要用于找出最小化依赖项的途径
   - [cargo-udeps](https://crates.io/crates/cargo-udeps) 可以识别未使用的依赖项, 并尽可能减少我们的构建时间
   - [cargo-deny](https://github.com/EmbarkStudios/cargo-deny) 检查依赖
+  
 - 调试工具
+
   - [rust-gdb](https://github.com/rust-lang/rust/blob/master/src/etc/rust-gdb)
   - [rust-lldb](https://github.com/rust-lang/rust/blob/master/src/etc/rust-lldb)
 - 即时编译
 
   - [cargo-watch](https://crates.io/crates/cargo-watch) 即时编译
+
 - 平台编译打包
 
   - [cross](https://github.com/cross-rs/cross) 零设置的跨平台 交叉编译和交叉测试
   - [cargo-deb](https://crates.io/crates/cargo-deb) 打包成.deb
-
   - [cargo-generate-rpm](https://github.com/cat-in-136/cargo-generate-rpm) 打包成rpm
-
   - [cargo-aur](https://crates.io/crates/cargo-aur) 打包成 Arch Linux User Repository
 
 ## 2. crate
