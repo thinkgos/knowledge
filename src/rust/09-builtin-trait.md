@@ -43,7 +43,7 @@ pub trait Drop {
 
 > **注意**:
 >
-> `Copy trait` 和 `Drop trait` 是互斥的,  两者不能共存,  当你尝试为同一种数据类型实现 `Copy` 时,  也实现 `Drop`,  编译器就会报错. 这其实很好理解：**`Copy` 是按位做浅拷贝,  那么它会默认拷贝的数据没有需要释放的资源；而 `Drop` 恰恰是为了释放额外的资源而生的. **
+> `Copy trait` 和 `Drop trait` 是互斥的,  两者不能共存,  当你尝试为同一种数据类型实现 `Copy` 时,  同时也实现 `Drop`,  编译器就会报错. 这其实很好理解：**`Copy` 是按位做浅拷贝,  那么它会默认拷贝的数据没有需要释放的资源；而 `Drop` 恰恰是为了释放额外的资源而生的. **
 
 ## 2. 标记 trait: `Sized`/`Send`/`Sync`/`Unpin`
 
@@ -52,8 +52,6 @@ pub trait Drop {
 ```rust
 pub trait Sized { }
 ```
-
-
 
 `Sized trait` 用于标记有具体大小的类型. 在使用泛型参数时,  `Rust` 编译器会自动为泛型参数加上 `Sized` 约束.
 
@@ -86,8 +84,6 @@ pub unsafe auto trait Sync {}
 
 - 如果一个类型 `T` 实现了 `Send trait`,  意味着 `T` 可以安全地从一个线程移动到另一个线程,  也就是说所有权可以在线程间移动.
 - 如果一个类型 `T` 实现了 `Sync trait`,  则意味着 `&T` 可以安全地在多个线程中共享. 一个类型 `T` 满足 `Sync trait`,  当且仅当 `&T` 满足 `Send trait`.
-
-
 
 对于 `Send/Sync` 在线程安全中的作用,  可以这么看,  **如果一个类型 `T: Send`,  那么 `T` 在某个线程中的独占访问是线程安全的；如果一个类型 `T: Sync`,  那么 `T` 在线程间的只读共享是安全的. **
 
@@ -185,6 +181,7 @@ pub trait AsMut<T> where T: ?Sized {
 pub trait Deref {
     // 解引用出来的结果类型
     type Target: ?Sized;
+    
     fn deref(&self) -> &Self::Target;
 }
 
