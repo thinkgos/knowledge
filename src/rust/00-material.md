@@ -30,9 +30,10 @@
 
   - [rust-gdb](https://github.com/rust-lang/rust/blob/master/src/etc/rust-gdb)
   - [rust-lldb](https://github.com/rust-lang/rust/blob/master/src/etc/rust-lldb)
-- 即时编译
+- 编译
 
   - [cargo-watch](https://crates.io/crates/cargo-watch) 即时编译
+  - [sccache](https://github.com/mozilla/sccache) sccache is ccache with cloud storage, Shared Compilation Cache
 
 - 平台编译打包
 
