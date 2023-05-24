@@ -15,6 +15,7 @@
   - [标准trait](./rust/09-builtin-trait.md)
   - [类型系统: 泛型](./rust/10-generics.md)
   - [类型系统: trait](./rust/11-trait.md)
+  - [处理借用数据的模块: `std::borrow`](./rust/12-borrow.md)
   - [如何阅读源码](./rust/20-how-to-read-code.md)
 - [Golang](./golang/README.md)
   - [Golang AST](./golang/ast/README.md)
