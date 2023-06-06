@@ -9,6 +9,8 @@
 - [This week in Rust](https://github.com/rust-lang/this-week-in-rust)
 - [Rust 语言开源杂志](https://github.com/RustMagazine/rust_magazine_2021) 每月一期, 囊括了大量优秀的 Rust 文章
 - [Beginner’s Series to: Rust](https://www.youtube.com/playlist?list=PLlrxD0HtieHjbTjrchBwOVks_sr8EVW1x) 微软推出的一系列Rust培训
+- [Comprehensive Rust](https://google.github.io/comprehensive-rust/welcome.html) google 出品
+- [The Rustonomicon](https://doc.rust-lang.org/nomicon/intro.html) unsafe rust
 - [Jon Gjengset](https://www.youtube.com/channel/UC_iD0xppBwwsrM9DegC5cQQ) 大佬youtube, 他的视频面向中高级 Rust 用户, 适合学习完本课程后再去观看
 - [cheat rs](https://cheats.rs/) Rust Language Cheat Sheet
 - [Rust for Rustaceans]() Rust for Rustaceans
