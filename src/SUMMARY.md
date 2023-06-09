@@ -17,6 +17,8 @@
   - [类型系统: trait](./rust/11-trait.md)
   - [处理借用数据的模块: `std::borrow`](./rust/12-borrow.md)
   - [如何阅读源码](./rust/20-how-to-read-code.md)
+- [actix-web](./actix-web/README.md)
+  - [handler原理](./actix-web/01-handler.md)
 - [Golang](./golang/README.md)
   - [Golang AST](./golang/ast/README.md)
     - [token](./golang/ast/01-token.md)
