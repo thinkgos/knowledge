@@ -6,7 +6,7 @@
   - [资料](./rust/00-material.md)
   - [内存模型](./rust/01-memory-model.md)
   - [所有权机制-借用规则](./rust/02-owner-borrow.md)
-  - [内类系统](./rust/03-type-system.md)
+  - [类型系统](./rust/03-type-system.md)
   - [并发模型](./rust/04-concurrent.md)
   - [宏](./rust/05-macro.md)
   - [闭包](./rust/06-closure.md)

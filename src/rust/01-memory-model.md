@@ -1,6 +1,6 @@
 # 内存模型
 
-类型的布局是其大小 (size) 、对齐方式 (align) 及其字段的相对偏移量. 对于枚举, 如何布局和解释判别式也是类型布局的一部分.  对于 Sized 的数据类型, 可以在编译时知道内存布局, 可以通过 [size_of](https://doc.rust-lang.org/stable/std/mem/fn.size_of.html) 和 [align_of](https://doc.rust-lang.org/stable/std/mem/fn.align_of.html) 获得其 size 和 align. 
+类型的布局是其大小 (size) 、对齐方式 (align) 及其字段的相对偏移量. 对于枚举, 如何布局和解释判别式也是类型布局的一部分.  对于 Sized 的数据类型, 可以在编译时知道内存布局, 可以通过 [size_of](https://doc.rust-lang.org/stable/std/mem/fn.size_of.html) 和 [align_of](https://doc.rust-lang.org/stable/std/mem/fn.align_of.html) 获得其 size 和 align.
 
 ```text
 The layout of a type is its size, alignment, and the relative offsets of its fields. 
@@ -45,15 +45,15 @@ The IEEE 754-2008 "binary32" and "binary64" floating-point types are `f32` and `
 
 ### 4.1 char 类型
 
-`char`表示：一个 32 位(4 Bytes)长度字符, Unicode 标量值 [Unicode Scalar Value](http://www.unicode.org/glossary/#unicode_scalar_value) 范围为 0x0000 - 0xD7FF 或者是 0xE000 - 0x10FFFF. 
+`char`表示：一个 32 位(4 Bytes)长度字符, Unicode 标量值 [Unicode Scalar Value](http://www.unicode.org/glossary/#unicode_scalar_value) 范围为 0x0000 - 0xD7FF 或者是 0xE000 - 0x10FFFF.
 
 ### 4.2 str 类型
 
-str 与 [u8] 一样表示一个 u8 的 slice. Rust 中标准库中对 str 有个假设：符合 UTF-8 编码. 内存布局与 [u8] 相同. 
+str 与 [u8] 一样表示一个 u8 的 slice. Rust 中标准库中对 str 有个假设：符合 UTF-8 编码. 内存布局与 [u8] 相同.
 
 ## 5. `&` 和`&[T]` 引用
 
-### 5.1 `&` 
+### 5.1 `&`
 
 ```rust
 let a: i32 = 25;
@@ -61,17 +61,17 @@ let b: &i32 = &a;
 let c: &&i32 = &b;
 
 stack
-			|  a |    | b  |    │  c │
-            +––––+––––+––––+––––+––––+
-		    │ 25 │    │ *  │    │ *  │ 
-            +––^–+––––+–│^–+––––+–│––+
-			   │		│|________|
-			   │________│
+      |  a |    | b  |    │  c │
+      +––––+––––+––––+––––+––––+
+      │ 25 │    │ *  │    │ *  │ 
+      +––^–+––––+–│^–+––––+–│––+
+         │        │|________|
+         │________│
 ```
 
 ### 5.2 `&[T]` slice 引用
 
- slice 的使用必须要通过指针, `&[T]` 是一个胖指针, 保存指向数据的地址和元素个数.  slice 的内存布局与其指向的 array 部分相同. 
+ slice 的使用必须要通过指针, `&[T]` 是一个胖指针, 保存指向数据的地址和元素个数.  slice 的内存布局与其指向的 array 部分相同.
 
 ```rust
 // array &[T]
@@ -83,10 +83,10 @@ stack       [––––  a   ––––|   |–––  b ––|
             +––––+––––+––––+–––+––––+––––+
             │ 55 │ 66 │ 77 │   |  * |  2 | 
             +––––+––––+––––+–––+––––+––––+
-        	|		  |			 /     /  		
+            |         |          /     /
             –––––––––––<––––––––/     / 
-   							   /  length	
-   							buffer point
+                               /  length
+                        buffer point
 ```
 
 ```rust
@@ -98,16 +98,14 @@ stack       [–––  a   ––|     |–––  b ––|
             +–––+–––+–––+     +––––+––––+
             │ • │ 3 │ 4 │     |  * |  2 | 
             +–│–+–––+–––+     +–│––+––––+
-              │					│
-heap          │					│
+              │                 │
+heap          │                 │
             +–V––+––––+––––+    │
             │ 55 │ 66 │ 77 │    │
             +––––+––––+––––+    │
-            |		  |			│ 		
+            |         │         │ 
             –––––––––––<––––––––/
 ```
-
-
 
 ## 6. `&str`,`str` 和 `String` 的区别
 
@@ -117,12 +115,12 @@ heap          │					│
 String: let s: String = String::from("hello");
 
 
-    				buffer point
-                   /   capacity
+              buffer point
+                  /   capacity
                  /   /  length
 stack           /   /   /
             +–––+–––+–––+
-		    │ • │ 8 │ 5 │ 
+            │ • │ 8 │ 5 │ 
             +–│–+–––+–––+
               │
 heap          │
@@ -138,7 +136,7 @@ heap          │
 ```rust
 &str: let s: &str = "hello";
 
-			    buffer point
+          buffer point
                 /   length
 stack          /   /  
             +–––+–––+
@@ -149,7 +147,7 @@ read-only     │
 memory        │                     
             [–│–––––– str ––––––] 
             +–V–+–––+–––+–––+–––+
-  		    │ h │ e │ l │ l │ o │  
+            │ h │ e │ l │ l │ o │  
             +–––+–––+–––+–––+–––+
 ```
 
@@ -159,13 +157,11 @@ memory        │
 let a: (char, u8, i32) = ('a', 7, 356)
 
 stack
-			[–––––––––––––– 12 Bytes –––––––––––––––––––|
+            [–––––––––––––– 12 Bytes –––––––––––––––––––|
             +–––––––––––––+–––––+–––––––––+–––––––––––––+
             │      'a'    │  7  │ padding │      356    │  
             +–––––––––––––+–––––+–––––––––+–––––––––––––+
             |–– 4 Bytes ––|    4 Bytes    |–– 4 Bytes ––|
-				
-
 ```
 
 ## 8. struct
@@ -178,7 +174,7 @@ stack
 struct Data {
     nums: Vec<u8>,
     a: u8,
-}	
+}
 
 stack       [––– nums ––|– a –]
             +–––+–––+–––+–––––+
@@ -224,7 +220,7 @@ enum HTTPStatus {
 HTTPStatus::Ok
 stack
             +–––+
-    	    │ 0 │
+            │ 0 │
             +–––+
 
 HTTPStatus::NotFound
@@ -252,7 +248,7 @@ stack
 HTTPStatus::NotFound
 stack
             +–––––+
- 		    │ 404 │
+            │ 404 │
             +–––––+
 ```
 
@@ -267,26 +263,26 @@ enum Data {
 
 stack
 
-Data::Empty	
+Data::Empty
             +–––––+––––––––––––––––––––––––––––––––––––––––––––––+
-            │  0  │ padding               				         │  
+            │  0  │ padding                                      │  
             +–––––+––––––––––––––––––––––––––––––––––––––––––––––+
-			| mark|	      
-Data::Number	
+            | mark|     
+Data::Number
             +–––––+–––––––––+–––––––––––+––––––––––––––––––––––––+
-            │  1  │ padding │     0     │   	padding  	     │  
+            │  1  │ padding │     0     │      padding           │  
             +–––––+–––––––––+–––––––––––+––––––––––––––––––––––––+
             | mark|         |––  i32 –––|
-				            |–– value ––|
+                            |–– value ––|
 
 Data::Array(Vec<i32>)
-			[––––––––––––––––––––– 32 Bytes –––––––––––––––––––––|
+            [––––––––––––––––––––– 32 Bytes –––––––––––––––––––––|
             +–––––+–––––––––+–––––––––––+––––––––––––+–––––––––––+
             │  2  │ padding │    none   │      0     │     0     │  
             +–––––+–––––––––+–––––––––––+––––––––––––+–––––––––––+
             | mark|         |–––––––––––––  Vec<i32> ––––––––––––|
-				            |– pointer –|– capacity –|– length  –|
-–––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––
+                            |– pointer –|– capacity –|– length  –|
+––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––
  enum Data {
     Empty;
     Number(i32),
@@ -295,30 +291,30 @@ Data::Array(Vec<i32>)
 
 stack
 
-Data::Empty	
+Data::Empty
             +–––––+–––––––––––––––––––––+
             │  0  │ padding             │  
             +–––––+–––––––––––––––––––––+
-			| mark|	      
-Data::Number	
+            | mark|     
+Data::Number
             +–––––+–––––––––+–––––––––––+
             │  1  │ padding │     0     │ 
             +–––––+–––––––––+–––––––––––+
             | mark|         |––  i32 –––|
-				            |–– value ––|
+                            |–– value ––|
 
 Data::Array(Vec<i32>)
-			[––––––– 16 Bytes ––––––––––|
+            [––––––– 16 Bytes ––––––––––|
             +–––––+–––––––––+–––––––––––+
             │  2  │ padding │      *    │    
             +–––––+–––––––––+––│––––––––+
             | mark|         |– │ Box<T>–|
-				            |– │ pointer|
-                			   │
-heap             			   V
-                    		   +–––––––––––+––––––––––––+–––––––––––+
-            				   │    none   │      0     │     0     │  
-            				   +–––––––––––+––––––––––––+–––––––––––+           
+                            |– │ pointer|
+                               │
+heap                           V
+                       +–––––––––––+––––––––––––+–––––––––––+
+                       │    none   │      0     │     0     │  
+                       +–––––––––––+––––––––––––+–––––––––––+           
 ```
 
 ### 9.4 `Option<T>`
@@ -326,45 +322,43 @@ heap             			   V
 ```rust
 Option<Box<i32>>
 
-None	
+None
             +–––––+–––––––––––––––––––––+
             │  0  │ padding             │  
             +–––––+–––––––––––––––––––––+
-			| mark|	      
-Some(Box<i32>)	
+            | mark|  
+Some(Box<i32>)
             +–––––+–––––––––+–––––––––––+
             │  1  │ padding │     *     │ 
             +–––––+–––––––––+–––––––––––+
             +–––––+–––––––––+––│––––––––+
             | mark|         |– │ Box<T>–|
-				            |– │ pointer|
-                			   │
-heap             			   V
-                    		   +–––––––––––+
-            				   │     0     │    
-            				   +–––––––––––+
+                            |– │ pointer|
+                               │
+heap                           V
+                       +–––––––––––+
+                       │     0     │    
+                       +–––––––––––+
 
 // 因为智能指针的值都不允许为0, 所以实际上上面会进行优化成下面的方式
-None	
+None
             +–––––––––––+
             │     0     │  
             +–––––––––––+
-			| mark|	      
-Some(Box<i32>)	
+            | mark|   
+Some(Box<i32>)
             +–––––––––––+
             │     *     │ 
             +–––––––––––+
             +––│––––––––+
             |– │ Box<T>–|
-			|– │ pointer|
+            |– │ pointer|
                │
 heap           V
                +–––––––––––+
                │     0     │    
                +–––––––––––+
 ```
-
-
 
 ## 10. `array`,`[T]`和`Vec<T>`
 
@@ -409,7 +403,7 @@ heap          │
 let v: Box<Vec<i32>> = Box::new(vec![55,66,77]);
 
 stack    
-	  	    [ v |  
+            [ v ]  
             +–––+   
             │ * │      
             +–│–+    
@@ -418,7 +412,7 @@ heap          |
             +–V–+–––+–––+
             │ * │ 3 │ 3 │
             +–│–+–––+–––+
-           	  │
+              │
               │
             +–V––+––––+––––+
             │ 55 │ 66 │ 77 | 
@@ -434,16 +428,16 @@ let v: Rc<Vec<i32>> = Rc::new(vec![55,66,77]);
 let v2 = v.clone()
 
 stack    
-	  	    [ v |       [ v2 |
+            [ v |       [ v2 |
             +–––+       +–––+
             │ * │       │ * │ 
             +–│–+       +–│–+
               |___________|
-heap		  |
+heap          |
             +–V–+–––+–––+–––+
             │ 2 │ * │ 3 │ 3 |
             +–––+–│–+–––+–––+
-              /	  │
+              /   │
  ref count<– /    │
                 +–V––+––––+––––+
                 │ 55 │ 66 │ 77 | 
@@ -461,20 +455,20 @@ heap		  |
 
 官方定义：
 
-```
+```text
 A trait object is an opaque value of another type that implements a set of traits. 
 The set of traits is made up of an object safe base trait plus any number of auto traits.  
 ```
 
-trait 是 `DST` 类型 ,对trait的引用称之为 trait object, trait object是个胖指针, 包含两个普通指针分别为 `data `和 `vtable`.
+trait 是 `DST` 类型 ,对trait的引用称之为 trait object, trait object是个胖指针, 包含两个普通指针分别为 `data`和 `vtable`.
 
 ![2](http://imgur.thinkgos.cn/imgur/202205141636711.jpeg)
 
 ## 13. Dynamically Sized Types(DST) 动态类型
 
-一般来说大多数类型, 可以在编译阶段确定大小和对齐属性, [Sized trait](https://doc.rust-lang.org/stable/reference/special-types-and-traits.html#sized) 就是保证了这种特性. 
+一般来说大多数类型, 可以在编译阶段确定大小和对齐属性, [Sized trait](https://doc.rust-lang.org/stable/reference/special-types-and-traits.html#sized) 就是保证了这种特性.
 
-非 size (`?Sized`) 及 `DST` 类型. 
+非 size (`?Sized`) 及 `DST` 类型.
 
 - DST 类型有 slice 和 trait object.
 - DST 类型必须通过指针来使用,需要注意：
@@ -486,32 +480,28 @@ trait 是 `DST` 类型 ,对trait的引用称之为 trait object, trait object是
 enum Void {}
 ```
 
-空类型的一个主要应用场景是在类型层面声明不可到达性. 假如, 一个 API 一般需要返回一个 Result, 但是在特殊情况下它是绝对不会运行失败的. 这种情况下将返回值设为 Result<T, Void>, API 的调用者就可以信心十足地使用 unwrap, 因为不可能产生一个 Void 类型的值, 所以返回值不可能是一个 Err. 
+空类型的一个主要应用场景是在类型层面声明不可到达性. 假如, 一个 API 一般需要返回一个 Result, 但是在特殊情况下它是绝对不会运行失败的. 这种情况下将返回值设为 Result<T, Void>, API 的调用者就可以信心十足地使用 unwrap, 因为不可能产生一个 Void 类型的值, 所以返回值不可能是一个 Err.
 
 ## 15. function
 
 ```rust
 stack    
-	  	    [ f |  
+            [ f |  
             +–––+   
             │ * │      
             +–│–+    
               |
-	 machine code of function
+        machine code of function
 ```
 
 ## 16. closure
 
-闭包相当于一个捕获变量的结构体, 实现了 `FnOnce` 或 `FnMut` 或 `Fn`. 
+闭包相当于一个捕获变量的结构体, 实现了 `FnOnce` 或 `FnMut` 或 `Fn`.
 
 ## 17. Reference
- - [Rust数据内存布局](https://rustmagazine.github.io/rust_magazine_2021/chapter_6/ant-rust-data-layout.html)
 
-
+- [Rust数据内存布局](https://rustmagazine.github.io/rust_magazine_2021/chapter_6/ant-rust-data-layout.html)
 
 ## 18. 生命周期
 
 ![image-20221111224011998](http://imgur.thinkgos.cn/imgur/202211112240020.png)
-
-
-
