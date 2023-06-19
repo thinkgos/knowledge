@@ -178,7 +178,7 @@ const (
 > Go语言规范定义的基础面值主要有整数、浮点数和复数面值类型,此外还有字符和字符串面值类型.  
 > 需要注意的是,在Go语言规范中布尔类型的true和false并不在基础面值之类.但是为了方便词法解析,`go/token`包将true和false等对应的标识符也作为面值Token一类.
 >
->   其中literal_beg和literal_end是私有的类型,主要用于表示面值类型Token的值域范围
+> 其中literal_beg和literal_end是私有的类型,主要用于表示面值类型Token的值域范围
 
 - **运算符(分隔符)**Token
 

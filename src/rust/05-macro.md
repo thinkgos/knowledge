@@ -4,7 +4,7 @@
 
 - 使用`macro_rules!` 构建的声明宏 (declarative macro)
 - 3 种过程宏
-  - 自定义`#[devive]`宏, 用于struct 或enum, 可以为其指定随 `derive` 属性添加的代码
+  - 自定义`#[derive]`宏, 用于struct 或enum, 可以为其指定随 `derive` 属性添加的代码
   - 类似属性的宏, 在任何条目上添加自定义属性
   - 类似函数的宏, 看起来像函数调用, 对其指定为参数的 token 进行操作
 
