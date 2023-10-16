@@ -20,7 +20,7 @@
 - [actix-web](./actix-web/README.md)
   - [handler原理](./actix-web/01-handler.md)
 - [rust日记](./daily-rust/README.md)
-  - [不可变数据建议`Rc<[T]>`/`Arc<[T]>`替代`Vec<T>`](./daily-rust/using-immut-vec.md)
+  - [不可变数据建议`Rc<[T]>`/`Arc<[T]>`替代`Vec<T>`](./daily-rust/01-using-immut-vec.md)
 - [Golang](./golang/README.md)
   - [Golang AST](./golang/ast/README.md)
     - [token](./golang/ast/01-token.md)

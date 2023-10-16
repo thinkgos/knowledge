@@ -6,7 +6,7 @@ src = 'src'
 title = 'fragmentary knowledge collection'
 [output.html]
 mathjax-support = true
-git-repository-url = 'https://github.com/thinkgos/fragmentary-knowledge-collection'
+git-repository-url = 'https://github.com/thinkgos/knowledge'
 
 [output.html.playground]
 editable = true

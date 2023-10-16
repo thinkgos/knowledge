@@ -1,3 +1,3 @@
-# fragmentary knowledge collection
+# knowledge
 
 [Summary](./src/SUMMARY.md)
