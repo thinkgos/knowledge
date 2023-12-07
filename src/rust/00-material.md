@@ -14,6 +14,7 @@
 - [Jon Gjengset](https://www.youtube.com/channel/UC_iD0xppBwwsrM9DegC5cQQ) 大佬youtube, 他的视频面向中高级 Rust 用户, 适合学习完本课程后再去观看
 - [cheat rs](https://cheats.rs/) Rust Language Cheat Sheet
 - [Rust for Rustaceans]() Rust for Rustaceans
+- [Rust Atomics and Locks](https://marabos.nl/atomics/)
 
 ## 1. 工具
 
