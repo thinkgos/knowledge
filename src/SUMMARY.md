@@ -23,6 +23,7 @@
   - [你应知道的crate](./daily-rust/00-crate-you-need-to-know.md)
   - [不可变数据建议`Rc<[T]>`/`Arc<[T]>`替代`Vec<T>`](./daily-rust/01-using-immut-vec.md)
   - [(译)Rust临时生命周期和"Super Let"](./daily-rust/02-rust-temporary-lifetimes-and-super-let.md)
+  - [宏系统](./daily-rust/03-macro.md)
 - [Golang](./golang/README.md)
   - [Golang AST](./golang/ast/README.md)
     - [token](./golang/ast/01-token.md)
