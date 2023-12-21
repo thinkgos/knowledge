@@ -1,3 +1,1 @@
-# knowledge
-
-[Summary](./src/SUMMARY.md)
+./src/SUMMARY.md
