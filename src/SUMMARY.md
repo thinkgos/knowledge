@@ -1,6 +1,4 @@
-# knowledge
-
-## Summary
+# Summary
 
 [Introduction](./README.md)
 

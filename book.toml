@@ -3,7 +3,7 @@ authors = ['thinkgo']
 language = 'en'
 multilingual = false
 src = 'src'
-title = 'fragmentary knowledge collection'
+title = 'knowledge'
 [output.html]
 mathjax-support = true
 git-repository-url = 'https://github.com/thinkgos/knowledge'
