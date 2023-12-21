@@ -110,3 +110,4 @@ pub fn derive_name_macro(input: TokenStream) -> TokenStream {
 - [宏小册](https://zjp-cn.github.io/tlborm/introduction.html)
 - [The Little Book of Rust Macros](https://veykril.github.io/tlborm/)
 - [The Rust Reference - Macros](https://doc.rust-lang.org/nightly/reference/macros.html)
+- [Proc-Macro-Workshop](https://github.com/dtolnay/proc-macro-workshop)
