@@ -1,10 +1,8 @@
-# (译)Rust临时生命周期和"Super Let"
-
-原文[^1]: [Rust Temporary Lifetimes and "Super Let"](https://blog.m-ou.se/super-let/)
+# (译)`Rust`临时生命周期和"Super Let"[^1]
 
 在`Rust`中, 临时变量生命周期是一个复杂但又经常被忽视的话题. 在一些简单的情况下, `Rust`会让临时变量存活足够长的时间, 这样我们就不必考虑它们了. 然而, 在很多情况下, 我们可能无法立即得到我们想要的东西.
 
-在这篇文章中, 我们将(重新)发掘临时变量生命周期的规则, 介绍一些临时变量生命周期扩展的用例, 并探索一种新的语言理念--`super let,`, 为我们提供更多控制.
+在这篇文章中, 我们将(重新)发掘临时变量生命周期的规则, 介绍一些临时生命周期扩展的用例, 并探索一种新的语言理念--`super let,`, 为我们提供更多控制.
 
 ## 临时变量
 
@@ -235,6 +233,30 @@ let a = Some { 0: &temporary() }; // Extended! (I bet you have never used this s
 
 ### 持续推广
 
+临时生命周期扩展很容易与另一种叫不断晋升的东西混淆, 后者是临时变量获得比预期生命周期长的另一种方式.
+
+在`&123`和`&None`这样的表达式中, 值被认定为常量（[without interior mutability and without desctructors](https://doc.rust-lang.org/stable/reference/destructors.html#constant-promotion)）, 因此会自动晋升为永生值. 这意味着这些引用将具有`'static`生命周期.
+
+例如:
+
+```rust
+let x = f(&3); // The &3 here is 'static, regardless if that's necessary for `f()`.
+```
+
+This even applies to simple expressions:
+
+```rust
+let x = f(&(1 + 2)); // The &3 here is 'static.
+```
+
+在同时适用临时生命周期延长和恒定提升的情况下, 后者优先, 因为它延长的生命周期最长:
+
+```rust
+let x = &1; // constant promotion, not temporary lifetime extension.
+```
+
+也就是说, 在上面的代码段中, `x`是一个`'static`引用. 值`1`的寿命甚至比`x`本身还长.
+
 ### 代码块中的临时生命周期扩展
 
 想象一下, 我们有某种`Writer`类型, 它持有一个要写入的文件的引用:
@@ -462,6 +484,23 @@ let thing = pin!(Thing { … });
 
 ### 可能的扩展
 
+未来可能的扩展是允许在函数作用域中使用`super let`. 也就是说, "super"指的是函数的调用者.
+
+正如[@lorepozo@tech.lgbt](https://hachyderm.io/@lorepozo@tech.lgbt/111499621692587962)在Mastodon上提到的, 这将使 `pin!()` 成为一个函数而不是宏. 同样, 它也能让 `Writer::new_file(...)` 成为可能, 而不必使用宏.
+
+这样做的有效方式是允许某些函数将对象放入调用者的堆栈框架中, 然后可以从返回值中引用这些对象. 这在任何普通的旧函数中都是行不通的；通常情况下, 调用者不会为函数预留放置对象的空间. 这需要成为函数签名的一部分.
+
+也许可以这样?
+
+```rust
+pub placing fn new_file(filename: &str) -> Writer {
+    super let mut file = File::create(filename).unwrap(); // Placed into caller's stack frame
+    Writer::new(&file) // So we can borrow it in the return value!
+}
+```
+
+这不是我现在提出的建议的一部分, 但想想也很有趣. ）
+
 ## 临时生命周期 2024 RFC
 
 几个月前, 我与*Niko Matsakis*和*Ding Xiang Fei*分享了我的想法--`super let`.他们一直在努力制定`super let`的确切定义和详细规则, 以及下一版`Rust`的临时生命周期的一些新规则.
@@ -478,4 +517,4 @@ let thing = pin!(Thing { … });
 
 ## 引用
 
-[^1]: https://blog.m-ou.se/super-let
+[^1]: [Rust Temporary Lifetimes and "Super Let"](https://blog.m-ou.se/super-let/)
