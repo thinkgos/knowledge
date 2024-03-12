@@ -1,8 +1,8 @@
 # iptables
 
-## 1. iptables 
+## 1. iptables
 
->  参考文章 [iptables详解](http://www.zsythink.net/archives/tag/iptables/page/2/) [备链](https://blog.csdn.net/weixin_33749242/article/details/91718539)
+> 参考文章 [iptables详解](http://www.zsythink.net/archives/tag/iptables/page/2/) [备链](https://blog.csdn.net/weixin_33749242/article/details/91718539)
 
 `iptables`其实不是真正的防火墙,我们可以把它理解成一个客户端代理,用户通过`iptables`这个代理,将用户的安全设定执行到对应的"安全框架"中,这个"安全框架"才是真正的防火墙,这个框架的名字叫`netfilter`.
 
@@ -20,36 +20,36 @@
 
 ### 1.1 iptables基础
 
-   `iptables`是按照规则来办事的,所谓规则一般的定义为:
+`iptables`是按照规则来办事的,所谓规则一般的定义为:
 
-> "如果数据包头符合这样的条件,就这样处理这个数据包".规则存储在内核空间的信息包过滤表中,这些规则分别指定了***源地址***、***目的地址***、***传输协议(如TCP、UDP、ICMP)***和***服务类型(如HTTP、FTP和SMTP)***等.
+> "如果数据包头符合这样的条件,就这样处理这个数据包".规则存储在内核空间的信息包过滤表中,这些规则分别指定了 ***源地址*** 、***目的地址*** 、***传输协议(如TCP、UDP、ICMP)*** 和 ***服务类型(如HTTP、FTP和SMTP)*** 等.
 >
-> 当数据包与规则匹配时,`iptables`就根据规则所定义的方法来处理这些数据包,如**放行(accept)**、**拒绝(reject)**和**丢弃(drop)**等.
+> 当数据包与规则匹配时,`iptables`就根据规则所定义的方法来处理这些数据包,如 **放行(accept)** 、**拒绝(reject)** 和 **丢弃(drop)** 等.
 >
 > 配置防火墙的主要工作就是添加、修改和删除这些规则.
 
-`iptables`配置的通常就是所说的**四表五链**.
+`iptables`配置的通常就是所说的 **四表五链** .
 
-四表: (另外`security`表不常用,主要用于数据包上应用**SELniux**)
+四表: (另外`security`表不常用,主要用于数据包上应用 **SELinux** )
 
-- `raw`: 关闭nat表上启用的连接追踪机制; iptable_raw 
-- `mangle`: 拆解报文, 做出修改, 并重新封装 的功能；iptable_mangle 
-- `NAT`:  network address translation,网络地址转换功能；；iptable_nat
+- `raw`: 关闭nat表上启用的连接追踪机制; iptable_raw
+- `mangle`: 拆解报文, 做出修改, 并重新封装 的功能；iptable_mangle
+- `nat`:  network address translation,网络地址转换功能；；iptable_nat
 - `filter`:  负责过滤功能,防火墙；内核模块：iptables_filter
 
 > 这5张表的优先级从高到低是：`raw` -> `mangle`  ->  `nat` -> `filter`  [-> `security`]
 >
 > > 需要注意的是, `iptables`**不支持用户自定义表**,但**支持自定义链**.
 
-**五链**(标记表的执行优先级次序):  
+**五链** (标记表的执行优先级次序):  
 
 - `PREROUTING`: `raw` -->`mangle`--> `nat`
-- `FORWARD`: `mangle`- -> `filter`
-- `POSTROUTING`: `mangle` --> `nat`
 - `INPUT`:  `mangle` --> `filter`(centos7中还有`nat`表,centos6中没有).
+- `FORWARD`: `mangle`- -> `filter`
 - `OUPUT`: `raw`--> `mangle` --> `nat` --> `filter`
+- `POSTROUTING`: `mangle` --> `nat`
 
-以上看出各个链有对应的表,而且表和表上的规则是有优先级的,**在实际操作使用时,往往是通过操作`iptables`这些表,对规则进行定义的.**
+以上看出各个链有对应的表,而且表和表上的规则是有优先级的, **在实际操作使用时,往往是通过操作`iptables`这些表,对规则进行定义的.**
 
 ![iptable-1](http://imgur.thinkgos.cn/imgur/202205071135668.png)
 
@@ -59,26 +59,26 @@
 
 #### a. 匹配条件
 
-匹配条件分为***基本匹配条件***与***扩展匹配条件***
+匹配条件分为 ***基本匹配条件*** 与 ***扩展匹配条件***
 
-**基本匹配条件：**
+**基本匹配条件**:
 
-- 源地址 Source IP
-- 目标地址 Destination IP
+- 源地址: Source IP
+- 目标地址: Destination IP
 
 **扩展匹配条件：**
 
-除了上述的条件可以用于匹配,还有很多其他的条件可以用于匹配,这些条件泛称为***扩展条件***,这些扩展条件其实也是`netfilter`中的一部分,只是以模块的形式存在,如果想要使用这些条件,则需要依赖对应的扩展模块.
+除了上述的条件可以用于匹配,还有很多其他的条件可以用于匹配,这些条件泛称为 ***扩展条件*** ,这些扩展条件其实也是`netfilter`中的一部分,只是以模块的形式存在,如果想要使用这些条件,则需要依赖对应的扩展模块.
 
-- 源端口Source Port
+- 源端口:Source Port
 
-- 目标端口Destination Port
+- 目标端口:Destination Port
 
 #### b. **处理动作**
 
 处理动作在`iptables`中被称为target(这样说并不准确,我们暂且这样称呼),
 
-动作也可以分为***基本动作***和***扩展动作***.
+动作也可以分为 ***基本动作*** 和 ***扩展动作***.
 
 此处列出一些常用的动作：
 
@@ -112,44 +112,36 @@ $ iptables -t filter -L INPUT
 # -v选项,查看更多的,更详细的信息,
 # -x选项表示显示计数器的精确值.
 $ iptables -t filter -vxL
-# 默认是对IP地址进行反解
-# -n直接显示IP地址,不进行反解
+# 默认是对IP地址进行名称解析
+# -n直接显示IP地址,不进行名称解析
 $ iptables -t filter -nvL
 # --line-numbers 显示行号,可用--line
 $ iptables -t filter -nvL --line-numbers
 
 Chain FORWARD (policy DROP 0 packets, 0 bytes)
-num   pkts bytes target     prot opt in     out     source               destination         
-1        4   296 DOCKER-USER  all  --  *      *       0.0.0.0/0            0.0.0.0/0           
-2        4   296 DOCKER-ISOLATION-STAGE-1  all  --  *      *       0.0.0.0/0            0.0.0.0/0           
-3        0     0 ACCEPT     all  --  *      docker0  0.0.0.0/0            0.0.0.0/0            ctstate RELATED,ESTABLISHED
+num   pkts bytes target                    prot opt in     out      source               destination         
+1        4   296 DOCKER-USER               all  --  *      *        0.0.0.0/0            0.0.0.0/0           
+2        4   296 DOCKER-ISOLATION-STAGE-1  all  --  *      *        0.0.0.0/0            0.0.0.0/0           
+3        0     0 ACCEPT                    all  --  *      docker0  0.0.0.0/0            0.0.0.0/0            ctstate RELATED,ESTABLISHED
 ```
 
-连后面括号中的含义:
+链后面括号中的含义:
 
-- **policy**表示当前链的默认策略,policy ACCEPT表示上图中INPUT的链的默认动作为ACCEPT
-- **packets**表示当前链(上例为INPUT链)默认策略匹配到的包的数量,0 packets表示默认策略匹配到0个包
+- **policy**表示当前链的默认策略,`policy ACCEPT`表示上图中`INPUT`的链的默认动作为`ACCEPT`
+- **packets**表示当前链默认策略匹配到的包的数量,`0 packets`表示默认策略匹配到`0`个包
 - **bytes**表示当前链默认策略匹配到的所有包的大小总和.
 
 规则条目参数:
 
-- **pkts**:对应规则匹配到的报文的个数.
-
-- **bytes**:对应匹配到的报文包的大小总和.
-
-- **target**:规则对应的target,往往表示规则对应的"动作",即规则匹配成功后需要采取的措施.
-
-- **prot**:表示规则对应的协议,是否只针对某些协议应用此规则.
-
-- **opt**:表示规则对应的选项.
-
-- **in**:表示数据包由哪个接口(网卡)流入,我们可以设置通过哪块网卡流入的报文需要匹配当前规则.
-
-- **out**:表示数据包由哪个接口(网卡)流出,我们可以设置通过哪块网卡流出的报文需要匹配当前规则.
-
-- **source**:表示规则对应的源头地址,可以是一个IP,也可以是一个网段.
-
-- **destination**:表示规则对应的目标地址.可以是一个IP,也可以是一个网段
+- **pkts**:   对应规则匹配到的**报文**的个数.
+- **bytes**:  对应匹配到的**报文包的大小**总和.
+- **target**: 规则对应的**target**,往往表示规则对应的"动作",即规则匹配成功后需要采取的措施.
+- **prot**:   规则对应的**协议**,是否只针对某些协议应用此规则.
+- **opt**:    规则对应的**选项**.
+- **in**:     数据包由哪个接口(网卡)流入,我们可以设置通过**哪块网卡流入的报文**需要匹配当前规则.
+- **out**:    数据包由哪个接口(网卡)流出,我们可以设置通过**哪块网卡流出的报文**需要匹配当前规则.
+- **source**:       规则对应的**源头地址**,可以是一个IP,也可以是一个网段.
+- **destination**:  规则对应的**目标地址**.可以是一个IP,也可以是一个网段
 
 ### 2.2 规则管理
 
@@ -157,21 +149,20 @@ num   pkts bytes target     prot opt in     out     source               destina
 
 ```shell
 # 添加一条规则,表示在filter表的INPUT链追加一条丢弃来自192.168.1.111的规则
-# -A表示追加
-# -I表示插入表头,可指定位置,在链名后面添加相应数字即可.
-# -s 表示源地址
-# -j 表示动作
+#  -A: 追加
+#  -I: 插入表头,可指定位置,在链名后面添加相应数字即可.
+#  -s: 源地址
+#  -j: 动作
 $ iptables -t filter -A INPUT -s 192.168.1.111 -j DROP
 
 # 根据规则的编号删除规则.
-# -D 表示删除
+#  -D: 删除
 $ iptables -t filter -D INPUT 2 
 # 根据匹配条件去删除规则,NOTE: 有坑,建议选删除再增加.
 $ iptables -t filter -D INPUT -s 192.168.1.111 -j DROP
 # 清空filter 表的规则
 # -F flush 冲刷清除之意.
 $ iptables -t filter -F input
-
 
 # 修改规则
 # -R 修改指定条目序号的规则,注意: 必须指定匹配规则,虽然已指定的序号.
