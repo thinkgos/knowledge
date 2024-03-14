@@ -91,7 +91,7 @@
 
 以上看出各个链有对应的表,而且表和表上的规则是有优先级的, **在实际操作使用时,往往是通过操作`iptables`这些表,对规则进行定义的.**
 
-![iptable-1](http://imgur.thinkgos.cn/imgur/202205071135668.png)
+![iptable-1](../assets/iptables-chain.png)
 
 ### 1.2 规则概念
 
@@ -339,7 +339,7 @@ NOTE: `--monthdays`与`--weekdays`可以使用`"!"`取反,其他选项不能取�
 `--tcp-flags` tcp头的标志有`SYN`,`ACK`,`FIN`,`RST`,`URG`,`PSH`,默认`ALL`表示全部.
 `iptables -t filter -I INPUT -p tcp -m tcp --dport 22 --tcp-flags ALL SYNC -j REJECT`
 
-![tcp-flags](http://imgur.thinkgos.cn/imgur/202205071133169.png)
+![tcp-flags](../assets/iptables-tcp-flag.png)
 
 ##### 2.2.5.9 扩展模块之UDP扩展与ICMP扩展
 
