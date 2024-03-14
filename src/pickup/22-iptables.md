@@ -1,5 +1,45 @@
 # iptables
 
+- [iptables](#iptables)
+  - [1. iptables](#1-iptables)
+    - [1.1 iptables基础](#11-iptables基础)
+    - [1.2 规则概念](#12-规则概念)
+      - [1.2.1 匹配条件](#121-匹配条件)
+      - [1.2.2 处理动作](#122-处理动作)
+  - [2. iptables规则](#2-iptables规则)
+    - [2.1 规则管理](#21-规则管理)
+      - [2.1.1 规则查询](#211-规则查询)
+      - [2.1.2 规则的增删改](#212-规则的增删改)
+      - [2.1.3 保存规则](#213-保存规则)
+    - [2.2 规则匹配条件](#22-规则匹配条件)
+      - [2.2.1 源地址](#221-源地址)
+      - [2.2.2 目标地址](#222-目标地址)
+      - [2.2.3 协议类型](#223-协议类型)
+      - [2.2.4 网卡接口](#224-网卡接口)
+      - [2.2.5 扩展匹配条件](#225-扩展匹配条件)
+        - [2.2.5.1 匹配端口](#2251-匹配端口)
+        - [2.2.5.2 匹配多个离散的端口](#2252-匹配多个离散的端口)
+        - [2.2.5.3 `iprange`扩展模块](#2253-iprange扩展模块)
+        - [2.2.5.4 string扩展模块](#2254-string扩展模块)
+        - [2.2.5.5 time扩展模块](#2255-time扩展模块)
+        - [2.2.5.6 connlimit扩展模块](#2256-connlimit扩展模块)
+        - [2.2.5.7 limit扩展模块](#2257-limit扩展模块)
+        - [2.2.5.8 扩展条件之`-tcp-flags`](#2258-扩展条件之-tcp-flags)
+        - [2.2.5.9 扩展模块之UDP扩展与ICMP扩展](#2259-扩展模块之udp扩展与icmp扩展)
+        - [2.2.5.10 扩展模块之state扩展](#22510-扩展模块之state扩展)
+    - [2.3 黑白名单机制](#23-黑白名单机制)
+    - [2.4 自定义链](#24-自定义链)
+    - [2.5 网络防火墙](#25-网络防火墙)
+    - [2.6 动作](#26-动作)
+      - [2.6.1 动作REJECT](#261-动作reject)
+      - [2.6.2 动作LOG](#262-动作log)
+      - [2.6.3 动作SNAT](#263-动作snat)
+      - [2.6.4 动作DNAT](#264-动作dnat)
+      - [2.6.5 动作MASQUERADE](#265-动作masquerade)
+      - [2.6.6 动作REDIRECT](#266-动作redirect)
+    - [2.7 总结](#27-总结)
+
+
 ## 1. iptables
 
 > 参考文章 [iptables详解](http://www.zsythink.net/archives/tag/iptables/page/2/) [备链](https://blog.csdn.net/weixin_33749242/article/details/91718539)
@@ -57,7 +97,7 @@
 
 根据指定的匹配条件来尝试匹配每个流经此处的报文,一旦匹配成功,则由规则后面指定的处理动作(target)进行处理.如果不匹配将顺延匹配下一条.
 
-#### a. 匹配条件
+#### 1.2.1 匹配条件
 
 匹配条件分为 ***基本匹配条件*** 与 ***扩展匹配条件***
 
@@ -74,7 +114,7 @@
 
 - 目标端口:Destination Port
 
-#### b. **处理动作**
+#### 1.2.2 处理动作
 
 处理动作在`iptables`中被称为target(这样说并不准确,我们暂且这样称呼),
 
@@ -100,7 +140,9 @@
 
 ## 2. iptables规则
 
-### 2.1 规则查看
+### 2.1 规则管理
+
+#### 2.1.1 规则查询
 
 ```shell
 # 查看filter表的所有规则
@@ -143,9 +185,7 @@ num   pkts bytes target                    prot opt in     out      source      
 - **source**:       规则对应的**源头地址**,可以是一个IP,也可以是一个网段.
 - **destination**:  规则对应的**目标地址**.可以是一个IP,也可以是一个网段
 
-### 2.2 规则管理
-
-#### a. 规则的增删改
+#### 2.1.2 规则的增删改
 
 ```shell
 # 添加一条规则,表示在filter表的INPUT链追加一条丢弃来自192.168.1.111的规则
@@ -169,7 +209,7 @@ $ iptables -t filter -F input
 $ iptables -t filter -R INPUT 1 -s 192.168.1.111 -j REJECT 
 ```
 
-#### b. 保存规则
+#### 2.1.3 保存规则
 
 在默认的情况下,我们对"防火墙"所做出的修改都是"临时的",换句话说就是,当重启`iptables`服务或者重启服务器以后,我们平常添加的规则或者对规则所做出的修改都将消失,为了防止这种情况的发生,我们需要将规则"保存"
 
@@ -186,13 +226,12 @@ $ iptables-restore
 $ iptables-restore < /etc/sysconfig/iptables
 ```
 
-### 2.3 规则匹配条件
+### 2.2 规则匹配条件
 
 > 注意: 不指定源或目标地址,均默认为`0.0.0.0/0`
->
-> 多个匹配条件,为''与"关系
+> 多个匹配条件,为"与"关系
 
-- 源地址
+#### 2.2.1 源地址
 
 ```shell
 # 单个源地址
@@ -205,7 +244,7 @@ $ iptables -t filter -I INPUT -s 192.168.0.0/16 -j DROP
 $ iptables -t filter -I INPUT ! -s 192.168.1.111 -j DROP
 ```
 
-- 目标地址
+#### 2.2.2 目标地址
 
 ```shell
 # -d 指定目标地址匹配条件
@@ -214,136 +253,104 @@ $ iptables -t filter -I INPUT ! -s 192.168.1.111 -j DROP
 $ iptables -t filter -I INPUT -s 192.168.1.111 -d 192.168.1.120 -j DROP
 ```
 
-- 协议类型 (默认是所有协议`-p all`)
+#### 2.2.3 协议类型
 
-  > `-p`指定协议
-  >
-  > 支持的协议有: tcp, udp, udplite, icmp, icmpv6,esp, ah, sctp, mh等
+`-p`指定协议
+默认是所有协议`-p all`)
+支持的协议有: `tcp`, `udp`, `udplite`, `icmp`, `icmpv6`, `esp`, `ah`, `sctp`, `mh`等.
 
-- 网卡接口(默认是所有网卡)
+#### 2.2.4 网卡接口
 
-> `-i` 指定匹配报文网卡流入,匹配报文是通过哪块网卡流入本机的,只能作用于`PREROUTING`、`INPUT`、`FORWARD`
->
-> `-o`指定匹配报文网卡流出,匹配报文将从哪个网卡流出,只能用于`FORWARD`、`OUTPUT`、`POSTROUTING`.
+`-i` 指定匹配报文网卡流入,匹配报文是通过哪块网卡流入本机的,只能作用于`PREROUTING`、`INPUT`、`FORWARD`
+`-o`指定匹配报文网卡流出,匹配报文将从哪个网卡流出,只能用于`FORWARD`、`OUTPUT`、`POSTROUTING`.
+默认是所有网卡
 
-- 扩展匹配条件
+#### 2.2.5 扩展匹配条件
 
-> 源端口和目标端口属于扩展匹配条件,如果想要使用扩展匹配条件,则需要依赖一些扩展模块.
->
-> 在使用`--dport`,`--sport`之前,我们使用`-m`选项,指定了对应的扩展模块为`tcp`,也就是说,如果想要使用`--dport`,`--sport`这个扩展匹配条件,则必须依靠某个扩展模块完成.
-> 当使用`-p`选项指定了报文的协议时,如果在没有使用`-m`指定对应的扩展模块名称的情况下,使用了扩展匹配条件,  `iptables`默认会调用与`-p`选项对应的协议名称相同的模块
->
-> - 目标端口
->
-> > 使用选项`--dport`可以匹配报文的目标端口,`--dport`意为destination-port,即表示目标端口.
->
-> - 源端口
->
-> > 使用选项`--sport`可以匹配报文的源端口,`--sport`表示source-port,即表示源端口.
->
-> ​    扩展匹配条件是可以取反的,同样是使用"!"进行取反,比如 `! --dport 22`,表示目标端口不是22的报文将会被匹配到.
->
-> ​    `--sport`,`--dsport`,都能够指定一个端口范围,比如,`--dport 22:25`表示目标端口为22到25之间的所有端口.
->
-> ​    同时指定多个离散的端口,需要借助另一个扩展模块,"multiport"模块
->
-> - 匹配多个离散的端口
->
-> 1. 使用`multiport`模块的`--sports`扩展条件同时指定多个离散的源端口.
->
-> `iptables -t filter -I INPUT -s 192.168.1.111 -p tcp -m multiport --dports 22,36,80 -j DROP`
->
-> 2. 使用`multiport`模块的`--dports`扩展条件同时指定多个离散的目标端口
->
-> `iptables -t filter -I INPUT -s 192.168.1.111 -p tcp -m multiport --sports 22,36,80 -j DROP`
+源端口和目标端口属于扩展匹配条件,如果想要使用扩展匹配条件,则需要依赖一些扩展模块.
 
-- 常用扩展匹配模块
+##### 2.2.5.1 匹配端口
 
-  - `iprange`扩展模块
+在使用`--dport`,`--sport`之前,我们使用`-m`选项,指定了对应的扩展模块为`tcp`,也就是说,如果想要使用`--dport`,`--sport`这个扩展匹配条件,则必须依靠某个扩展模块完成.
+当使用`-p`选项指定了报文的协议时,如果在没有使用`-m`指定对应的扩展模块名称的情况下,使用了扩展匹配条件,  `iptables`默认会调用与`-p`选项对应的协议名称相同的模块
 
-  > 使用`-s`选项或者`-d`选项即可匹配报文的源地址与目标地址,而且在指定IP地址时,可以同时指定多个IP地址,每个IP用"逗号"隔开,但是,`-s`选项与`-d`选项并不能一次性的指定一段连续的IP地址范围,
-  >
-  > 如果我们需要指定一段连续的IP地址范围,可以使用`iprange`扩展模块,扩展匹配条件可以使用`--src-range`,`--dst-range`
-  >
-  > ```shell
-  > $ iptables -t filter -I INPUT -m iprange --src-range 192.168.1.111-192.168.1.120 -j DROP
-  > $ iptables -t filter -I INPUT -m iprange --dst-range 192.168.1.111-192.168.1.120 -j DROP
-  > ```
+- 目标端口: 使用选项`--dport`可以匹配报文的目标端口,`--dport`意为destination-port,即表示目标端口.
+- 源端口: 使用选项`--sport`可以匹配报文的源端口,`--sport`表示source-port,即表示源端口.
 
-  - string扩展模块
+扩展匹配条件是可以取反的,同样是使用"!"进行取反,比如 `! --dport 22`,表示目标端口不是22的报文将会被匹配到.
+`--sport`,`--dsport`,都能够指定一个端口范围,比如,`--dport 22:25`表示目标端口为22到25之间的所有端口.
 
-  > 使用string扩展模块,可以指定要匹配的字符串,如果报文中包含对应的字符串,则符合匹配条件
-  >
-  > `--algo`：用于指定匹配算法,可选的算法有`bm`与`kmp`,此选项为必须选项,我们不用纠结于选择哪个算法,但是我们必须指定一个.
-  >
-  > `--string`：用于指定需要匹配的字符串.
+同时指定多个离散的端口,需要借助另一个扩展模块,`multiport`模块
 
-  - time扩展模块
+##### 2.2.5.2 匹配多个离散的端口
 
-  > 我们可以通过time扩展模块,根据时间段区匹配报文,如果报文到达的时间在指定的时间范围以内,则符合匹配条件.
-  >
-  > `--timestart`指定起始时间. 格式 xx.xx.xx
-  >
-  > `--timestop`指定结束时间.
-  >
-  > `--monthdays` 指定月份的哪一号,多个用`,`隔开
-  >
-  > `--weekdays` 指定星期几,多个用`,`隔开 Mon, Tue, Wed, Thu, Fri, Sat, Sun
-  >
-  > `--datestart` 指定日期开始时间
-  >
-  > `--datestop`指定日期结束时间
-  >
-  > NOTE: `--monthdays`与`--weekdays`可以使用`"!"`取反,其他选项不能取反
+- 使用`multiport`模块的`--sports`扩展条件同时指定多个离散的源端口.
+   `iptables -t filter -I INPUT -s 192.168.1.111 -p tcp -m multiport --dports 22,36,80 -j DROP`
+- 使用`multiport`模块的`--dports`扩展条件同时指定多个离散的目标端口
+   `iptables -t filter -I INPUT -s 192.168.1.111 -p tcp -m multiport --sports 22,36,80 -j DROP`
 
-  - connlimit扩展模块
+##### 2.2.5.3 `iprange`扩展模块
 
-  > 使用connlimit扩展模块,可以限制每个IP地址同时链接到server端的链接数量
-  >
-  > 注意：我们不用指定IP,其默认就是针对"每个客户端IP",即对单IP的并发连接数限制.
-  >
-  > `--connlimit-above 2`表示限制每个IP的链接数量上限为2
-  >
-  > `--connlimit-upto`含义与`! --commlimit-above`的含义相同,即链接数量未达到指定的连接数量之意"--
-  >
-  > `--connlimit-mask`限制"某类网段"的链接数量.`connlimit-mask 24`表示某个C类网段,没错,mask为掩码之意,所以将24转换成点分十进制就表示255.255.255.0
+使用`-s`选项或者`-d`选项即可匹配报文的源地址与目标地址,而且在指定IP地址时,可以同时指定多个IP地址,每个IP用"逗号"隔开,但是,`-s`选项与`-d`选项并不能一次性的指定一段连续的IP地址范围,
+如果我们需要指定一段连续的IP地址范围,可以使用`iprange`扩展模块,扩展匹配条件可以使用`--src-range`,`--dst-range`
 
-  - limit扩展模块
+```shell
+iptables -t filter -I INPUT -m iprange --src-range 192.168.1.111-192.168.1.120 -j DROP
+iptables -t filter -I INPUT -m iprange --dst-range 192.168.1.111-192.168.1.120 -j DROP
+```
 
-  > limit模块是对"报文到达速率"进行限制的. 限制单位时间内流入的包的数量.
-  >
-  > `--limit`可以以秒为单位进行限制,也可以以分钟、小时、天作为单位进行限制.
-  >
-  > 可以选择的时间单位`/second`,`/minute`,`/hour`,`/day`
-  >
-  > `--limit-burst`可以指定"空闲时可放行的包的数量"
+##### 2.2.5.4 string扩展模块
 
-- 扩展条件之`-tcp-flags`
+使用`string`扩展模块,可以指定要匹配的字符串,如果报文中包含对应的字符串,则符合匹配条件
+`--algo`：用于指定匹配算法,可选的算法有`bm`与`kmp`,此选项为必须选项,我们不用纠结于选择哪个算法,但是我们必须指定一个.
+`--string`：用于指定需要匹配的字符串.
 
-> 注：需要对tcp协议的基础知识有一定的了解,比如：tcp头的结构、tcp三次握手的过程.
->
-> 见名知义,"--tcp-flags"指的就是tcp头中的标志位,看来,在使用iptables时,我们可以通过此扩展匹配条件,去匹配tcp报文的头部的标识位,然后根据标识位的实际情况实现访问控制的功能.
->
-> 如下图,在使用iptables时,使用tcp扩展模块的"--tcp-flags"选项,即可对上图中的标志位进行匹配,判断指定的标志位的值是否为"1".
->
-> `--tcp-flags` tcp头的标志有`SYN`,`ACK`,`FIN`,`RST`,`URG`,`PSH`,默认`ALL`表示全部.
->
-> `iptables -t filter -I INPUT -p tcp -m tcp --dport 22 --tcp-flags ALL SYNC -j REJECT`
+##### 2.2.5.5 time扩展模块
+
+我们可以通过time扩展模块,根据时间段区匹配报文,如果报文到达的时间在指定的时间范围以内,则符合匹配条件.
+`--timestart`指定起始时间. 格式 xx.xx.xx
+`--timestop`指定结束时间.
+`--monthdays` 指定月份的哪一号,多个用`,`隔开
+`--weekdays` 指定星期几,多个用`,`隔开 Mon, Tue, Wed, Thu, Fri, Sat, Sun
+`--datestart` 指定日期开始时间
+`--datestop`指定日期结束时间
+NOTE: `--monthdays`与`--weekdays`可以使用`"!"`取反,其他选项不能取反
+
+##### 2.2.5.6 connlimit扩展模块
+
+使用`connlimit`扩展模块,可以限制每个IP地址同时链接到server端的链接数量
+注意：我们不用指定IP,其默认就是针对"每个客户端IP",即对单IP的并发连接数限制.
+`--connlimit-above 2`表示限制每个IP的链接数量上限为2
+`--connlimit-upto`含义与`! --commlimit-above`的含义相同,即链接数量未达到指定的连接数量之意"--
+`--connlimit-mask`限制"某类网段"的链接数量.`connlimit-mask 24`表示某个C类网段,没错,mask为掩码之意,所以将24转换成点分十进制就表示255.255.255.0
+
+##### 2.2.5.7 limit扩展模块
+
+`limit`模块是对"报文到达速率"进行限制的. 限制单位时间内流入的包的数量.
+`--limit`可以以秒为单位进行限制,也可以以分钟、小时、天作为单位进行限制.
+可以选择的时间单位`/second`,`/minute`,`/hour`,`/day`
+`--limit-burst`可以指定"空闲时可放行的包的数量"
+
+##### 2.2.5.8 扩展条件之`-tcp-flags`
+
+注：需要对tcp协议的基础知识有一定的了解,比如：tcp头的结构、tcp三次握手的过程.
+见名知义,"--tcp-flags"指的就是tcp头中的标志位,看来,在使用iptables时,我们可以通过此扩展匹配条件,去匹配tcp报文的头部的标识位,然后根据标识位的实际情况实现访问控制的功能.
+如下图,在使用iptables时,使用tcp扩展模块的"--tcp-flags"选项,即可对上图中的标志位进行匹配,判断指定的标志位的值是否为"1".
+`--tcp-flags` tcp头的标志有`SYN`,`ACK`,`FIN`,`RST`,`URG`,`PSH`,默认`ALL`表示全部.
+`iptables -t filter -I INPUT -p tcp -m tcp --dport 22 --tcp-flags ALL SYNC -j REJECT`
 
 ![tcp-flags](http://imgur.thinkgos.cn/imgur/202205071133169.png)
 
-- 扩展模块之UDP扩展与ICMP扩展
+##### 2.2.5.9 扩展模块之UDP扩展与ICMP扩展
 
-  - UDP扩展
+- UDP扩展
 
   > `--sport`与`--dport`,即匹配报文的源端口与目标端口.
-  >
   > `iptables -t filter -I INPUT -p udp -m udp --dport 136 0j ACCEPT`
 
-  - ICMP扩展
+- ICMP扩展
 
   > `--icmp-type`选项表示根据具体的type与code去匹配对应的icmp报文.
-  >
   > `--icmp-type 8/0`表示icmp报文的type为8,code为0才会被匹配到,也就是只有ping请求类型的报文才能被匹配到.
   >
   > ```shell
@@ -356,41 +363,29 @@ $ iptables -t filter -I INPUT -s 192.168.1.111 -d 192.168.1.120 -j DROP
   >
   > see [icmp扩展](http://www.zsythink.net/archives/1588)
 
-- 扩展模块之state扩展
+##### 2.2.5.10 扩展模块之state扩展
 
-> state模块可以让iptables实现"连接追踪"机制.那么,既然是"连接追踪",则必然要有"连接".
->
-> state模块的连接而言,"连接"其中的报文可以分为5种状态:
->
-> - **NEW** ：连接中的第一个包,状态就是NEW,我们可以理解为新连接的第一个包的状态为NEW.
->
-> - **ESTABLISHED**：我们可以把NEW状态包后面的包的状态理解为ESTABLISHED,表示连接已建立.
->
-> - **RELATED**：从字面上理解RELATED译为关系,但是这样仍然不容易理解,我们举个例子.
->
-> 比如FTP服务,FTP服务端会建立两个进程,一个命令进程,一个数据进程.
->
-> 命令进程负责服务端与客户端之间的命令传输(我们可以把这个传输过程理解成state中所谓的一个"连接",暂称为"命令连接").
->
-> 数据进程负责服务端与客户端之间的数据传输 ( 我们把这个过程暂称为"数据连接" ).
->
-> 但是具体传输哪些数据,是由命令去控制的,所以,"数据连接"中的报文与"命令连接"是有"关系"的.
->
-> 那么,"数据连接"中的报文可能就是RELATED状态,因为这些报文与"命令连接"中的报文有关系.
->
-> (注：如果想要对ftp进行连接追踪,需要单独加载对应的内核模块nf_conntrack_ftp,如果想要自动加载,可以配置/etc/sysconfig/iptables-config文件)
->
-> - **INVALID**：如果一个包没有办法被识别,或者这个包没有任何状态,那么这个包的状态就是INVALID,我们可以主动屏蔽状态为INVALID的报文.
->
-> - **UNTRACKED**：报文的状态为untracked时,表示报文未被追踪,当报文的状态为Untracked时通常表示无法找到相关的连接.
->
-> `iptables -t filter -I INPUT -m state --state RELATED,ESTABLISHED -j ACCEPT`
+`state`模块可以让`iptables`实现"连接追踪"机制.那么,既然是"连接追踪",则必然要有"连接".
+`state`模块的连接而言,"连接"其中的报文可以分为5种状态:
 
-### 2.4 黑白名单机制
+- **NEW**：连接中的第一个包,状态就是NEW,我们可以理解为新连接的第一个包的状态为NEW.
+- **ESTABLISHED**：我们可以把NEW状态包后面的包的状态理解为ESTABLISHED,表示连接已建立.
+- **RELATED**：从字面上理解`RELATED`译为关系,但是这样仍然不容易理解,我们举个例子.
+   比如FTP服务,FTP服务端会建立两个进程,一个命令进程,一个数据进程.
+   命令进程负责服务端与客户端之间的命令传输(我们可以把这个传输过程理解成state中所谓的一个"连接",暂称为"命令连接").
+   数据进程负责服务端与客户端之间的数据传输 ( 我们把这个过程暂称为"数据连接" ).
+   但是具体传输哪些数据,是由命令去控制的,所以,"数据连接"中的报文与"命令连接"是有"关系"的.
+   那么,"数据连接"中的报文可能就是RELATED状态,因为这些报文与"命令连接"中的报文有关系.
+   (注：如果想要对ftp进行连接追踪,需要单独加载对应的内核模块`nf_conntrack_ftp`,如果想要自动加载,可以配置`/etc/sysconfig/iptables-config`文件)
+- **INVALID**：如果一个包没有办法被识别,或者这个包没有任何状态,那么这个包的状态就是INVALID,我们可以主动屏蔽状态为INVALID的报文.
+- **UNTRACKED**：报文的状态为untracked时,表示报文未被追踪,当报文的状态为Untracked时通常表示无法找到相关的连接.
 
-> 白名单机制: 我们就要把所有人都当做坏人,只放行好人.
->
-> 黑名单机制: 我们就要把所有人都当成好人,只拒绝坏人.
+`iptables -t filter -I INPUT -m state --state RELATED,ESTABLISHED -j ACCEPT`
+
+### 2.3 黑白名单机制
+
+白名单机制: 我们就要把所有人都当做坏人,只放行好人.
+黑名单机制: 我们就要把所有人都当成好人,只拒绝坏人.
 
 ```shell
 # 更改链的默认规则
@@ -398,9 +393,9 @@ $ iptables -t filter -I INPUT -s 192.168.1.111 -d 192.168.1.120 -j DROP
 $ iptables -t filter -P INPUT DROP
 ```
 
-### 2.5 自定义链
+### 2.4 自定义链
 
-> 自定义链并不能直接使用,而是需要被默认链引用才能够使用
+自定义链并不能直接使用,而是需要被默认链引用才能够使用
 
 ```shell
 # 创建自定义链,
@@ -428,15 +423,12 @@ $ iptables -t filter -F MY_CHAIN
 $ iptables -t filter -X MY_CHAIN
 ```
 
-### 2.6 网络防火墙
+### 2.5 网络防火墙
 
 防火墙从逻辑上讲, 可以分为**主机防火墙**与**网络防火墙**。
 
 ​主机防火墙：针对于单个主机进行防护。
-
 ​网络防火墙： 往往处于网络入口或边缘, 针对于网络入口进行防护, 服务于防火墙背后的本地局域网。
-
-
 
 ```shell
 #如果想要iptables作为网络防火墙,iptables所在主机开启核心转发功能,以便能够转发报文.
@@ -465,114 +457,105 @@ iptables -I FORWARD -s 10.1.0.0/16 -p tcp --dport 22 -j ACCEPT
 iptables -I FORWARD -m state --state ESTABLISHED,RELATED -j ACCEPT
 ```
 
-### 2.7 动作
+### 2.6 动作
 
 "动作"与"匹配条件"一样,也有"基础"与"扩展"之分,使用扩展动作也需要借助扩展模块,但是,扩展动作可以**直接使用**,不用像使用"扩展匹配条件"那样指定特定的模块.
 
 `ACCEPT`与`DROP`都属于基础动作,而`REJECT`则属于扩展动作.
 
-1. 动作REJECT
+#### 2.6.1 动作REJECT
 
-> 动作也有自己的选项,以下以REJECT为例.
->
-> `iptables -I INPUT 2 -j REJECT --reject-with icmp-host-unreachable`
->
-> REJECT动作的常用选项为`--reject-with`,设置提示信息
->
-> - icmp-port-unreachable(不设置任何值时,默认此值)
-> - icmp-net-unreachable
->
-> - icmp-host-unreachable
->
-> - icmp-proto-unreachable
->
-> - icmp-net-prohibited
->
-> - icmp-host-pro-hibited
->
-> - icmp-admin-prohibited
+动作也有自己的选项,以下以REJECT为例.
 
-2. 动作LOG
+```shell
+iptables -I INPUT 2 -j REJECT --reject-with icmp-host-unreachable
+```
 
- > ​    使用LOG动作,可以将符合条件的报文的相关信息记录到日志中,但当前报文具体是被"接受",还是被"拒绝",都由后面的规则控制,
- > ​    换句话说,LOG动作只负责记录匹配到的报文的相关信息,不负责对报文的其他处理,如果想要对报文进行进一步的处理,可以在之后设置具体规则,进行进一步的处理
- >
- > `iptables -I INPUT -p tcp --dport 22 -j LOG`
- >
- > ​    可以查看`/var/log/messages`
- > ​     也可以将相关信息记录在指定的文件中,以防止iptables的相关信息与其他日志信息相混淆,修改`/etc/rsyslog.conf`文件(或者`/etc/syslog.conf`),
- > 在rsyslog配置文件中添加如下配置即可.
- >
- > ```shell
- > #报文相关信息会记录在 /var/log/iptables.log文
- > $ vim /etc/rsyslog.conf
- > kern.warning /var/log/iptables.log
- > 
- > 
- > # 服务重启生效
- > $ service rsyslog restart
- > ```
- >
- > LOG动作也有自己的选项,常用选项如下
- >
- > `--log-level`选项可以指定记录日志的日志级别,可用级别有**emerg,alert,crit,error,warning,notice,info,debug**.
- >
- > `--log-prefix`选项可以给记录到的相关信息添加"标签"之类的信息,以便区分各种记录到的报文信息,方便在分析时进行过滤.
- >
- > 注：`--log-prefix`对应的值不能超过29个字符.
+REJECT动作的常用选项为`--reject-with`,设置提示信息
 
- 3. 动作SNAT
+- icmp-port-unreachable(不设置任何值时,默认此值)
+- icmp-net-unreachable
+- icmp-host-unreachable
+- icmp-proto-unreachable
+- icmp-net-prohibited
+- icmp-host-pro-hibited
+- icmp-admin-prohibited
 
-    `echo 1 > /proc/sys/net/ipv4/ip_forward`开始核心转发
+#### 2.6.2 动作LOG
 
-    `iptables -t nat -A POSTROUTING -s 10.1.0.0/16 -j SNAT --to-source 192.168.1.146`意思是将来自于10.1.0.0/16网段的报文的源地址改为公司的公网IP地址.
+使用`LOG`动作,可以将符合条件的报文的相关信息记录到日志中,但当前报文具体是被"接受",还是被"拒绝",都由后面的规则控制,
+换句话说,LOG动作只负责记录匹配到的报文的相关信息,不负责对报文的其他处理,如果想要对报文进行进一步的处理,可以在之后设置具体规则,进行进一步的处理
 
- 4. 动作DNAT
+```shell
+iptables -I INPUT -p tcp --dport 22 -j LOG
+```
 
-    `iptables -t -I PREROUTING -d 192.168.1.146 -p tcp --dport 3389 -j DNAT --to-destination10.1.0.6:3389`意思是当外网主机访问公司公网IP的3389时,其报文的目标地址与端口将会被映射到10.1.0.6:3389上.
+可以查看`/var/log/messages`
+也可以将相关信息记录在指定的文件中,以防止`iptables`的相关信息与其他日志信息相混淆,修改`/etc/rsyslog.conf`文件(或者`/etc/syslog.conf`),
+在rsyslog配置文件中添加如下配置即可.
 
- 5. 动作MASQUERADE
+```shell
+#报文相关信息会记录在 /var/log/iptables.log文
+$ vim /etc/rsyslog.conf
+kern.warning /var/log/iptables.log
+# 服务重启生效
+$ service rsyslog restart
+```
 
-    MASQUERADE会动态的将源地址转换为可用的IP地址,其实与SNAT实现的功能完全一致,都是修改源地址,只不过SNAT需要指明将报文的源地址改为哪个IP,而*MASQUERADE则不用指定明确的IP,会动态的将报文的源地址修改为指定网卡上可用的IP地址*.
+`LOG`动作也有自己的选项,常用选项如下
+`--log-level`选项可以指定记录日志的日志级别,可用级别有**emerg,alert,crit,error,warning,notice,info,debug**.
+`--log-prefix`选项可以给记录到的相关信息添加"标签"之类的信息,以便区分各种记录到的报文信息,方便在分析时进行过滤.
+注：`--log-prefix`对应的值不能超过29个字符.
 
-    `iptables -t nat - POSTROUTING -s 10.1.0.0/16 -o eno50332184 -j MQSQUERADE`表示通过外网网卡出去的报文在经过POSTROUTING链时,会自动将报文的源地址修改为外网网卡上可用的IP地址,这时,即使外网网卡中的公网IP地址发生了改变,也能够正常的、动态的将内部主机的报文的源IP映射为对应的公网IP.
+#### 2.6.3 动作SNAT
 
- 6. 动作REDIRECT
+`echo 1 > /proc/sys/net/ipv4/ip_forward`开始核心转发
 
-    使用REDIRECT动作可以在本机上进行端口映射
+`iptables -t nat -A POSTROUTING -s 10.1.0.0/16 -j SNAT --to-source 192.168.1.146`
+意思是将来自于`10.1.0.0/16`网段的报文的源地址改为公司的公网IP地址.
 
-    比如,将本机的80端口映射到本机的8080端口上
+#### 2.6.4 动作DNAT
 
-    `iptables -t nat -A PREROUTING -p tcp --dport 80 -j REDIRECT --to-ports 8080`
+`iptables -t -I PREROUTING -d 192.168.1.146 -p tcp --dport 3389 -j DNAT --to-destination10.1.0.6:3389`
+意思是当外网主机访问公司公网IP的3389时,其报文的目标地址与端口将会被映射到10.1.0.6:3389上.
 
-    经过上述规则映射后,当别的机器访问本机的80端口时,报文会被重定向到本机的8080端口上.	
+#### 2.6.5 动作MASQUERADE
 
-    NOTE: REDIRECT规则只能定义在PREROUTING链或者OUTPUT链中.
+`MASQUERADE`会动态的将源地址转换为可用的IP地址,其实与SNAT实现的功能完全一致,都是修改源地址,只不过SNAT需要指明将报文的源地址改为哪个IP,而*MASQUERADE则不用指定明确的IP,会动态的将报文的源地址修改为指定网卡上可用的IP地址*.
 
-### 2.8 总结
+`iptables -t nat - POSTROUTING -s 10.1.0.0/16 -o eno50332184 -j MQSQUERADE`
+表示通过外网网卡出去的报文在经过`POSTROUTING`链时,会自动将报文的源地址修改为外网网卡上可用的IP地址,这时,即使外网网卡中的公网IP地址发生了改变,也能够正常的、动态的将内部主机的报文的源IP映射为对应的公网IP.
 
-**1**、规则的顺序非常重要.
+#### 2.6.6 动作REDIRECT
 
-> 如果报文已经被前面的规则匹配到,IPTABLES则会对报文执行对应的动作,通常是ACCEPT或者REJECT,报文被放行或拒绝以后,即使后面的规则也能匹配到刚才放行或拒绝的报文,也没有机会再对报文执行相应的动作了(前面规则的动作为LOG时除外),所以,**针对相同服务的规则,更严格的规则应该放在前面**. 
+使用REDIRECT动作可以在本机上进行端口映射
+比如,将本机的80端口映射到本机的8080端口上
 
-**2**、当规则中有多个匹配条件时,条件之间默认存在"与"的关系.
+`iptables -t nat -A PREROUTING -p tcp --dport 80 -j REDIRECT --to-ports 8080`
+
+经过上述规则映射后,当别的机器访问本机的80端口时,报文会被重定向到本机的8080端口上.
+
+**NOTE**: `REDIRECT`规则只能定义在`PREROUTING`链或者`OUTPUT`链中.
+
+### 2.7 总结
+
+**1**. 规则的顺序非常重要.
+
+> 如果报文已经被前面的规则匹配到,IPTABLES则会对报文执行对应的动作,通常是ACCEPT或者REJECT,报文被放行或拒绝以后,即使后面的规则也能匹配到刚才放行或拒绝的报文,也没有机会再对报文执行相应的动作了(前面规则的动作为LOG时除外),所以,**针对相同服务的规则,更严格的规则应该放在前面**.
+
+**2**. 当规则中有多个匹配条件时,条件之间默认存在"与"的关系.
 
 > 如果一条规则中包含了多个匹配条件,那么报文必须同时满足这个规则中的所有匹配条件,报文才能被这条规则匹配到.
 
-**3**、在不考虑1的情况下,应该将更容易且经常被匹配到的规则放置在前面.
+**3**. 在不考虑1的情况下,应该将更容易且经常被匹配到的规则放置在前面.
 
 > 比如,你写了两条规则,一条针对sshd服务,一条针对web服务.
->
 > 假设,一天之内,有20000个请求访问web服务,有200个请求访问sshd服务,
->
 > 那么,应该将针对web服务的规则放在前面,针对sshd的规则放在后面,因为访问web服务的请求频率更高.
->
 > 如果将sshd的规则放在前面,当报文是访问web服务时,sshd的规则也要白白的验证一遍,由于访问web服务的频率更高,白白耗费的资源就更多.
->
 > 如果web服务的规则放在前面,由于访问web服务的频率更高,所以无用功会比较少.
->
 > 换句话说就是,在没有顺序要求的情况下,不同类别的规则,被匹配次数多的、匹配频率高的规则应该放在前面.
 
-**4**、当IPTABLES所在主机作为网络防火 墙时,在配置规则时,应着重考虑方向性,双向都要考虑,从外到内,从内到外.
+**4**. 当`IPTABLES`所在主机作为网络防火 墙时,在配置规则时,应着重考虑方向性,双向都要考虑,从外到内,从内到外.
 
-**5**、在配置IPTABLES白名单时,往往会将链的默认策略设置为ACCEPT,通过在链的最后设置REJECT规则实现白名单机制,而不是将链的默认策略设置为DROP,如果将链的默认策略设置为DROP,当链中的规则被清空时,管理员的请求也将会被DROP掉.
+**5**. 在配置`IPTABLES`白名单时,往往会将链的默认策略设置为ACCEPT,通过在链的最后设置`REJECT`规则实现白名单机制,而不是将链的默认策略设置为`DROP`,如果将链的默认策略设置为`DROP`,当链中的规则被清空时,管理员的请求也将会被`DROP`掉.
