@@ -1,0 +1,401 @@
+<!DOCTYPE HTML>
+<html lang="en" class="light" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>css选择器汇总 - knowledge</title>
+
+
+        <!-- Custom HTML head -->
+        
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="../favicon.svg">
+        <link rel="shortcut icon" href="../favicon.png">
+        <link rel="stylesheet" href="../css/variables.css">
+        <link rel="stylesheet" href="../css/general.css">
+        <link rel="stylesheet" href="../css/chrome.css">
+        <link rel="stylesheet" href="../css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="../FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="../fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" href="../highlight.css">
+        <link rel="stylesheet" href="../tomorrow-night.css">
+        <link rel="stylesheet" href="../ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+
+        <!-- MathJax -->
+        <script async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    </head>
+    <body class="sidebar-visible no-js">
+    <div id="body-container">
+        <!-- Provide site root to javascript -->
+        <script>
+            var path_to_root = "../";
+            var default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "navy" : "light";
+        </script>
+
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                var theme = localStorage.getItem('mdbook-theme');
+                var sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            var theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            var html = document.querySelector('html');
+            html.classList.remove('light')
+            html.classList.add(theme);
+            var body = document.querySelector('body');
+            body.classList.remove('no-js')
+            body.classList.add('js');
+        </script>
+
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            var body = document.querySelector('body');
+            var sidebar = null;
+            var sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+            }
+            sidebar_toggle.checked = sidebar === 'visible';
+            body.classList.remove('sidebar-visible');
+            body.classList.add("sidebar-" + sidebar);
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <div class="sidebar-scrollbox">
+                <ol class="chapter"><li class="chapter-item affix "><a href="../index.html">Introduction</a></li><li class="chapter-item "><a href="../rust/index.html"><strong aria-hidden="true">1.</strong> Rust</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../rust/00-material.html"><strong aria-hidden="true">1.1.</strong> 资料</a></li><li class="chapter-item "><a href="../rust/01-memory-model.html"><strong aria-hidden="true">1.2.</strong> 内存模型</a></li><li class="chapter-item "><a href="../rust/02-owner-borrow.html"><strong aria-hidden="true">1.3.</strong> 所有权机制-借用规则</a></li><li class="chapter-item "><a href="../rust/03-type-system.html"><strong aria-hidden="true">1.4.</strong> 类型系统</a></li><li class="chapter-item "><a href="../rust/04-concurrent.html"><strong aria-hidden="true">1.5.</strong> 并发模型</a></li><li class="chapter-item "><a href="../rust/05-macro.html"><strong aria-hidden="true">1.6.</strong> 宏</a></li><li class="chapter-item "><a href="../rust/06-closure.html"><strong aria-hidden="true">1.7.</strong> 闭包</a></li><li class="chapter-item "><a href="../rust/07-error-handling.html"><strong aria-hidden="true">1.8.</strong> 错误处理</a></li><li class="chapter-item "><a href="../rust/08-smart-pointer.html"><strong aria-hidden="true">1.9.</strong> 智能指针</a></li><li class="chapter-item "><a href="../rust/09-builtin-trait.html"><strong aria-hidden="true">1.10.</strong> 标准trait</a></li><li class="chapter-item "><a href="../rust/10-generics.html"><strong aria-hidden="true">1.11.</strong> 类型系统: 泛型</a></li><li class="chapter-item "><a href="../rust/11-trait.html"><strong aria-hidden="true">1.12.</strong> 类型系统: trait</a></li><li class="chapter-item "><a href="../rust/12-borrow.html"><strong aria-hidden="true">1.13.</strong> 处理借用数据的模块: std::borrow</a></li><li class="chapter-item "><a href="../rust/20-how-to-read-code.html"><strong aria-hidden="true">1.14.</strong> 如何阅读源码</a></li></ol></li><li class="chapter-item "><a href="../actix-web/index.html"><strong aria-hidden="true">2.</strong> actix-web</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../actix-web/01-handler.html"><strong aria-hidden="true">2.1.</strong> handler原理</a></li></ol></li><li class="chapter-item "><a href="../daily-rust/index.html"><strong aria-hidden="true">3.</strong> rust日记</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../daily-rust/00-crate-you-need-to-know.html"><strong aria-hidden="true">3.1.</strong> 你应知道的crate</a></li><li class="chapter-item "><a href="../daily-rust/01-using-immut-vec.html"><strong aria-hidden="true">3.2.</strong> 不可变数据建议Rc&lt;[T]&gt;/Arc&lt;[T]&gt;替代Vec&lt;T&gt;</a></li><li class="chapter-item "><a href="../daily-rust/02-rust-temporary-lifetimes-and-super-let.html"><strong aria-hidden="true">3.3.</strong> (译)Rust临时生命周期和"Super Let"</a></li><li class="chapter-item "><a href="../daily-rust/03-macro.html"><strong aria-hidden="true">3.4.</strong> 宏系统</a></li><li class="chapter-item "><a href="../daily-rust/04-rust-cross-compile.html"><strong aria-hidden="true">3.5.</strong> rust交叉编译</a></li></ol></li><li class="chapter-item "><a href="../golang/index.html"><strong aria-hidden="true">4.</strong> Golang</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../golang/ast/index.html"><strong aria-hidden="true">4.1.</strong> Golang AST</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../golang/ast/01-token.html"><strong aria-hidden="true">4.1.1.</strong> token</a></li><li class="chapter-item "><a href="../golang/ast/02-基础面值.html"><strong aria-hidden="true">4.1.2.</strong> 基础面值</a></li><li class="chapter-item "><a href="../golang/ast/03-基础表达式.html"><strong aria-hidden="true">4.1.3.</strong> 基础表达式</a></li><li class="chapter-item "><a href="../golang/ast/04-代码结构.html"><strong aria-hidden="true">4.1.4.</strong> 代码结构</a></li></ol></li><li class="chapter-item "><a href="../golang/00-material.html"><strong aria-hidden="true">4.2.</strong> 资料</a></li><li class="chapter-item "><a href="../golang/01-quiz-basic.html"><strong aria-hidden="true">4.3.</strong> quiz basic</a></li><li class="chapter-item "><a href="../golang/02-quiz-hard.html"><strong aria-hidden="true">4.4.</strong> quiz hard</a></li></ol></li><li class="chapter-item expanded "><a href="../pickup/index.html"><strong aria-hidden="true">5.</strong> Pickup</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../pickup/01-logql.html"><strong aria-hidden="true">5.1.</strong> logql</a></li><li class="chapter-item "><a href="../pickup/02-promql.html"><strong aria-hidden="true">5.2.</strong> promql</a></li><li class="chapter-item "><a href="../pickup/04-xpath语法.html"><strong aria-hidden="true">5.3.</strong> xpath语法</a></li><li class="chapter-item expanded "><a href="../pickup/05-css选择器汇总.html" class="active"><strong aria-hidden="true">5.4.</strong> css选择器汇总</a></li><li class="chapter-item "><a href="../pickup/06-opentelemetry.html"><strong aria-hidden="true">5.5.</strong> opentelemetry</a></li><li class="chapter-item "><a href="../pickup/07-grep-sed-awk.html"><strong aria-hidden="true">5.6.</strong> grep sed awk</a></li><li class="chapter-item "><a href="../pickup/20-linux信号.html"><strong aria-hidden="true">5.7.</strong> linux信号</a></li><li class="chapter-item "><a href="../pickup/21-linux虚拟化-虚拟网卡技术.html"><strong aria-hidden="true">5.8.</strong> linux虚拟化 虚拟网卡技术</a></li><li class="chapter-item "><a href="../pickup/22-iptables.html"><strong aria-hidden="true">5.9.</strong> iptables</a></li><li class="chapter-item "><a href="../pickup/23-netcat瑞士军刀.html"><strong aria-hidden="true">5.10.</strong> netcat瑞士军刀</a></li><li class="chapter-item "><a href="../pickup/24-netstat详解.html"><strong aria-hidden="true">5.11.</strong> netstat详解</a></li><li class="chapter-item "><a href="../pickup/25-tcpdump指南.html"><strong aria-hidden="true">5.12.</strong> tcpdump详解</a></li><li class="chapter-item "><a href="../pickup/26-jq详解.html"><strong aria-hidden="true">5.13.</strong> jq详解</a></li><li class="chapter-item "><a href="../pickup/80-shell语法.html"><strong aria-hidden="true">5.14.</strong> shell语法</a></li><li class="chapter-item "><a href="../pickup/81-cron语法.html"><strong aria-hidden="true">5.15.</strong> cron语法</a></li><li class="chapter-item "><a href="../pickup/82-yaml语法.html"><strong aria-hidden="true">5.16.</strong> yaml语法</a></li><li class="chapter-item "><a href="../pickup/83-protobuf语法.html"><strong aria-hidden="true">5.17.</strong> protobuf语法</a></li><li class="chapter-item "><a href="../pickup/84-ansible.html"><strong aria-hidden="true">5.18.</strong> ansible</a></li><li class="chapter-item "><a href="../pickup/85-glob.html"><strong aria-hidden="true">5.19.</strong> glob</a></li><li class="chapter-item "><a href="../pickup/100-git.html"><strong aria-hidden="true">5.20.</strong> git</a></li><li class="chapter-item "><a href="../pickup/101-rsa.html"><strong aria-hidden="true">5.21.</strong> rsa</a></li><li class="chapter-item "><a href="../pickup/999-link.html"><strong aria-hidden="true">5.22.</strong> link</a></li></ol></li></ol>
+            </div>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <!-- Track and set sidebar scroll position -->
+        <script>
+            var sidebarScrollbox = document.querySelector('#sidebar .sidebar-scrollbox');
+            sidebarScrollbox.addEventListener('click', function(e) {
+                if (e.target.tagName === 'A') {
+                    sessionStorage.setItem('sidebar-scroll', sidebarScrollbox.scrollTop);
+                }
+            }, { passive: true });
+            var sidebarScrollTop = sessionStorage.getItem('sidebar-scroll');
+            sessionStorage.removeItem('sidebar-scroll');
+            if (sidebarScrollTop) {
+                // preserve sidebar scroll position when navigating via links within sidebar
+                sidebarScrollbox.scrollTop = sidebarScrollTop;
+            } else {
+                // scroll sidebar to current active section when navigating via "next/previous chapter" buttons
+                var activeSection = document.querySelector('#sidebar .active');
+                if (activeSection) {
+                    activeSection.scrollIntoView({ block: 'center' });
+                }
+            }
+        </script>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </label>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search. (Shortkey: s)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="S" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">knowledge</h1>
+
+                    <div class="right-buttons">
+                        <a href="../print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+                        <a href="https://github.com/thinkgos/knowledge" title="Git repository" aria-label="Git repository">
+                            <i id="git-repository-button" class="fa fa-github"></i>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h1 id="css选择器"><a class="header" href="#css选择器">css选择器</a></h1>
+<p><img src="http://imgur.thinkgos.cn/imgur/202205071128045.gif" alt="" /></p>
+<h2 id="一-元素选择器"><a class="header" href="#一-元素选择器">一. 元素选择器</a></h2>
+<p>文档的元素就是元素先择器,是最基本的选择器</p>
+<pre><code class="language-css">html { color:black; }
+h1 { color:blue; }
+h2 { color:silver; }
+</code></pre>
+<h2 id="二-选择器分组"><a class="header" href="#二-选择器分组">二. 选择器分组</a></h2>
+<p>可以对选择器进行分组(<code>以','分隔</code>), 这样, 被分组的选择器就可以分享相同的声明。</p>
+<pre><code class="language-css">h1,h2,h3,h4,h5,h6 {
+  color: green;
+}
+</code></pre>
+<h2 id="三-类选择器"><a class="header" href="#三-类选择器">三 类选择器</a></h2>
+<p>类选择器允许以一种独立于文档元素的方式来指定样式。</p>
+<pre><code class="language-html">&lt;h1 class="important"&gt;
+This heading is very important.
+&lt;/h1&gt;
+</code></pre>
+<pre><code class="language-css">.important {color:red;}
+</code></pre>
+<h2 id="四-id选择器"><a class="header" href="#四-id选择器">四. ID选择器</a></h2>
+<p>ID 选择器允许以一种独立于文档元素的方式来指定样式</p>
+<pre><code class="language-html">&lt;p id="intro"&gt;This is a paragraph of introduction.&lt;/p&gt;
+</code></pre>
+<pre><code class="language-css">#intro {font-weight:bold;}
+</code></pre>
+<h2 id="五-属性选择器"><a class="header" href="#五-属性选择器">五. 属性选择器</a></h2>
+<p>属性选择器可以根据元素的属性及属性值来选择元素.</p>
+<h3 id="1-简单属性选择"><a class="header" href="#1-简单属性选择">1. 简单属性选择</a></h3>
+<p>如果您希望把包含标题（title）的所有元素变为红色, 可以写作:</p>
+<pre><code class="language-css">*[title] {color:red;}  // 把包含标题（title）的所有元素变为红色
+a[href] {color:red;} // 只对有 href 属性的锚（a 元素）应用样式
+a[href][title] {color:red;} // 将同时有 href 和 title 属性的 HTML 超链接的文本设置为红色
+img[alt] {border: 5px solid red;} // 所有带有 alt 属性的图像应用样式, 从而突出显示这些有效的图像
+</code></pre>
+<h3 id="2-根据具体属性值选择"><a class="header" href="#2-根据具体属性值选择">2. 根据具体属性值选择</a></h3>
+<pre><code class="language-css">a[href="http://www.w3school.com.cn/"][title="W3School"] {color: red;} // 把多个属性-值选择器链接在一起来选择一个文档
+p[class="important warning"] {color: red;} // 根据具体属性值来选择该元素
+</code></pre>
+<div class="table-wrapper"><table><thead><tr><th style="text-align: left">选择器</th><th style="text-align: left">描述</th></tr></thead><tbody>
+<tr><td style="text-align: left">[<a href="https://www.w3school.com.cn/cssref/selector_attribute.asp"><em>attribute</em>]</a></td><td style="text-align: left">选取带有attribute属性的元素。</td></tr>
+<tr><td style="text-align: left">[<a href="https://www.w3school.com.cn/cssref/selector_attribute_value.asp"><em>attribute</em>=<em>value</em>]</a></td><td style="text-align: left">选取attribute属性值为value的元素。</td></tr>
+<tr><td style="text-align: left">[<a href="https://www.w3school.com.cn/cssref/selector_attribute_value_contain.asp"><em>attribute</em>~=<em>value</em>]</a></td><td style="text-align: left">选取attribute属性值中包含value的元素。</td></tr>
+<tr><td style="text-align: left">[<a href="https://www.w3school.com.cn/cssref/selector_attribute_value_start.asp"><em>attribute</em>|=<em>value</em>]</a></td><td style="text-align: left">选取attribute属性值等于value或value-开头的元素, 该值必须是整个单词。</td></tr>
+<tr><td style="text-align: left">[<a href="https://www.w3school.com.cn/cssref/selector_attr_begin.asp"><em>attribute</em>^=<em>value</em>]</a></td><td style="text-align: left">选取attribute属性值value开头的每个元素。</td></tr>
+<tr><td style="text-align: left"><a href="https://www.w3school.com.cn/cssref/selector_attr_end.asp">[<em>attribute</em>$=value]</a></td><td style="text-align: left">选取attribute属性值value结尾的每个元素。</td></tr>
+<tr><td style="text-align: left"><a href="https://www.w3school.com.cn/cssref/selector_attr_contain.asp">[attribute*=value]</a></td><td style="text-align: left">选取attribute属性值包含value的每个元素。</td></tr>
+</tbody></table>
+</div>
+<h2 id="六-后代选择器"><a class="header" href="#六-后代选择器">六. 后代选择器</a></h2>
+<p>后代选择器可以选择作为某元素后代的元素(<code>以空格分隔</code>)</p>
+<pre><code class="language-css">h1 em {color:red;}
+</code></pre>
+<h2 id="七-子元素选择器"><a class="header" href="#七-子元素选择器">七. 子元素选择器</a></h2>
+<p>与后代选择器相比, 子元素选择器（Child selectors）只能选择作为某元素子元素的元素。</p>
+<pre><code class="language-css">h1 &gt; strong {color:red;}
+</code></pre>
+<h2 id="八-相邻兄弟选择器"><a class="header" href="#八-相邻兄弟选择器">八. 相邻兄弟选择器</a></h2>
+<p>相邻兄弟选择器（Adjacent sibling selector）可选择紧接在另一元素后的元素, 且二者有相同父元素。</p>
+<pre><code class="language-css">h1 + p {margin-top:50px;}
+</code></pre>
+<h2 id="九-伪类"><a class="header" href="#九-伪类">九. 伪类</a></h2>
+<p>伪类用于向某些选择器添加特殊的效果</p>
+<pre><code class="language-css">selector : pseudo-class {property: value}
+</code></pre>
+<h3 id="1-锚伪类"><a class="header" href="#1-锚伪类">1. 锚伪类</a></h3>
+<pre><code class="language-css">a:link {color: #FF0000}		/* 未访问的链接 */
+a:visited {color: #00FF00}	/* 已访问的链接 */
+a:hover {color: #FF00FF}	/* 鼠标移动到链接上 */
+a:active {color: #0000FF}	/* 选定的链接 */
+</code></pre>
+<h3 id="2-first-child-伪类"><a class="header" href="#2-first-child-伪类">2. :first-child 伪类</a></h3>
+<p>可以使用<code> :first-child</code> 伪类来选择元素的第一个子元素</p>
+<pre><code class="language-css">p:first-child {font-weight: bold;}
+li:first-child {text-transform:uppercase;}
+</code></pre>
+<h3 id="3-lang-伪类"><a class="header" href="#3-lang-伪类">3. :lang 伪类</a></h3>
+<p><code>:lang </code>伪类使你有能力为不同的语言定义特殊的规则</p>
+<pre><code class="language-css">q:lang(no)   {
+   quotes: "~" "~"
+}
+</code></pre>
+<div class="table-wrapper"><table><thead><tr><th style="text-align: left">属性</th><th style="text-align: left">描述</th><th style="text-align: left">CSS</th></tr></thead><tbody>
+<tr><td style="text-align: left"><a href="https://www.w3school.com.cn/cssref/pr_pseudo_active.asp">:active</a></td><td style="text-align: left">向被激活的元素添加样式。</td><td style="text-align: left">1</td></tr>
+<tr><td style="text-align: left"><a href="https://www.w3school.com.cn/cssref/pr_pseudo_focus.asp">:focus</a></td><td style="text-align: left">向拥有键盘输入焦点的元素添加样式。</td><td style="text-align: left">2</td></tr>
+<tr><td style="text-align: left"><a href="https://www.w3school.com.cn/cssref/pr_pseudo_hover.asp">:hover</a></td><td style="text-align: left">当鼠标悬浮在元素上方时, 向元素添加样式。</td><td style="text-align: left">1</td></tr>
+<tr><td style="text-align: left"><a href="https://www.w3school.com.cn/cssref/pr_pseudo_link.asp">:link</a></td><td style="text-align: left">向未被访问的链接添加样式。</td><td style="text-align: left">1</td></tr>
+<tr><td style="text-align: left"><a href="https://www.w3school.com.cn/cssref/pr_pseudo_visited.asp">:visited</a></td><td style="text-align: left">向已被访问的链接添加样式。</td><td style="text-align: left">1</td></tr>
+<tr><td style="text-align: left"><a href="https://www.w3school.com.cn/cssref/pr_pseudo_first-child.asp">:first-child</a></td><td style="text-align: left">向元素的第一个子元素添加样式。</td><td style="text-align: left">2</td></tr>
+<tr><td style="text-align: left"><a href="https://www.w3school.com.cn/cssref/pr_pseudo_lang.asp">:lang</a></td><td style="text-align: left">向带有指定 lang 属性的元素添加样式。</td><td style="text-align: left">2</td></tr>
+</tbody></table>
+</div>
+<h2 id="十-伪元素"><a class="header" href="#十-伪元素">十. 伪元素</a></h2>
+<p>伪元素用于向某些选择器设置特殊效果</p>
+<pre><code>selector:pseudo-element {property:value;}
+</code></pre>
+<h3 id="1-first-line-伪元素"><a class="header" href="#1-first-line-伪元素">1. "first-line" 伪元素</a></h3>
+<p><code>"first-line"</code> 伪元素用于向文本的首行设置特殊样式。</p>
+<pre><code class="language-css">p:first-line  {
+  color:#ff0000;
+  font-variant:small-caps;
+  }
+</code></pre>
+<p><strong>注释：</strong>"first-line" 伪元素只能用于块级元素。</p>
+<p>**注释：**下面的属性可应用于 "first-line" 伪元素：</p>
+<ul>
+<li>font</li>
+<li>color</li>
+<li>background</li>
+<li>word-spacing</li>
+<li>letter-spacing</li>
+<li>text-decoration</li>
+<li>vertical-align</li>
+<li>text-transform</li>
+<li>line-height</li>
+<li>clear</li>
+</ul>
+<h3 id="2-first-letter-伪元素"><a class="header" href="#2-first-letter-伪元素">2. :first-letter 伪元素</a></h3>
+<p><code>first-letter</code> 伪元素用于向文本的首字母设置特殊样式：</p>
+<pre><code class="language-css">p:first-letter
+  {
+  color:#ff0000;
+  font-size:xx-large;
+  }
+</code></pre>
+<p><strong>注释：</strong>"first-letter" 伪元素只能用于块级元素。</p>
+<p>**注释：**下面的属性可应用于 "first-letter" 伪元素：</p>
+<ul>
+<li>font</li>
+<li>color</li>
+<li>background</li>
+<li>margin</li>
+<li>padding</li>
+<li>border</li>
+<li>text-decoration</li>
+<li>vertical-align (仅当 float 为 none 时)</li>
+<li>text-transform</li>
+<li>line-height</li>
+<li>float</li>
+<li>clear</li>
+</ul>
+<h3 id="3--before-伪元素"><a class="header" href="#3--before-伪元素">3.  :before 伪元素</a></h3>
+<p><code>:before</code>伪元素可以在元素的内容前面插入新内容</p>
+<pre><code class="language-css">h1:before{
+  content:url(logo.gif);
+  }
+</code></pre>
+<h3 id="4-after-伪元素"><a class="header" href="#4-after-伪元素">4. after 伪元素</a></h3>
+<p><code>:after</code> 伪元素可以在元素的内容之后插入新内容。</p>
+<pre><code class="language-css">h1:after{
+  content:url(logo.gif);
+  }
+</code></pre>
+<div class="table-wrapper"><table><thead><tr><th style="text-align: left">属性</th><th style="text-align: left">描述</th><th style="text-align: left">CSS</th></tr></thead><tbody>
+<tr><td style="text-align: left"><a href="https://www.w3school.com.cn/cssref/pr_pseudo_first-letter.asp">:first-letter</a></td><td style="text-align: left">向文本的第一个字母添加特殊样式。</td><td style="text-align: left">1</td></tr>
+<tr><td style="text-align: left"><a href="https://www.w3school.com.cn/cssref/pr_pseudo_first-line.asp">:first-line</a></td><td style="text-align: left">向文本的首行添加特殊样式。</td><td style="text-align: left">1</td></tr>
+<tr><td style="text-align: left"><a href="https://www.w3school.com.cn/cssref/pr_pseudo_before.asp">:before</a></td><td style="text-align: left">在元素之前添加内容。</td><td style="text-align: left">2</td></tr>
+<tr><td style="text-align: left"><a href="https://www.w3school.com.cn/cssref/pr_pseudo_after.asp">:after</a></td><td style="text-align: left">在元素之后添加内容。</td><td style="text-align: left">2</td></tr>
+</tbody></table>
+</div>
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="../pickup/04-xpath语法.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+
+                            <a rel="next prefetch" href="../pickup/06-opentelemetry.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="../pickup/04-xpath语法.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+
+                    <a rel="next prefetch" href="../pickup/06-opentelemetry.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+
+
+        <script>
+            window.playground_line_numbers = true;
+        </script>
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+        <script src="../ace.js"></script>
+        <script src="../editor.js"></script>
+        <script src="../mode-rust.js"></script>
+        <script src="../theme-dawn.js"></script>
+        <script src="../theme-tomorrow_night.js"></script>
+
+        <script src="../elasticlunr.min.js"></script>
+        <script src="../mark.min.js"></script>
+        <script src="../searcher.js"></script>
+
+        <script src="../clipboard.min.js"></script>
+        <script src="../highlight.js"></script>
+        <script src="../book.js"></script>
+
+        <!-- Custom JS scripts -->
+
+
+    </div>
+    </body>
+</html>
