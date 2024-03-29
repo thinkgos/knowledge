@@ -22,20 +22,16 @@ unix  2      [ ]         DGRAM                    18444    /run/systemd/cgroups-
 
 1、**Active Internet connections** 有源TCP连接, 其中"Recv-Q"和"Send-Q"指接收队列和发送队列。
 
-​		这些数字一般都应该是0。如果不是则表示软件包正在队列中堆积。这种情况只能在非常少的情况见到。
+这些数字一般都应该是0。如果不是则表示软件包正在队列中堆积。这种情况只能在非常少的情况见到。
 
 2、**Active UNIX domain sockets** 有源Unix域套接口(和网络套接字一样, 但是只能用于本机通信, 性能可以提高一倍)。
 
 列名解释：
 
 - `Proto`：显示连接使用的*协议*。
-
 - `RefCnt`：表示连接到本套接口上的*进程号*。
-
 - `Types`：显示套接口的*类型*。
-
 - `State`：显示套接口当前的*状态*。
-
 - `Path`：表示连接到套接口的其它*进程使用的路径名*。
 
 ## 2. 常见参数
@@ -52,4 +48,4 @@ unix  2      [ ]         DGRAM                    18444    /run/systemd/cgroups-
 > `-s` 按各个协议进行统计
 > `-c` 每隔一个固定时间, 执行该netstat命令。
 >
-> NOTE: **LISTEN**和**LISTENING**的状态只有用`-a`或者`-l`才能看到。
+> NOTE: **LISTEN**和**LISTENING**的状态只有用`-a`或者`-l`才能看到.
