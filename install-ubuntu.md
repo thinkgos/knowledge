@@ -36,7 +36,7 @@ deb-src https://mirrors.aliyun.com/ubuntu/ jammy-backports main restricted unive
 ```shell
 sudo apt-get update
 sudo apt-get upgrade
-sudo apt-get install vim zsh git curl jq gcc make cmake tmux
+sudo apt-get install vim zsh git curl jq gcc make cmake tmux gcc12
 ```
 
 ### 配置git
