@@ -125,7 +125,7 @@ git clone https://github.com/thinkgos/minority.git  .minority
 # 软链接
 ln -s ~/.minority/zshrc/.zshrc ~/.zshrc
 ln -s ~/.minority/vim/.vimrc ~/.vimrc 
-ln -s ~/.minority/zshrc/starship.toml ~/.config/startship.toml 
+ln -s ~/.minority/zshrc/starship.toml ~/.config/starship.toml 
 ln -s ~/.minority/minority/zellij ~/.config/zellij
 ```
 
