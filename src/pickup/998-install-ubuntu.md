@@ -46,6 +46,8 @@ git config --global user.name ""
 git config --global user.email ""
 ```
 
+`.gitconfig`
+
 ```shell
 [user]
     name = example 
@@ -85,11 +87,39 @@ git config --global user.email ""
     colorMoved = default
 ```
 
+`.gitmessage`
+
+```shell
+# head: <type>(<scope>): <subject>                                                                                                                                                            
+# - type: feat, fix, doc, perf, style, refactor, test, chore, security, revert                                                                                                                
+# - scope: can be empty (eg. if the change is a global or difficult to assign to a single component)                                                                                          
+# - subject: start with verb (such as 'change'), 50-character line                                                                                                                            
+#                                                                                                                                                                                             
+# body: 72-character wrapped. This should answer:                                                                                                                                             
+# * Why was this change necessary?                                                                                                                                                            
+# * How does it address the problem?                                                                                                                                                          
+# * Are there any side effects?                                                                                                                                                               
+#                                                                                                                                                                                             
+# footer:                                                                                                                                                                                     
+# - Include a link to the ticket, if any.                                                                                                                                                     
+# - BREAKING CHANGE
+```
+
 ### 安装输入法
 
 ```shell
 sudo apt update
 sudo apt install fcitx5 fcitx5-chinese-addons fcitx-config-gtk 
+```
+
+配置`/etc/environment`中增加以下配置, 解决浏览器等软件无法使用的问题.
+
+```shell
+GTK_IM_MODULE=fcitx
+QT_IM_MODULE=fcitx
+XMODIFIERS=@im=fcitx
+SDL_IM_MODULE=fcitx
+GLFW_IM_MODULE=ibus
 ```
 
 配置 **语言支持** 为 `fcitx5`
@@ -98,6 +128,12 @@ sudo apt install fcitx5 fcitx5-chinese-addons fcitx-config-gtk
 
 ```shell
 sudo apt install gnome-tweaks
+```
+
+### 安装`gnome-shell-extensions`
+
+```shell
+sudo apt install gnome-shell-extensions 
 ```
 
 ### zsh配置
@@ -156,7 +192,7 @@ rustflags = ["-C", "link-arg=-fuse-ld=/usr/local/bin/mold"]
 
 ### 安装go
 
-#### 使用goup安装
+#### 使用[goup](https://github.com/thinkgos/goup-rs)安装
 
 #### 配置 `.zshenv`
 
