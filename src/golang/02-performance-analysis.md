@@ -3,7 +3,9 @@
 - [值得收藏深度解密系列: Go语言之 pprof](https://mp.weixin.qq.com/s?__biz=MzAxMTA4Njc0OQ==&mid=2651438010&idx=5&sn=9641a1dcc64b4d7b6b228c54b3da9834&chksm=80bb6548b7ccec5ef4760cfe32599568c133d97a311c0eab113f14ceecaeaa3f53a07dc0f488&mpshare=1&scene=24&srcid=&sharer_sharetime=1593169627588&sharer_shareid=fbafc624aa53cd09857fb0861ac2a16d&exportkey=AR4ME0Tlj8P7jxFrwP7KfPs%3D&pass_ticket=DDvVwMc9uE8gubEQ4Udh%2F7K9IzRY%2FCbcirMDYkaFdBlrl2%2B2VHn%2BmCXuaTNKOfGb#rd)
 - [实战Go内存泄露](https://segmentfault.com/a/1190000019222661)
 - [wolfogre 非常精彩的实战文章](https://blog.wolfogre.com/posts/go-ppof-practice/)
-- [FlameGraph:Stack trace visualizer](https://github.com/brendangregg/FlameGraph)
+- [FlameGraph: Stack trace visualizer](https://github.com/brendangregg/FlameGraph)
+- [google pprof](https://github.com/google/pprof)
+- [如何读懂pprof grap](https://git.io/JfYMW)
 
 ## 1. shell内置time指令
 
@@ -73,8 +75,8 @@ pprof 支持四种类型的分析:
 ## 3.1. pprof的作用
 
 `pprof` 是 Go 语言中可视化和分析程序运行性能的工具.
-pprof 以 [profile.proto](https://github.com/google/pprof/blob/master/proto/profile.proto) 读取分析样本的集合，并生成报告以可视化并帮助分析数据 (支持文本和图形报告).
-`profile.proto` 是一个 `Protocol Buffer v3` 的描述文件，它描述了一组 `callstack` 和 `symbolization` 信息， 作用是表示统计分析的一组采样的调用栈，是很常见的 `stacktrace` 配置文件格式.
+pprof 以 [profile.proto](https://github.com/google/pprof/blob/master/proto/profile.proto) 读取分析样本的集合, 并生成报告以可视化并帮助分析数据 (支持文本和图形报告).
+`profile.proto` 是一个 `Protocol Buffer v3` 的描述文件, 它描述了一组 `callstack` 和 `symbolization` 信息,  作用是表示统计分析的一组采样的调用栈, 是很常见的 `stacktrace` 配置文件格式.
 
 它能提供各种性能数据:
 
@@ -89,7 +91,7 @@ pprof 以 [profile.proto](https://github.com/google/pprof/blob/master/proto/prof
 > 1. CPU Profiling: 当 CPU 性能分析启用后, Go runtime 会每 10ms 就暂停一下, 记录当前运行的 goroutine 的调用堆栈及相关数据.当性能分析数据保存到硬盘后, 我们就可以分析代码中的热点了.
 > 2. Memory Profiling: 内存性能分析则是在堆 (Heap) 分配的时候, 记录一下调用堆栈.默认情况下, 是每 1000 次分配, 取样一次, 这个数值可以改变.栈(Stack)分配, 由于会随时释放, 因此不会被内存分析所记录. 由于内存分析是取样方式, 并且也因为其记录的是分配内存, 而不是使用内存. 因此使用内存性能分析工具来准确判断程序具体的内存使用是比较困难的.
 > 3. Block Profiling: 阻塞分析是一个很独特的分析, 它有点儿类似于 CPU 性能分析, 但是它所记录的是 goroutine 等待资源所花的时间.阻塞分析对分析程序并发瓶颈非常有帮助, 阻塞性能分析可以显示出什么时候出现了大批的 goroutine 被阻塞了.阻塞性能分析是特殊的分析工具, 在排除 CPU 和内存瓶颈前, 不应该用它来分析.
-> 4. Mutex Profiling: 互斥锁分析，报告互斥锁的竞争情况
+> 4. Mutex Profiling: 互斥锁分析, 报告互斥锁的竞争情况
 
 ### 3.1.1 如何使用
 
@@ -191,6 +193,10 @@ go tool pprof cpu.prof
 - heap的flat, sum, cum与上面类似, 只不过计算的是内存大小
   - `-inuse_space`: 分析应用程序的常驻内存占用情况
   - `-alloc_objects`: 分析应用程序的内存临时分配情况
+
+调用图中解释:
+
+在 `cpu profile` 中, 一个是方法运行的时间占比, 一个是它在采样的堆栈中出现的时间占比 (前者是 `flat` 时间, 后者则是 `cumulate` 时间占比); 框越大, 代表耗时越多或是内存分配越多。
 
 ## 3.2 火焰图
 
