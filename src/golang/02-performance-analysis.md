@@ -1,4 +1,4 @@
-# 性能优化
+# 性能优化pprof
 
 - [值得收藏深度解密系列: Go语言之 pprof](https://mp.weixin.qq.com/s?__biz=MzAxMTA4Njc0OQ==&mid=2651438010&idx=5&sn=9641a1dcc64b4d7b6b228c54b3da9834&chksm=80bb6548b7ccec5ef4760cfe32599568c133d97a311c0eab113f14ceecaeaa3f53a07dc0f488&mpshare=1&scene=24&srcid=&sharer_sharetime=1593169627588&sharer_shareid=fbafc624aa53cd09857fb0861ac2a16d&exportkey=AR4ME0Tlj8P7jxFrwP7KfPs%3D&pass_ticket=DDvVwMc9uE8gubEQ4Udh%2F7K9IzRY%2FCbcirMDYkaFdBlrl2%2B2VHn%2BmCXuaTNKOfGb#rd)
 - [实战Go内存泄露](https://segmentfault.com/a/1190000019222661)
@@ -6,6 +6,7 @@
 - [FlameGraph: Stack trace visualizer](https://github.com/brendangregg/FlameGraph)
 - [google pprof](https://github.com/google/pprof)
 - [如何读懂pprof grap](https://git.io/JfYMW)
+- [pprof暴露的风险](https://mmcloughlin.com/posts/your-pprof-is-showing)
 
 ## 1. shell内置time指令
 
@@ -168,7 +169,35 @@ go tool pprof http://localhost:8080/debug/pprof/block
 # 下载 mutex profile
 go tool pprof http://localhost:8080/debug/pprof/mutex
 ```
-  
+
+命令行支持命令:
+
+- `callgrind`: `callgrind`格式主要用于`KCachegrind`工具, 可视化分析函数调用和执行情况.
+- `comments`: 输出所有的profile注释信息, 帮助开发者了解和记录性能分析的元数据.
+- `disasm`: 输出带有采样注释的汇编代码列表.此功能对于需要深入了解程序在汇编级别的性能表现非常有用.
+- `dot`: 生成DOT格式的图表. DOT格式是一种图形描述语言, 可以用于`Graphviz`工具, 进行复杂的图形可视化.
+- `eog`: 通过eog工具可视化图表.此命令将生成的图表直接在eog中打开.
+- `evince`: 通过evince工具可视化图表, 与eog类似, 但使用的是Evince文档查看器.
+- `gif`: 生成GIF格式的图像, 便于在网页和报告中嵌入性能分析图表.
+- `gv`: 通过gv工具可视化图表. gv是一个基于X11的PostScript和PDF查看器.
+- `kcachegrind`: 在`KCachegrind`工具中可视化报告. `KCachegrind`是一个强大的性能分析工具, 特别适用于处理`callgrind`格式的文件.
+- `list`: 输出与正则表达式匹配的函数的注释源代码, 帮助开发者直接在源代码级别查看性能瓶颈.
+- `pdf`: 生成PDF格式的图表, 便于打印和分享
+- `peek`: 输出与正则表达式匹配的函数的调用者和被调用者信息
+- `png`: 生成PNG格式的图像, 与GIF类似, 但适用于需要高质量静态图像的场景.
+- `proto`: 以压缩protobuf格式输出profile数据.这种格式适用于数据交换和存储.
+- `ps`: 生成PostScript格式的图表, 便于高质量打印.
+- `raw`: 输出原始profile数据的文本表示, 用于深入分析或自定义处理.
+- `svg`: 生成SVG格式的图像, 适用于需要矢量图形的场景, 如网页嵌入和缩放显示
+- `tags`: 输出profile中的所有标签信息, 帮助开发者了解和筛选性能数据
+- `text`: 以文本形式输出主要的性能数据条目, 便于快速查看和分析.
+- `top`: 以文本形式输出性能数据的主要条目, 类似于Linux中的top命令, 帮助开发者快速定位性能热点.
+- `topproto`: 以压缩protobuf格式输出主要的性能数据条目, 结合了top和proto命令的功能.
+- `traces`: 以文本形式输出所有的profile样本数据, 适用于详细的逐样本分析.
+- `tree`: 以文本形式输出调用图, 帮助开发者以树形结构查看函数调用关系.
+- `web`: 通过默认的网页浏览器可视化图表, 使得性能分析结果更易于共享和展示.
+- `weblist`: 在网页浏览器中显示带注释的源代码, 与list命令类似, 但提供了更友好的界面.
+
 #### 通过可视化界面(需要`graphviz`支持)
 
 ```shell
@@ -188,13 +217,13 @@ go tool pprof cpu.prof
   - `flat`: 本函数的执行耗时
   - `flat%`: flat占CPU总时间的比例
   - `sum%`: 本函数累积使用CPU总比例
-  - `cum`: 本函数加上该函数调用的函数总耗时
+  - `cum`: 本函数加上调用的函数总耗时
   - `cum%`: cum占CPU总时间的比例
 - heap的flat, sum, cum与上面类似, 只不过计算的是内存大小
   - `-inuse_space`: 分析应用程序的常驻内存占用情况
   - `-alloc_objects`: 分析应用程序的内存临时分配情况
 
-在 `cpu profile` 中, 一个是方法运行的时间占比, 一个是它在采样的堆栈中出现的时间占比 (前者是 `flat` 时间, 后者则是 `cum` 时间占比); 框越大, 代表耗时越多或是内存分配越多。
+在 `cpu profile` 中, 一个是方法运行的时间占比, 一个是它在采样的堆栈中出现的时间占比 (前者是 `flat` 时间, 后者则是 `cum` 时间占比); 框越大, 代表耗时越多或是内存分配越多.
 
 #### 解读调用图
 
@@ -203,8 +232,8 @@ go tool pprof cpu.prof
   - 大的负`cum`为绿色, 负值最有可能出现在剖面比较中
   - `cum`接近零为灰色
 - 节点字体大小:
-  - 字体大小越大，表示`flat`绝对值越大.
-  - 字体大小越小，表示`flat`绝对值越小.
+  - 字体大小越大, 表示`flat`绝对值越大.
+  - 字体大小越小, 表示`flat`绝对值越小.
 - 边权重:
   - 边越厚, 表示在该路径上使用的资源越多.
   - 边越细, 表示在该路径上使用的资源越少.
