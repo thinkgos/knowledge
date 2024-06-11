@@ -1,10 +1,10 @@
 # css选择器
 
-![](http://imgur.thinkgos.cn/imgur/202205071128045.gif)
+![selector](../assets/css_selector.gif)
 
-## 一. 元素选择器
+## 1. 元素选择器
 
-文档的元素就是元素先择器,是最基本的选择器
+文档的元素就是元素选择器,是最基本的选择器
 
 ```css
 html { color:black; }
@@ -12,9 +12,9 @@ h1 { color:blue; }
 h2 { color:silver; }
 ```
 
-## 二. 选择器分组
+## 2. 选择器分组
 
-可以对选择器进行分组(`以','分隔`), 这样, 被分组的选择器就可以分享相同的声明。
+对选择器进行分组(`以','分隔`), 这样, 被分组的选择器就可以分享相同的声明.
 
 ```css
 h1,h2,h3,h4,h5,h6 {
@@ -22,9 +22,9 @@ h1,h2,h3,h4,h5,h6 {
 }
 ```
 
-## 三 类选择器
+## 3. 类选择器
 
-类选择器允许以一种独立于文档元素的方式来指定样式。
+类选择器允许以一种独立于文档元素的方式来指定样式.
 
 ```html
 <h1 class="important">
@@ -36,9 +36,9 @@ This heading is very important.
 .important {color:red;}
 ```
 
-## 四. ID选择器
+## 4. ID选择器
 
-ID 选择器允许以一种独立于文档元素的方式来指定样式
+ID选择器允许以一种独立于文档元素的方式来指定样式
 
 ```html
 <p id="intro">This is a paragraph of introduction.</p>
@@ -48,11 +48,11 @@ ID 选择器允许以一种独立于文档元素的方式来指定样式
 #intro {font-weight:bold;}
 ```
 
-## 五. 属性选择器
+## 5. 属性选择器
 
 属性选择器可以根据元素的属性及属性值来选择元素.
 
-### 1. 简单属性选择
+### 5.1. 简单属性选择
 
 如果您希望把包含标题（title）的所有元素变为红色, 可以写作: 
 
@@ -63,7 +63,7 @@ a[href][title] {color:red;} // 将同时有 href 和 title 属性的 HTML 超链
 img[alt] {border: 5px solid red;} // 所有带有 alt 属性的图像应用样式, 从而突出显示这些有效的图像
 ```
 
-### 2. 根据具体属性值选择
+### 5.2. 根据具体属性值选择
 
 ```css
 a[href="http://www.w3school.com.cn/"][title="W3School"] {color: red;} // 把多个属性-值选择器链接在一起来选择一个文档
@@ -72,15 +72,15 @@ p[class="important warning"] {color: red;} // 根据具体属性值来选择该�
 
 | 选择器                                                       | 描述                                                         |
 | :----------------------------------------------------------- | :----------------------------------------------------------- |
-| [[*attribute*\]](https://www.w3school.com.cn/cssref/selector_attribute.asp) | 选取带有attribute属性的元素。                                |
-| [[*attribute*=*value*\]](https://www.w3school.com.cn/cssref/selector_attribute_value.asp) | 选取attribute属性值为value的元素。                           |
-| [[*attribute*~=*value*\]](https://www.w3school.com.cn/cssref/selector_attribute_value_contain.asp) | 选取attribute属性值中包含value的元素。                       |
-| [[*attribute*\|=*value*\]](https://www.w3school.com.cn/cssref/selector_attribute_value_start.asp) | 选取attribute属性值等于value或value-开头的元素, 该值必须是整个单词。 |
-| [[*attribute*^=*value*\]](https://www.w3school.com.cn/cssref/selector_attr_begin.asp) | 选取attribute属性值value开头的每个元素。                     |
-| [[*attribute*$=value]](https://www.w3school.com.cn/cssref/selector_attr_end.asp) | 选取attribute属性值value结尾的每个元素。                     |
-| [[attribute*=value]](https://www.w3school.com.cn/cssref/selector_attr_contain.asp) | 选取attribute属性值包含value的每个元素。                     |
+| [[*attribute*\]](https://www.w3school.com.cn/cssref/selector_attribute.asp) | 选取带有`attribute`属性的元素.                                |
+| [[*attribute*=*value*\]](https://www.w3school.com.cn/cssref/selector_attribute_value.asp) | 选取`attribute`属性值为`value`的元素.                           |
+| [[*attribute*~=*value*\]](https://www.w3school.com.cn/cssref/selector_attribute_value_contain.asp) | 选取`attribute`属性值中包含`value`的元素.                       |
+| [[*attribute*\|=*value*\]](https://www.w3school.com.cn/cssref/selector_attribute_value_start.asp) | 选取`attribute`属性值等于`value`或`value`开头的元素, 该值必须是整个单词. |
+| [[*attribute*^=*value*\]](https://www.w3school.com.cn/cssref/selector_attr_begin.asp) | 选取`attribute`属性值`value`开头的每个元素.                     |
+| [[*attribute*$=value]](https://www.w3school.com.cn/cssref/selector_attr_end.asp) | 选取`attribute`属性值value结尾的每个元素.                     |
+| [[attribute*=value]](https://www.w3school.com.cn/cssref/selector_attr_contain.asp) | 选取`attribute`属性值包含`value`的每个元素.                     |
 
-## 六. 后代选择器
+## 6. 后代选择器
 
 后代选择器可以选择作为某元素后代的元素(`以空格分隔`)
 
@@ -88,9 +88,9 @@ p[class="important warning"] {color: red;} // 根据具体属性值来选择该�
 h1 em {color:red;}
 ```
 
-## 七. 子元素选择器
+## 7. 子元素选择器
 
-与后代选择器相比, 子元素选择器（Child selectors）只能选择作为某元素子元素的元素。
+与后代选择器相比, 子元素选择器（Child selectors）只能选择作为某元素子元素的元素(`以>分隔`).
 
 ```css
 h1 > strong {color:red;}
@@ -98,7 +98,7 @@ h1 > strong {color:red;}
 
 ## 八. 相邻兄弟选择器
 
-相邻兄弟选择器（Adjacent sibling selector）可选择紧接在另一元素后的元素, 且二者有相同父元素。
+相邻兄弟选择器（Adjacent sibling selector）可选择**紧接**在另一元素后的元素, 且二者有相同父元素(`以+分隔`).
 
 ```css
 h1 + p {margin-top:50px;}
@@ -115,10 +115,10 @@ selector : pseudo-class {property: value}
 ### 1. 锚伪类
 
 ```css
-a:link {color: #FF0000}		/* 未访问的链接 */
-a:visited {color: #00FF00}	/* 已访问的链接 */
-a:hover {color: #FF00FF}	/* 鼠标移动到链接上 */
-a:active {color: #0000FF}	/* 选定的链接 */
+a:link {color: #FF0000}    /* 未访问的链接 */
+a:visited {color: #00FF00}  /* 已访问的链接 */
+a:hover {color: #FF00FF}  /* 鼠标移动到链接上 */
+a:active {color: #0000FF}  /* 选定的链接 */
 ```
 
 ### 2. :first-child 伪类
@@ -142,13 +142,13 @@ q:lang(no)   {
 
 | 属性                                                         | 描述                                     | CSS  |
 | :----------------------------------------------------------- | :--------------------------------------- | :--- |
-| [:active](https://www.w3school.com.cn/cssref/pr_pseudo_active.asp) | 向被激活的元素添加样式。                 | 1    |
-| [:focus](https://www.w3school.com.cn/cssref/pr_pseudo_focus.asp) | 向拥有键盘输入焦点的元素添加样式。       | 2    |
-| [:hover](https://www.w3school.com.cn/cssref/pr_pseudo_hover.asp) | 当鼠标悬浮在元素上方时, 向元素添加样式。 | 1    |
-| [:link](https://www.w3school.com.cn/cssref/pr_pseudo_link.asp) | 向未被访问的链接添加样式。               | 1    |
-| [:visited](https://www.w3school.com.cn/cssref/pr_pseudo_visited.asp) | 向已被访问的链接添加样式。               | 1    |
-| [:first-child](https://www.w3school.com.cn/cssref/pr_pseudo_first-child.asp) | 向元素的第一个子元素添加样式。           | 2    |
-| [:lang](https://www.w3school.com.cn/cssref/pr_pseudo_lang.asp) | 向带有指定 lang 属性的元素添加样式。     | 2    |
+| [:active](https://www.w3school.com.cn/cssref/pr_pseudo_active.asp) | 向被激活的元素添加样式.                 | 1    |
+| [:focus](https://www.w3school.com.cn/cssref/pr_pseudo_focus.asp) | 向拥有键盘输入焦点的元素添加样式.       | 2    |
+| [:hover](https://www.w3school.com.cn/cssref/pr_pseudo_hover.asp) | 当鼠标悬浮在元素上方时, 向元素添加样式. | 1    |
+| [:link](https://www.w3school.com.cn/cssref/pr_pseudo_link.asp) | 向未被访问的链接添加样式.               | 1    |
+| [:visited](https://www.w3school.com.cn/cssref/pr_pseudo_visited.asp) | 向已被访问的链接添加样式.               | 1    |
+| [:first-child](https://www.w3school.com.cn/cssref/pr_pseudo_first-child.asp) | 向元素的第一个子元素添加样式.           | 2    |
+| [:lang](https://www.w3school.com.cn/cssref/pr_pseudo_lang.asp) | 向带有指定 lang 属性的元素添加样式.     | 2    |
 
 ## 十. 伪元素
 
@@ -160,7 +160,7 @@ selector:pseudo-element {property:value;}
 
 ### 1. "first-line" 伪元素
 
-`"first-line"` 伪元素用于向文本的首行设置特殊样式。
+`"first-line"` 伪元素用于向文本的首行设置特殊样式.
 
 ```css
 p:first-line  {
@@ -169,7 +169,7 @@ p:first-line  {
   }
 ```
 
-**注释：**"first-line" 伪元素只能用于块级元素。
+**注释：**"first-line" 伪元素只能用于块级元素.
 
 **注释：**下面的属性可应用于 "first-line" 伪元素：
 
@@ -196,7 +196,7 @@ p:first-letter
   }
 ```
 
-**注释：**"first-letter" 伪元素只能用于块级元素。
+**注释：**"first-letter" 伪元素只能用于块级元素.
 
 **注释：**下面的属性可应用于 "first-letter" 伪元素：
 
@@ -225,7 +225,7 @@ h1:before{
 
 ### 4. after 伪元素
 
-`:after` 伪元素可以在元素的内容之后插入新内容。
+`:after` 伪元素可以在元素的内容之后插入新内容.
 
 ```css
 h1:after{
@@ -235,8 +235,8 @@ h1:after{
 
 | 属性                                                         | 描述                             | CSS  |
 | :----------------------------------------------------------- | :------------------------------- | :--- |
-| [:first-letter](https://www.w3school.com.cn/cssref/pr_pseudo_first-letter.asp) | 向文本的第一个字母添加特殊样式。 | 1    |
-| [:first-line](https://www.w3school.com.cn/cssref/pr_pseudo_first-line.asp) | 向文本的首行添加特殊样式。       | 1    |
-| [:before](https://www.w3school.com.cn/cssref/pr_pseudo_before.asp) | 在元素之前添加内容。             | 2    |
-| [:after](https://www.w3school.com.cn/cssref/pr_pseudo_after.asp) | 在元素之后添加内容。             | 2    |
+| [:first-letter](https://www.w3school.com.cn/cssref/pr_pseudo_first-letter.asp) | 向文本的第一个字母添加特殊样式. | 1    |
+| [:first-line](https://www.w3school.com.cn/cssref/pr_pseudo_first-line.asp) | 向文本的首行添加特殊样式.       | 1    |
+| [:before](https://www.w3school.com.cn/cssref/pr_pseudo_before.asp) | 在元素之前添加内容.             | 2    |
+| [:after](https://www.w3school.com.cn/cssref/pr_pseudo_after.asp) | 在元素之后添加内容.             | 2    |
 
