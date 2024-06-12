@@ -1,6 +1,44 @@
 # PromQL: prometheus query language
 
-## 一. Concepts
+- [PromQL: prometheus query language](#promql-prometheus-query-language)
+  - [1. Concepts](#1-concepts)
+    - [1.1 Data model](#11-data-model)
+      - [1.1.1 Metric names and labels](#111-metric-names-and-labels)
+    - [1.1.2 Samples](#112-samples)
+    - [1.1.3 Notation](#113-notation)
+    - [1.2 Metric types](#12-metric-types)
+      - [1.2.1 Counter](#121-counter)
+      - [1.2.2 Gauge](#122-gauge)
+      - [1.2.3 Histogram](#123-histogram)
+      - [1.2.4 Summary](#124-summary)
+    - [1.3 Jobs and instances](#13-jobs-and-instances)
+  - [2. promQL](#2-promql)
+    - [2.1 Expression language data types](#21-expression-language-data-types)
+    - [2.2 literals](#22-literals)
+      - [2.2.1 String literals](#221-string-literals)
+      - [2.2.2 Float literals](#222-float-literals)
+    - [2.3 Time series Selectors](#23-time-series-selectors)
+      - [2.3.1 Instant vector selectors](#231-instant-vector-selectors)
+      - [2.3.2 Range Vector Selectors](#232-range-vector-selectors)
+        - [Time Durations](#time-durations)
+        - [Offset modifier](#offset-modifier)
+        - [@ modifier](#-modifier)
+      - [2.3.3 Subquery](#233-subquery)
+      - [2.3.4 Operators](#234-operators)
+      - [2.3.5 Functions](#235-functions)
+      - [2.3.6 Comments](#236-comments)
+      - [2.3.7 Gotchas](#237-gotchas)
+    - [2.4 Operators](#24-operators)
+      - [2.4.1 Binary operators](#241-binary-operators)
+        - [Arithmetic binary operators](#arithmetic-binary-operators)
+        - [Comparison binary operators](#comparison-binary-operators)
+        - [Logical/set binary operators](#logicalset-binary-operators)
+      - [2.4.2 Vector matching](#242-vector-matching)
+      - [2.4.3 Aggregation operators](#243-aggregation-operators)
+      - [2.4.4 Binary operator precedence](#244-binary-operator-precedence)
+    - [2.5 Functions](#25-functions)
+
+## 1. Concepts
 
 ### 1.1 Data model
 
@@ -25,7 +63,7 @@
 
 给定`Metric names`和一组`label`, 经常使用此识别时间序列：
 
-```
+```text
 <metric name>{<label name>=<label value>, ...}
 ```
 
@@ -55,7 +93,7 @@
 
 `instances`:  采集的目标实例
 
-## 二. promQL
+## 2. promQL
 
 `Prometheus`提供了一个功能性查询语言, 这使用户可以实时选择和聚合时间序列数据。表达式的结果可以显示为图形, 将其视为`Prometheus`表达式浏览器中的图形数据, 也可以通过`HTTP API`被外部系统使用。
 
@@ -79,7 +117,7 @@
 
 标量浮点值可以以格式写入文字整数或浮点数（仅包含用于更好可读性的空格）：
 
-```
+```text
 [-+]?(
       [0-9]*\.?[0-9]+([eE][-+]?[0-9]+)?
     | 0[xX][0-9a-fA-F]+
@@ -94,15 +132,15 @@
 
 瞬时向量选择器(Instant vector selectors)允许使用简单指定`Metric names`获取在给定时间戳（瞬时）选择一组时间序列样本值. 结果包含一个时间序列的瞬时向量集合.
 
-比如: 
+比如:
 
-```
+```text
 http_requests_total
 ```
 
 你可以过滤这些集合, 通过`labels`进行选择,
 
-```
+```text
 http_requests_total{job="prometheus",group="canary"}
 ```
 
@@ -119,7 +157,7 @@ http_requests_total{job="prometheus",group="canary"}
 
 区间向量选择器(Range vector)和瞬时向量集合选择器(Instant vector selectors)一样的工作系统,它从范围内选择一系列瞬时间做为集合的元素.
 
-```
+```text
 # 表示从过云5分钟内所有http_requests_total且label键值对为job,key的值
 http_requests_total{job="prometheus"}[5m]
 ```
@@ -138,7 +176,7 @@ http_requests_total{job="prometheus"}[5m]
 
 `offset`允许更改查询中各个瞬间和范围向量的时间偏移.
 
-```
+```text
 http_requests_total offset 5m
 sum(http_requests_total{method="GET"} offset 5m)
 rate(http_requests_total[5m] offset 1w)
@@ -149,7 +187,7 @@ rate(http_requests_total[5m] offset -1w)
 
 `@`修改器允许更改查询中各个即时和范围向量的评估时间。提供给`@`修改器的时间是UNIX时间戳, 并用浮点文字描述。
 
-```
+```text
 http_requests_total @ 1609746000
 ```
 
@@ -173,7 +211,7 @@ http_requests_total @ 1609746000
 
 PromQL supports line comments that start with `#`
 
-```
+```text
 # This is a comment
 ```
 
@@ -210,8 +248,6 @@ PromQL supports line comments that start with `#`
 - `or` (union)
 - `unless` (complement)
 
-
-
 #### 2.4.2 Vector matching
 
 集合之间的操作试图在左侧的每个条目中在右侧矢量中找到匹配元素。匹配行为有两种基本类型：一对一, 一对一/一对一。
@@ -243,4 +279,3 @@ PromQL supports line comments that start with `#`
 ### 2.5 Functions
 
 see [Functions](https://prometheus.io/docs/prometheus/latest/querying/functions/)
-

@@ -1,5 +1,27 @@
 # css选择器
 
+- [css选择器](#css选择器)
+  - [1. 元素选择器](#1-元素选择器)
+  - [2. 选择器分组](#2-选择器分组)
+  - [3. 类选择器](#3-类选择器)
+  - [4. ID选择器](#4-id选择器)
+  - [5. 属性选择器](#5-属性选择器)
+    - [5.1. 简单属性选择](#51-简单属性选择)
+    - [5.2. 根据具体属性值选择](#52-根据具体属性值选择)
+  - [6. 后代选择器](#6-后代选择器)
+  - [7. 子元素选择器](#7-子元素选择器)
+  - [8. 相邻兄弟选择器](#8-相邻兄弟选择器)
+  - [9. 伪类](#9-伪类)
+    - [9.1. 锚伪类](#91-锚伪类)
+    - [9.2. `:first-child`伪类](#92-first-child伪类)
+    - [9.3. `:lang`伪类](#93-lang伪类)
+  - [10. 伪元素](#10-伪元素)
+    - [10.1. `"first-line"`伪元素](#101-first-line伪元素)
+    - [10.2. `:first-letter`伪元素](#102-first-letter伪元素)
+    - [10.3. `:before`伪元素](#103-before伪元素)
+    - [10.4. `after`伪元素](#104-after伪元素)
+
+
 ![selector](../assets/css_selector.gif)
 
 ## 1. 元素选择器
@@ -54,7 +76,7 @@ ID选择器允许以一种独立于文档元素的方式来指定样式
 
 ### 5.1. 简单属性选择
 
-如果您希望把包含标题（title）的所有元素变为红色, 可以写作: 
+如果您希望把包含标题（title）的所有元素变为红色, 可以写作:
 
 ```css
 *[title] {color:red;}  // 把包含标题（title）的所有元素变为红色
@@ -96,7 +118,7 @@ h1 em {color:red;}
 h1 > strong {color:red;}
 ```
 
-## 八. 相邻兄弟选择器
+## 8. 相邻兄弟选择器
 
 相邻兄弟选择器（Adjacent sibling selector）可选择**紧接**在另一元素后的元素, 且二者有相同父元素(`以+分隔`).
 
@@ -104,7 +126,7 @@ h1 > strong {color:red;}
 h1 + p {margin-top:50px;}
 ```
 
-## 九. 伪类
+## 9. 伪类
 
 伪类用于向某些选择器添加特殊的效果
 
@@ -112,7 +134,7 @@ h1 + p {margin-top:50px;}
 selector : pseudo-class {property: value}
 ```
 
-### 1. 锚伪类
+### 9.1. 锚伪类
 
 ```css
 a:link {color: #FF0000}    /* 未访问的链接 */
@@ -121,18 +143,18 @@ a:hover {color: #FF00FF}  /* 鼠标移动到链接上 */
 a:active {color: #0000FF}  /* 选定的链接 */
 ```
 
-### 2. :first-child 伪类
+### 9.2. `:first-child`伪类
 
-可以使用` :first-child` 伪类来选择元素的第一个子元素
+可以使用`:first-child` 伪类来选择元素的第一个子元素
 
 ```css
 p:first-child {font-weight: bold;}
 li:first-child {text-transform:uppercase;}
 ```
 
-### 3. :lang 伪类
+### 9.3. `:lang`伪类
 
-`:lang `伪类使你有能力为不同的语言定义特殊的规则
+`:lang`伪类使你有能力为不同的语言定义特殊的规则
 
 ```css
 q:lang(no)   {
@@ -150,15 +172,15 @@ q:lang(no)   {
 | [:first-child](https://www.w3school.com.cn/cssref/pr_pseudo_first-child.asp) | 向元素的第一个子元素添加样式.           | 2    |
 | [:lang](https://www.w3school.com.cn/cssref/pr_pseudo_lang.asp) | 向带有指定 lang 属性的元素添加样式.     | 2    |
 
-## 十. 伪元素
+## 10. 伪元素
 
 伪元素用于向某些选择器设置特殊效果
 
-```
+```css
 selector:pseudo-element {property:value;}
 ```
 
-### 1. "first-line" 伪元素
+### 10.1. `"first-line"`伪元素
 
 `"first-line"` 伪元素用于向文本的首行设置特殊样式.
 
@@ -184,7 +206,7 @@ p:first-line  {
 - line-height
 - clear
 
-### 2. :first-letter 伪元素
+### 10.2. `:first-letter`伪元素
 
 `first-letter` 伪元素用于向文本的首字母设置特殊样式：
 
@@ -213,7 +235,7 @@ p:first-letter
 - float
 - clear
 
-### 3.  :before 伪元素
+### 10.3. `:before`伪元素
 
 `:before`伪元素可以在元素的内容前面插入新内容
 
@@ -223,7 +245,7 @@ h1:before{
   }
 ```
 
-### 4. after 伪元素
+### 10.4. `after`伪元素
 
 `:after` 伪元素可以在元素的内容之后插入新内容.
 
@@ -239,4 +261,3 @@ h1:after{
 | [:first-line](https://www.w3school.com.cn/cssref/pr_pseudo_first-line.asp) | 向文本的首行添加特殊样式.       | 1    |
 | [:before](https://www.w3school.com.cn/cssref/pr_pseudo_before.asp) | 在元素之前添加内容.             | 2    |
 | [:after](https://www.w3school.com.cn/cssref/pr_pseudo_after.asp) | 在元素之后添加内容.             | 2    |
-
