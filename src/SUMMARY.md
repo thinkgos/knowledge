@@ -44,6 +44,7 @@
   - [实战-优化](./mysql/05-实战-优化.md)
   - [实战-性能提升](./mysql/06-实战-性能提升.md)
   - [mysql数据储存](./mysql/07-mysql数据储存.md)
+  - [定位性能瓶颈](./mysql/08-定位性能瓶颈.md)
 - [Pickup](./pickup/README.md)
   - [logql](./pickup/01-logql.md)
   - [promql](./pickup/02-promql.md)
