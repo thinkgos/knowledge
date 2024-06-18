@@ -1,0 +1,641 @@
+<!DOCTYPE HTML>
+<html lang="en" class="light" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>(译)Rust临时生命周期和&quot;Super Let&quot; - knowledge</title>
+
+
+        <!-- Custom HTML head -->
+        
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="../favicon.svg">
+        <link rel="shortcut icon" href="../favicon.png">
+        <link rel="stylesheet" href="../css/variables.css">
+        <link rel="stylesheet" href="../css/general.css">
+        <link rel="stylesheet" href="../css/chrome.css">
+        <link rel="stylesheet" href="../css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="../FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="../fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" href="../highlight.css">
+        <link rel="stylesheet" href="../tomorrow-night.css">
+        <link rel="stylesheet" href="../ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+
+        <!-- MathJax -->
+        <script async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    </head>
+    <body class="sidebar-visible no-js">
+    <div id="body-container">
+        <!-- Provide site root to javascript -->
+        <script>
+            var path_to_root = "../";
+            var default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "navy" : "light";
+        </script>
+
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                var theme = localStorage.getItem('mdbook-theme');
+                var sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            var theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            var html = document.querySelector('html');
+            html.classList.remove('light')
+            html.classList.add(theme);
+            var body = document.querySelector('body');
+            body.classList.remove('no-js')
+            body.classList.add('js');
+        </script>
+
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            var body = document.querySelector('body');
+            var sidebar = null;
+            var sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+            }
+            sidebar_toggle.checked = sidebar === 'visible';
+            body.classList.remove('sidebar-visible');
+            body.classList.add("sidebar-" + sidebar);
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <div class="sidebar-scrollbox">
+                <ol class="chapter"><li class="chapter-item affix "><a href="../index.html">Introduction</a></li><li class="chapter-item "><a href="../rust/index.html"><strong aria-hidden="true">1.</strong> Rust</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../rust/00-material.html"><strong aria-hidden="true">1.1.</strong> 资料</a></li><li class="chapter-item "><a href="../rust/01-memory-model.html"><strong aria-hidden="true">1.2.</strong> 内存模型</a></li><li class="chapter-item "><a href="../rust/02-owner-borrow.html"><strong aria-hidden="true">1.3.</strong> 所有权机制-借用规则</a></li><li class="chapter-item "><a href="../rust/03-type-system.html"><strong aria-hidden="true">1.4.</strong> 类型系统</a></li><li class="chapter-item "><a href="../rust/04-concurrent.html"><strong aria-hidden="true">1.5.</strong> 并发模型</a></li><li class="chapter-item "><a href="../rust/05-macro.html"><strong aria-hidden="true">1.6.</strong> 宏</a></li><li class="chapter-item "><a href="../rust/06-closure.html"><strong aria-hidden="true">1.7.</strong> 闭包</a></li><li class="chapter-item "><a href="../rust/07-error-handling.html"><strong aria-hidden="true">1.8.</strong> 错误处理</a></li><li class="chapter-item "><a href="../rust/08-smart-pointer.html"><strong aria-hidden="true">1.9.</strong> 智能指针</a></li><li class="chapter-item "><a href="../rust/09-builtin-trait.html"><strong aria-hidden="true">1.10.</strong> 标准trait</a></li><li class="chapter-item "><a href="../rust/10-generics.html"><strong aria-hidden="true">1.11.</strong> 类型系统: 泛型</a></li><li class="chapter-item "><a href="../rust/11-trait.html"><strong aria-hidden="true">1.12.</strong> 类型系统: trait</a></li><li class="chapter-item "><a href="../rust/12-borrow.html"><strong aria-hidden="true">1.13.</strong> 处理借用数据的模块: std::borrow</a></li><li class="chapter-item "><a href="../rust/20-how-to-read-code.html"><strong aria-hidden="true">1.14.</strong> 如何阅读源码</a></li></ol></li><li class="chapter-item "><a href="../actix-web/index.html"><strong aria-hidden="true">2.</strong> actix-web</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../actix-web/01-handler.html"><strong aria-hidden="true">2.1.</strong> handler原理</a></li></ol></li><li class="chapter-item expanded "><a href="../daily-rust/index.html"><strong aria-hidden="true">3.</strong> Rust日记</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../daily-rust/00-crate-you-need-to-know.html"><strong aria-hidden="true">3.1.</strong> 你应知道的crate</a></li><li class="chapter-item "><a href="../daily-rust/01-using-immut-vec.html"><strong aria-hidden="true">3.2.</strong> 不可变数据建议Rc&lt;[T]&gt;/Arc&lt;[T]&gt;替代Vec&lt;T&gt;</a></li><li class="chapter-item expanded "><a href="../daily-rust/02-rust-temporary-lifetimes-and-super-let.html" class="active"><strong aria-hidden="true">3.3.</strong> (译)Rust临时生命周期和"Super Let"</a></li><li class="chapter-item "><a href="../daily-rust/03-macro.html"><strong aria-hidden="true">3.4.</strong> 宏系统</a></li><li class="chapter-item "><a href="../daily-rust/04-rust-cross-compile.html"><strong aria-hidden="true">3.5.</strong> rust交叉编译</a></li></ol></li><li class="chapter-item "><a href="../golang/index.html"><strong aria-hidden="true">4.</strong> Golang</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../golang/ast/index.html"><strong aria-hidden="true">4.1.</strong> Golang AST</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../golang/ast/01-token.html"><strong aria-hidden="true">4.1.1.</strong> token</a></li><li class="chapter-item "><a href="../golang/ast/02-基础面值.html"><strong aria-hidden="true">4.1.2.</strong> 基础面值</a></li><li class="chapter-item "><a href="../golang/ast/03-基础表达式.html"><strong aria-hidden="true">4.1.3.</strong> 基础表达式</a></li><li class="chapter-item "><a href="../golang/ast/04-代码结构.html"><strong aria-hidden="true">4.1.4.</strong> 代码结构</a></li></ol></li><li class="chapter-item "><a href="../golang/00-material.html"><strong aria-hidden="true">4.2.</strong> 资料</a></li><li class="chapter-item "><a href="../golang/01-quiz.html"><strong aria-hidden="true">4.3.</strong> quiz</a></li><li class="chapter-item "><a href="../golang/02-performance-analysis.html"><strong aria-hidden="true">4.4.</strong> golang性能分析pprof</a></li><li class="chapter-item "><a href="../golang/03-performance-trace.html"><strong aria-hidden="true">4.5.</strong> golang跟踪剖析trace</a></li></ol></li><li class="chapter-item "><a href="../mysql/index.html"><strong aria-hidden="true">5.</strong> mysql</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../mysql/00-基本操作.html"><strong aria-hidden="true">5.1.</strong> 基本操作</a></li><li class="chapter-item "><a href="../mysql/01-sql是如何执行的.html"><strong aria-hidden="true">5.2.</strong> sql是如何执行的</a></li><li class="chapter-item "><a href="../mysql/02-深入索引全局锁表锁行锁.html"><strong aria-hidden="true">5.3.</strong> 深入索引全局锁表锁行锁</a></li><li class="chapter-item "><a href="../mysql/03-数据库的锁.html"><strong aria-hidden="true">5.4.</strong> 数据库的锁</a></li><li class="chapter-item "><a href="../mysql/04-事务到底是隔离还是不隔离.html"><strong aria-hidden="true">5.5.</strong> 事务到底是隔离还是不隔离</a></li><li class="chapter-item "><a href="../mysql/05-实战-优化.html"><strong aria-hidden="true">5.6.</strong> 实战-优化</a></li><li class="chapter-item "><a href="../mysql/06-实战-性能提升.html"><strong aria-hidden="true">5.7.</strong> 实战-性能提升</a></li><li class="chapter-item "><a href="../mysql/07-mysql数据储存.html"><strong aria-hidden="true">5.8.</strong> mysql数据储存</a></li><li class="chapter-item "><a href="../mysql/08-定位性能瓶颈.html"><strong aria-hidden="true">5.9.</strong> 定位性能瓶颈</a></li></ol></li><li class="chapter-item "><a href="../pickup/index.html"><strong aria-hidden="true">6.</strong> Pickup</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../pickup/01-logql.html"><strong aria-hidden="true">6.1.</strong> logql</a></li><li class="chapter-item "><a href="../pickup/02-promql.html"><strong aria-hidden="true">6.2.</strong> promql</a></li><li class="chapter-item "><a href="../pickup/04-xpath语法.html"><strong aria-hidden="true">6.3.</strong> xpath语法</a></li><li class="chapter-item "><a href="../pickup/05-css选择器汇总.html"><strong aria-hidden="true">6.4.</strong> css选择器汇总</a></li><li class="chapter-item "><a href="../pickup/06-opentelemetry.html"><strong aria-hidden="true">6.5.</strong> opentelemetry</a></li><li class="chapter-item "><a href="../pickup/07-grep-sed-awk.html"><strong aria-hidden="true">6.6.</strong> grep sed awk</a></li><li class="chapter-item "><a href="../pickup/20-linux信号.html"><strong aria-hidden="true">6.7.</strong> linux信号</a></li><li class="chapter-item "><a href="../pickup/21-linux虚拟化-虚拟网卡技术.html"><strong aria-hidden="true">6.8.</strong> linux虚拟化 虚拟网卡技术</a></li><li class="chapter-item "><a href="../pickup/22-iptables.html"><strong aria-hidden="true">6.9.</strong> iptables</a></li><li class="chapter-item "><a href="../pickup/23-netcat瑞士军刀.html"><strong aria-hidden="true">6.10.</strong> netcat瑞士军刀</a></li><li class="chapter-item "><a href="../pickup/24-netstat详解.html"><strong aria-hidden="true">6.11.</strong> netstat详解</a></li><li class="chapter-item "><a href="../pickup/25-tcpdump指南.html"><strong aria-hidden="true">6.12.</strong> tcpdump详解</a></li><li class="chapter-item "><a href="../pickup/26-jq详解.html"><strong aria-hidden="true">6.13.</strong> jq详解</a></li><li class="chapter-item "><a href="../pickup/80-shell语法.html"><strong aria-hidden="true">6.14.</strong> shell语法</a></li><li class="chapter-item "><a href="../pickup/81-cron语法.html"><strong aria-hidden="true">6.15.</strong> cron语法</a></li><li class="chapter-item "><a href="../pickup/82-yaml语法.html"><strong aria-hidden="true">6.16.</strong> yaml语法</a></li><li class="chapter-item "><a href="../pickup/83-protobuf语法.html"><strong aria-hidden="true">6.17.</strong> protobuf语法</a></li><li class="chapter-item "><a href="../pickup/84-ansible.html"><strong aria-hidden="true">6.18.</strong> ansible</a></li><li class="chapter-item "><a href="../pickup/85-glob.html"><strong aria-hidden="true">6.19.</strong> glob</a></li><li class="chapter-item "><a href="../pickup/100-git.html"><strong aria-hidden="true">6.20.</strong> git</a></li><li class="chapter-item "><a href="../pickup/101-rsa.html"><strong aria-hidden="true">6.21.</strong> rsa</a></li><li class="chapter-item "><a href="../pickup/998-install-ubuntu.html"><strong aria-hidden="true">6.22.</strong> install ubuntu</a></li><li class="chapter-item "><a href="../pickup/999-link.html"><strong aria-hidden="true">6.23.</strong> link</a></li></ol></li></ol>
+            </div>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <!-- Track and set sidebar scroll position -->
+        <script>
+            var sidebarScrollbox = document.querySelector('#sidebar .sidebar-scrollbox');
+            sidebarScrollbox.addEventListener('click', function(e) {
+                if (e.target.tagName === 'A') {
+                    sessionStorage.setItem('sidebar-scroll', sidebarScrollbox.scrollTop);
+                }
+            }, { passive: true });
+            var sidebarScrollTop = sessionStorage.getItem('sidebar-scroll');
+            sessionStorage.removeItem('sidebar-scroll');
+            if (sidebarScrollTop) {
+                // preserve sidebar scroll position when navigating via links within sidebar
+                sidebarScrollbox.scrollTop = sidebarScrollTop;
+            } else {
+                // scroll sidebar to current active section when navigating via "next/previous chapter" buttons
+                var activeSection = document.querySelector('#sidebar .active');
+                if (activeSection) {
+                    activeSection.scrollIntoView({ block: 'center' });
+                }
+            }
+        </script>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </label>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search. (Shortkey: s)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="S" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">knowledge</h1>
+
+                    <div class="right-buttons">
+                        <a href="../print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+                        <a href="https://github.com/thinkgos/knowledge" title="Git repository" aria-label="Git repository">
+                            <i id="git-repository-button" class="fa fa-github"></i>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h1 id="译rust临时生命周期和super-let1"><a class="header" href="#译rust临时生命周期和super-let1">(译)<code>Rust</code>临时生命周期和"Super Let"<sup class="footnote-reference"><a href="#1">1</a></sup></a></h1>
+<p>在<code>Rust</code>中, 临时变量生命周期是一个复杂但又经常被忽视的话题. 在一些简单的情况下, <code>Rust</code>会让临时变量存活足够长的时间, 这样我们就不必考虑它们了. 然而, 在很多情况下, 我们可能无法立即得到我们想要的东西.</p>
+<p>在这篇文章中, 我们将(重新)发掘临时变量生命周期的规则, 介绍一些临时生命周期扩展的用例, 并探索一种新的语言理念--<code>super let,</code>, 为我们提供更多控制.</p>
+<h2 id="临时变量"><a class="header" href="#临时变量">临时变量</a></h2>
+<p>下面是一条<code>Rust</code>语句, 没有上下文, 使用的是临时<code>String</code>:</p>
+<pre><pre class="playground"><code class="language-rust edition2021"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>f(&amp;String::from('🦀'));
+<span class="boring">}</span></code></pre></pre>
+<p>这个临时<code>String</code>的存活时间多长?如果我们今天设计<code>Rust</code>, 基本上有两种选择:</p>
+<ol>
+<li>在调用 <code>f</code> 之前, 字符串会被立即丢弃. 或者</li>
+<li>只有在调用 <code>f</code> 后, 字符串才会被丢弃.</li>
+</ol>
+<p>如果我们选择方案<strong>1</strong>, 那么上面的语句将始终导致借用检查错误, 因为我们不能让<code>f</code>借用已经消失的东西.
+因此, <code>Rust</code>选择了方案<strong>2</strong>: 首先分配字符串, 然后将其引用传递给<code>f</code>, 只有在<code>f</code>返回后, 我们才会丢弃临时字符串.</p>
+<h3 id="在一个-let-语句中"><a class="header" href="#在一个-let-语句中">在一个 <code>let</code> 语句中</a></h3>
+<p>现在是一个稍难的问题:</p>
+<pre><pre class="playground"><code class="language-rust edition2021"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>let a = f(&amp;String::from('🦀'));
+…
+g(&amp;a);
+<span class="boring">}</span></code></pre></pre>
+<p>再来: 这个临时<code>String</code>的存活时间多长?</p>
+<ol>
+<li>字符串会在 <code>let</code> 语句结束时丢弃: 即在<code>f</code>返回之后, 但在<code>g</code>被调用之前. 或者</li>
+<li>字符串会在调用<code>g</code>之后的同时<code>a</code>被丢弃.</li>
+</ol>
+<p>如果<code>f</code>被定义为 <code>fn f(s: &amp;str) -&gt; usize</code>(如<code>str::len</code>), 那么在<code>let</code>语句后立即去掉<code>String</code>就完全没问题了.</p>
+<p>但是, 如果<code>f</code>被定义为 <code>fn f(s: &amp;str) -&gt; &amp;[u8]</code>(就像 <code>str::as_bytes</code>), 那么 <code>a</code> 就会从临时变量 <code>String</code> 中借用, 因此如果我们将<code>a</code>保留较长时间, 就会出现借用检查错误.</p>
+<p>如果采用方案<strong>2</strong>, 在这两种情况下都能正常编译, 但我们可能会在超出必要的存活时间内保留一个临时变量, 这可能会浪费资源或导致微妙的错误(例如, 当<code>MutexGuard</code>比预期时间晚丢弃时会造成死锁).</p>
+<p>这听起来像是第<strong>3</strong>种选择: 让它取决于<code>f</code>的签名.</p>
+<p>但是, <code>Rust</code>的借用检查器只执行检查, 并不影响代码的行为. 出于各种原因, 这是一个非常重要和有用的属性. 举例来说, 将 <code>fn f(s:&amp;str)-&gt;&amp;[u8]</code>(返回值借用参数)改为 <code>fn f(s:&amp;str)-&gt;&amp;'static[u8]</code>(返回值不借用参数)并不会改变调用位置的任何内容, 例如临时变量被丢弃的位置.</p>
+<p>因此, 在方案<strong>1</strong>和方案<strong>2</strong>之间, <code>Rust</code>选择了方案<strong>1</strong>: 在<code>let</code>语句末尾删除临时变量. 很容易手动将<code>String</code>移到单独的<code>let</code>语句中, 让它保持更长的时间.</p>
+<pre><pre class="playground"><code class="language-rust edition2021"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>let s = String::from('🦀'); // Moved to its own `let` to give it a longer lifetime.
+let a = f(&amp;s);
+…
+g(&amp;a);
+<span class="boring">}</span></code></pre></pre>
+<h3 id="在嵌套调用中"><a class="header" href="#在嵌套调用中">在嵌套调用中</a></h3>
+<p>好吧, 再来一个:</p>
+<pre><pre class="playground"><code class="language-rust edition2021"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>g(f(&amp;String::from('🦀')));
+<span class="boring">}</span></code></pre></pre>
+<p>同样, 有两种选择:</p>
+<ol>
+<li>在调用<code>f</code>之后、调用<code>g</code>之前, 字符串被丢弃. 或者</li>
+<li>字符串会在语句结束时丢弃, 所以是在调用<code>g</code>之后.</li>
+</ol>
+<p>该代码段与前一个代码段几乎完全相同: 临时<code>String</code>的引用被传递给<code>f</code>, <code>f</code>的返回值被传递给<code>g</code>.</p>
+<p>不过, 方案<strong>1</strong>可能有效, 也可能无效, 这取决于<code>f</code>的签名, 而方案<strong>2</strong>可能会让临时变量存活更长的时间.</p>
+<p>不过, 这次方案<strong>1</strong>会给程序员带来更多惊喜. 例如, 即使是简单的 <code>String::from('🦀').as_bytes().contains(&amp;0x80)</code> 也无法编译, 因为字符串会在 <code>as_bytes(f)</code> 之后、<code>contains (g)</code> 之前被删除.</p>
+<p>也可以说, 把临时变量多存活一段时间的坏处要小得多, 因为他们在声明结束时仍然会被丢弃.</p>
+<p>因此, Rust选择了方案<strong>2</strong>: 无论<code>f</code>的签名如何, 字符串都会一直存在, 直到语句结束, 直到<code>g</code>被调用.</p>
+<h3 id="在一个-if-语句中"><a class="header" href="#在一个-if-语句中">在一个 <code>if</code> 语句中</a></h3>
+<p>现在, 我们来看看简单的 <code>if</code> 语句:</p>
+<pre><pre class="playground"><code class="language-rust edition2021"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>if f(&amp;String::from('🦀')) {
+    …
+}
+<span class="boring">}</span></code></pre></pre>
+<p>同样的问题: <code>String</code> 何时丢弃?</p>
+<ol>
+<li>在 <code>if</code> 的条件求值之后, 但在 <code>if</code> 的主体执行之前(即在<code>{</code>处). 或者</li>
+<li>在 <code>if</code> 主体执行之后(即在<code>}</code>处).</li>
+</ol>
+<p>在这种情况下, 就没有理由在<code>if</code>主体中保留临时值. 条件的结果是一个布尔值(只有<code>true</code>或<code>false</code>), 顾名思义, 这并不借用任何东西.</p>
+<p>因此, <code>Rust</code>选择方案<strong>1</strong>.</p>
+<p>例如, 在使用 <code>Mutex::lock</code> 时, 它就会返回一个临时<code>MutexGuard</code>, 当<code>Mutex</code>被丢弃时, 它就会解锁:</p>
+<pre><pre class="playground"><code class="language-rust edition2021"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>fn example(m: &amp;Mutex&lt;String&gt;) {
+    if m.lock().unwrap().is_empty() {
+        println!("the string is empty!");
+    }
+}
+<span class="boring">}</span></code></pre></pre>
+<p>在这里, <code>m.lock().unwrap()</code>中的临时<code>MutexGuard</code>会在<code>.is_empty()</code>之后丢弃, 这样<code>Mutex</code>就不会在<code>println</code>语句中被不必要地锁定.</p>
+<h3 id="在-if-let-语句中"><a class="header" href="#在-if-let-语句中">在 <code>if let</code> 语句中</a></h3>
+<p>但 <code>if let</code>(和 <code>match</code>)的情况有所不同, 因为此时我们的表达式并不一定是评估布尔值:</p>
+<pre><pre class="playground"><code class="language-rust edition2021"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>if let … = f(&amp;String::from('🦀')) {
+    …
+}
+<span class="boring">}</span></code></pre></pre>
+<p>再次, 有两种选择:</p>
+<ol>
+<li>在模式匹配之后、<code>if let</code> 的正文之前(即 <code>{</code> 处)删除字符串. 或者、</li>
+<li>在 <code>if let</code> 主体之后(即 <code>}</code> 处)删除字符串.</li>
+</ol>
+<p>这一次, 我们有理由选择方案<strong>2</strong>而不是方案<strong>1</strong>, 在<code>if let</code>语句或<code>match</code>中借用模式是很常见的.</p>
+<p>因此, 在这种情况下, Rust选择了方案<strong>2</strong>.</p>
+<p>例如, 如果我们有一个<code>Mutex&lt;Vec&lt;T&gt;&gt;</code>类型的<code>vec</code>, 编译起来就很好:</p>
+<pre><pre class="playground"><code class="language-rust edition2021"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>if let Some(x) = vec.lock().unwrap().first() {
+    // The mutex is still locked here. :)
+    // This is necessary, because we're borrowing `x` from the `Vec`. (`x` is a `&amp;T`)
+    println!("first item in vec: {x}");
+}
+<span class="boring">}</span></code></pre></pre>
+<p>我们从<code>m.lock().unwrap()</code>获得一个临时的<code>MutexGuard</code>, 并使用<code>.first()</code>方法借用第一个元素. 由于<code>MutexGuard</code>只在最后一个 <code>}</code>才被丢弃, 因此借用将持续整个<code>if let</code>主体.</p>
+<p>不过, 在有些情况下, 这并不是我们想要的. 例如, 如果我们使用<code>pop</code>代替<code>first</code>, 它返回的是值而不是引用:</p>
+<pre><pre class="playground"><code class="language-rust edition2021"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>if let Some(x) = vec.lock().unwrap().pop() {
+    // The mutex is still locked here. :(
+    // This is unnecessary, because we don't borrow anything from the `Vec`. (`x` is a `T`)
+    println!("popped item from the vec: {x}");
+}
+<span class="boring">}</span></code></pre></pre>
+<p>这可能会<a href="https://marabos.nl/atomics/basics.html#lifetime-of-mutexguard">令人惊讶</a>, 并导致微妙的错误或性能降低.</p>
+<p>也许这就是<code>Rust</code>选择错误方案的一个论据, 也许这就是在未来版本的<code>Rust</code>中改变这一规则的一个论据. 关于如何修改这些规则的想法, 请参阅 <a href="https://smallcultfollowing.com/babysteps/blog/2023/03/15/temporary-lifetimes/">Niko’s blog post on this topic</a>.</p>
+<p>目前, 解决方法是使用一个单独的<code>let</code> 语句, 将临时生命周期限制在该语句中:</p>
+<pre><pre class="playground"><code class="language-rust edition2021"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>let x = vec.lock().unwrap().pop(); // The MutexGuard is dropped after this statement.
+if let Some(x) = x {
+    …
+}
+<span class="boring">}</span></code></pre></pre>
+<h2 id="临时生命周期扩展"><a class="header" href="#临时生命周期扩展">临时生命周期扩展</a></h2>
+<p>这种情况如何?</p>
+<pre><pre class="playground"><code class="language-rust edition2021"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>let a = &amp;String::from('🦀');
+…
+f(&amp;a);
+<span class="boring">}</span></code></pre></pre>
+<p>两种选择:</p>
+<ol>
+<li>字符串会在 <code>let</code> 语句的末尾被丢弃. 或者</li>
+<li>在调用 <code>f</code> 后, 字符串与 <code>a</code> 同时被删除.</li>
+</ol>
+<p>方案<strong>1</strong> 总是会导致借用检查错误. 因此, 方案<strong>2</strong>可能更有意义. 如今<code>Rust</code>也确实是这样工作的: 临时生命周期被扩展了, 因此上面的代码段可以正常编译.</p>
+<p>这种临时变量生命周期长于它在声明中出现的时间的现象被称为<strong>临时生命周期扩展</strong>.</p>
+<p>临时生命周期扩展并不适用于<em><strong>所有</strong></em>出现在<code>let</code>语句中的临时字符串, 正如我们已经看到的那样: <code>let a = f(&amp;String::from('🦀'))</code>; 中的临时字符串不会超过 <code>let</code>语句的生命周期.</p>
+<p>在<code>let a = &amp;f(&amp;String::from('🦀'))</code>;(注意多出的 <code>&amp;</code>)中, 临时生命周期扩展确实适用于最外层的<code>&amp;</code>, 它借用了作为<code>f</code> 返回值的临时, 但不适用于内层的<code>&amp;</code>, 它借用了<code>String</code>.</p>
+<p>例如, 用<code>str::len</code> 代替<code>f</code>:</p>
+<pre><pre class="playground"><code class="language-rust edition2021"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>let a: &amp;usize = &amp;String::from('a').len();
+<span class="boring">}</span></code></pre></pre>
+<p>在这里, 字符串在 <code>let</code> 语句的末尾被删除, 但 <code>.len()</code>返回的<code>usize</code>和<code>a</code>活的一样长.</p>
+<p>这不仅限于 <code>let _ = &amp;...;</code> 语法. 例如</p>
+<pre><pre class="playground"><code class="language-rust edition2021"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>let a = Person {
+    name: &amp;String::from('🦀'), // Extended!
+    address: &amp;String::from('🦀'), // Extended!
+};
+<span class="boring">}</span></code></pre></pre>
+<p>在上面的代码段中, 临时字符串的生命周期将被扩展, 因为即使我们对 <code>Person</code> 类型一无所知, 我们也可以肯定, 生命周期扩展对于生成对象之后的可用性是必要的.</p>
+<p>关于 <code>let</code> 语句中哪些临时变量的生命周期会被延长, <a href="https://doc.rust-lang.org/stable/reference/destructors.html#temporary-lifetime-extension"><code>temporary lifetime extension in Rust Reference</code></a>中有详细的说明, 但实际上只适用于那些从语法上就能看出有必要延长生命周期的表达式, 而与任何类型、函数签名或特质实现无关:</p>
+<pre><pre class="playground"><code class="language-rust edition2021"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>let a = &amp;temporary().field; // Extended!
+let a = MyStruct { field: &amp;temporary() }; // Extended!
+let a = &amp;MyStruct { field: &amp;temporary() }; // Both extended!
+let a = [&amp;temporary()]; // Extended!
+let a = { …; &amp;temporary() }; // Extended!
+
+let a = f(&amp;temporary()); // Not extended, because it might not be necessary.
+let a = temporary().f(); // Not extended, because it might not be necessary.
+let a = temporary() + temporary(); // Not extended, because it might not be necessary.
+<span class="boring">}</span></code></pre></pre>
+<p>虽然这看起来很合理, 但当我们考虑到构造元组结构或元组变体的语法只是一个函数调用时, 确实会感到意外: 从语法上讲, <code>Some(123)</code> 是对函数 <code>Some</code> 的函数调用.</p>
+<p>例如:</p>
+<pre><pre class="playground"><code class="language-rust edition2021"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>let a = Some(&amp;temporary()); // Not extended! (Because `Some` could have any signature...)
+let a = Some { 0: &amp;temporary() }; // Extended! (I bet you have never used this syntax.)
+<span class="boring">}</span></code></pre></pre>
+<p>这可能会让人相当困惑.</p>
+<p>这也是值得考虑<a href="https://smallcultfollowing.com/babysteps/blog/2023/03/15/temporary-lifetimes/#design-principles">重新修订规则</a>的原因之一.</p>
+<h3 id="持续推广"><a class="header" href="#持续推广">持续推广</a></h3>
+<p>临时生命周期扩展很容易与另一种叫不断晋升的东西混淆, 后者是临时变量获得比预期生命周期长的另一种方式.</p>
+<p>在<code>&amp;123</code>和<code>&amp;None</code>这样的表达式中, 值被认定为常量（<a href="https://doc.rust-lang.org/stable/reference/destructors.html#constant-promotion">without interior mutability and without desctructors</a>）, 因此会自动晋升为永生值. 这意味着这些引用将具有<code>'static</code>生命周期.</p>
+<p>例如:</p>
+<pre><pre class="playground"><code class="language-rust edition2021"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>let x = f(&amp;3); // The &amp;3 here is 'static, regardless if that's necessary for `f()`.
+<span class="boring">}</span></code></pre></pre>
+<p>This even applies to simple expressions:</p>
+<pre><pre class="playground"><code class="language-rust edition2021"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>let x = f(&amp;(1 + 2)); // The &amp;3 here is 'static.
+<span class="boring">}</span></code></pre></pre>
+<p>在同时适用临时生命周期延长和恒定提升的情况下, 后者优先, 因为它延长的生命周期最长:</p>
+<pre><pre class="playground"><code class="language-rust edition2021"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>let x = &amp;1; // constant promotion, not temporary lifetime extension.
+<span class="boring">}</span></code></pre></pre>
+<p>也就是说, 在上面的代码段中, <code>x</code>是一个<code>'static</code>引用. 值<code>1</code>的寿命甚至比<code>x</code>本身还长.</p>
+<h3 id="代码块中的临时生命周期扩展"><a class="header" href="#代码块中的临时生命周期扩展">代码块中的临时生命周期扩展</a></h3>
+<p>想象一下, 我们有某种<code>Writer</code>类型, 它持有一个要写入的文件的引用:</p>
+<pre><pre class="playground"><code class="language-rust edition2021"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>pub struct Writer&lt;'a&gt; {
+    pub file: &amp;'a File
+}
+<span class="boring">}</span></code></pre></pre>
+<p>以下代码创建了<code>Writer</code>, 写入新创建的文件:</p>
+<pre><pre class="playground"><code class="language-rust edition2021"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>println!("opening file...");
+let filename = "hello.txt";
+let file = File::create(filename).unwrap();
+let writer = Writer { file: &amp;file };
+<span class="boring">}</span></code></pre></pre>
+<p>现在的作用域包含<code>filename</code>、<code>file</code>和<code>writer</code>. 然而, 后面的代码只能通过
+<code>Writer</code>写入. 理想的情况是, 在作用域中已经看不到<code>filename</code>, 尤其是<code>file</code>.</p>
+<p>由于临时生命周期扩展也适用于代码块的最终表达式, 因此我们可以通过以下方式来实现:</p>
+<pre><pre class="playground"><code class="language-rust edition2021"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>let writer = {
+    println!("opening file...");
+    let filename = "hello.txt";
+    Writer { file: &amp;File::create(filename).unwrap() }
+};
+<span class="boring">}</span></code></pre></pre>
+<p>现在, <code>Writer</code>的创建被整齐地封装在它自己的作用域中, 这样外层作用域只能看到 <code>writer</code>, 而看不到其他任何东西.得益于临时生命周期的扩展, 在内作用域中作为临时创建的<code>file</code>与 <code>writer</code> 一样的存活时间.</p>
+<h3 id="临时生命周期扩展的限制"><a class="header" href="#临时生命周期扩展的限制">临时生命周期扩展的限制</a></h3>
+<p>试想一下, 如果我们将<code>Writer</code>结构中的<code>file</code>字段设置为私有, 会是怎样的结果？</p>
+<pre><pre class="playground"><code class="language-rust edition2021"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>pub struct Writer&lt;'a&gt; {
+    file: &amp;'a File
+}
+
+impl&lt;'a&gt; Writer&lt;'a&gt; {
+    pub fn new(file: &amp;'a File) -&gt; Self {
+        Self { file }
+    }
+}
+<span class="boring">}</span></code></pre></pre>
+<p>这样, 我们就不需要对原始用法片段做太多改动了:</p>
+<pre><pre class="playground"><code class="language-rust edition2021"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>println!("opening file...");
+let filename = "hello.txt";
+let file = File::create(filename).unwrap();
+let writer = Writer::new(&amp;file); // Only this line changed.
+<span class="boring">}</span></code></pre></pre>
+<p>我们只需调用<code>Writer::new()</code>而不是使用<code>Writer {}</code>语法来构建.</p>
+<p>不过, 这对作用域版本无效:</p>
+<pre><pre class="playground"><code class="language-rust edition2021"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>let writer = {
+    println!("opening file...");
+    let filename = "hello.txt";
+    Writer::new(&amp;File::create(filename).unwrap()) // Error: Does not live long enough!
+};
+
+writer.something(); // Error: File no longer alive here!
+<span class="boring">}</span></code></pre></pre>
+<p>正如我们之前看到的, 虽然临时生命周期扩展会通过<code>Writer {}</code>结构语法传播, 但不会通过<code>Writer::new()</code>函数调用语法传播. (例如, 签名可以是<code>fn new(&amp;File) -&gt; Self&lt;'static&gt;</code>或<code>fn new(&amp;File) -&gt; i32</code>, 这样就不需要扩展临时生命周期了).</p>
+<p>遗憾的是, 我们无法明确选择临时生命周期扩展.我们必须在最外层作用域中设置一个<code>let file</code>.目前我们能做的最好的办法就是使用延迟初始化:</p>
+<pre><pre class="playground"><code class="language-rust edition2021"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>let file;
+let writer = {
+    println!("opening file...");
+    let filename = "hello.txt";
+    file = File::create(filename).unwrap();
+    Writer::new(&amp;file)
+};
+<span class="boring">}</span></code></pre></pre>
+<p>但这会使<code>file</code>回到作用域中, 而这正是我们想要避免的.</p>
+<p>虽然可以说把<code>let file</code>放在作用域外部并不是什么大问题, 但对于大多数<code>Rust</code>程序员来说, 这种变通方法并不明显.延迟初始化并不是一个常用的功能, 编译器目前在给出临时生命周期错误时也不会建议采用这种变通方法. 即使编译器可以这样做, 这也不是一个小改动.</p>
+<p>如果能以某种方式解决这个问题就好了</p>
+<h3 id="macros宏"><a class="header" href="#macros宏">Macros宏</a></h3>
+<p>如果有一个函数既能创建文件, 又能返回一个 <code>Writer</code> 文件, 可能会很有用.比如</p>
+<pre><pre class="playground"><code class="language-rust edition2021"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>let writer = Writer::new_file("hello.txt");
+<span class="boring">}</span></code></pre></pre>
+<p>但是, 由于 <code>Writer</code> 只借用<code>file</code>, 这就要求 <code>new_file</code> 将<code>File</code>存储在某个地方.它可以<code>leak</code>这个<code>File</code>或以某种方式将其存储在<code>static</code>中, 但(目前)它没有办法让<code>file</code>与返回的 <code>Writer</code> 一样长存.</p>
+<p>因此, 我们可以使用宏来定义文件和写入器, 无论它在哪里被调用:</p>
+<pre><pre class="playground"><code class="language-rust edition2021"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>macro_rules! let_writer_to_file {
+    ($writer:ident, $filename:expr) =&gt; {
+        let file = std::fs::File::create($filename).unwrap();
+        let $writer = Writer::new(&amp;file);
+    };
+}
+<span class="boring">}</span></code></pre></pre>
+<p>使用方法如下:</p>
+<pre><pre class="playground"><code class="language-rust edition2021"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>let_writer_to_file!(writer, "hello.txt");
+
+writer.something();
+<span class="boring">}</span></code></pre></pre>
+<p>由于<a href="https://veykril.github.io/tlborm/decl-macros/minutiae/hygiene.html">宏的卫生性</a>, 在此范围内无法访问<code>file</code>.</p>
+<p>这样做是可行的, 但如果它看起来更像一个普通的函数调用, 不是更好吗？</p>
+<pre><pre class="playground"><code class="language-rust edition2021"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>et writer = writer_to_file!("hello.txt");
+
+writer.something();
+<span class="boring">}</span></code></pre></pre>
+<p>正如我们之前所见, 在 <code>let writer = ...;</code>语句中创建一个存活时间足够长的临时<code>File</code>的方法是使用临时生命周期扩展:</p>
+<pre><pre class="playground"><code class="language-rust edition2021"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>macro_rules! writer_to_file {
+    ($filename:expr) =&gt; {
+        Writer { file: &amp;File::create($filename).unwrap() }
+    };
+}
+
+let writer = writer_to_file!("hello.txt");
+<span class="boring">}</span></code></pre></pre>
+<p>这将扩展成:</p>
+<pre><pre class="playground"><code class="language-rust edition2021"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>let writer = Writer { file: &amp;File::create("hello.txt").unwrap() };
+<span class="boring">}</span></code></pre></pre>
+<p>这将在必要时延长临时<code>File</code>的生命周期.</p>
+<p>但如果<code>file</code>不是公开, 我们就不能这样做, 而需要使用 <code>Writer::new()</code> 代替.宏需要在调用它的 <code>let writer = ...;</code>语句之前插入 <code>let file</code>;.这是不可能的.</p>
+<h4 id="format_args"><a class="header" href="#format_args">format_args!()</a></h4>
+<p>这个问题也是(现在)<code>format_args!()</code> 的结果不能存储在 <code>let</code> 语句中的原因:</p>
+<pre><pre class="playground"><code class="language-rust edition2021"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>let f = format_args!("{}", 1); // Error!
+something.write_fmt(f);
+<span class="boring">}</span></code></pre></pre>
+<p>原因是 <code>format_args!()</code> 会扩展为类似 <code>fmt::Arguments::new(&amp;Argument::display(&amp;arg), ...)</code> 的内容, 其中一些参数是对临时变量的引用.</p>
+<p>临时生命周期扩展不适用于函数调用的参数, 因此 <code>fmt::Arguments</code> 对象只能在同一语句中使用.</p>
+<h4 id="pin"><a class="header" href="#pin">pin!()</a></h4>
+<p>另一种经常通过宏创建的类型是 <code>Pin</code>.粗略地说, 它表示对某个永远不会移动的东西的引用.(具体细节很复杂, 但现在不是很重要).</p>
+<p>它是通过一个名为 <code>Pin::new_unchecked</code> 的<code>unsafe</code>函数创建的, 因为我们需要保证它所引用的值即使在 <code>Pin</code> 本身消失后也不会被移动.</p>
+<p>使用该函数的最佳方法是使用<a href="https://doc.rust-lang.org/rust-by-example/variable_bindings/scope.html"><code>shadowing</code></a>:</p>
+<pre><pre class="playground"><code class="language-rust edition2021"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>let mut thing = Thing { … };
+let thing = unsafe { Pin::new_unchecked(&amp;mut thing) };
+<span class="boring">}</span></code></pre></pre>
+<p>因为第二个<code>thing</code>会对第一个<code>thing</code>产生<code>shadow</code>, 所以第一个<code>thing</code>(仍然存在)不能再被命名.因为它不能被命名, 所以我们可以确定它不能被移动(即使在放弃第二个<code>thing</code>后), 这正是我们在<code>unsafe</code>块中所承诺的.</p>
+<p>因为这是一种常见的模式, 所以通常用宏来捕获这种模式.</p>
+<p>例如, 我们可以定义一个 <code>let_pin</code> 宏如下:</p>
+<pre><pre class="playground"><code class="language-rust edition2021"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>macro_rules! let_pin {
+    ($name:ident, $init:expr) =&gt; {
+        let mut $name = $init;
+        let $name = unsafe { Pin::new_unchecked(&amp;mut $name) };
+    };
+}
+<span class="boring">}</span></code></pre></pre>
+<p>使用方法与之前的 <code>let_writer_to_file</code> 宏类似:</p>
+<pre><pre class="playground"><code class="language-rust edition2021"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>let_pin!(thing, Thing { … });
+
+thing.something();
+<span class="boring">}</span></code></pre></pre>
+<p>这样做可以很好地封装和隐藏不安全代码.</p>
+<p>但是, 就像我们的 <code>Writer</code> 示例一样, 如果它能像下面这样工作, 不是更好吗？</p>
+<pre><pre class="playground"><code class="language-rust edition2021"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>let thing = pin!(Thing { … });
+<span class="boring">}</span></code></pre></pre>
+<p>我们都知道, 要做到这一点, 我们必须利用临时生命周期扩展功能, 使<code>Thing</code>的生命周期足够长.而要做到这一点, 我们必须使用 <code>Pin {}</code> 语法来构造 <code>Pin:Pin { pinned: &amp;mut Thing { ... }}</code> 会调用临时生命周期扩展, 但 P<code>in::new_unchecked(&amp;mut Thing { ... })</code> 不会.</p>
+<p>这就意味着要将 <code>Pin</code> 的字段公开, 这就违背了 <code>Pin</code> 的初衷.只有在字段是私有的情况下, 它才能提供有意义的保证.</p>
+<p>这意味着, 不幸的是, (如今)不可能自己编写这样一个 <code>pin!()</code> 宏.</p>
+<p>标准库还是这么做了, 犯了一个可怕的罪行:<code>Pin</code> 的 "私有 "字段实际上被定义为 <code>pub</code>, 但也被标记为 "不稳定", 如果你试图使用它, 编译器就会抱怨.</p>
+<p>如果不需要这种黑客手段就好了.</p>
+<h2 id="super-let"><a class="header" href="#super-let"><code>super let</code></a></h2>
+<h3 id="用户体验和诊断"><a class="header" href="#用户体验和诊断">用户体验和诊断</a></h3>
+<h3 id="可能的扩展"><a class="header" href="#可能的扩展">可能的扩展</a></h3>
+<p>未来可能的扩展是允许在函数作用域中使用<code>super let</code>. 也就是说, "super"指的是函数的调用者.</p>
+<p>正如<a href="https://hachyderm.io/@lorepozo@tech.lgbt/111499621692587962">@lorepozo@tech.lgbt</a>在Mastodon上提到的, 这将使 <code>pin!()</code> 成为一个函数而不是宏. 同样, 它也能让 <code>Writer::new_file(...)</code> 成为可能, 而不必使用宏.</p>
+<p>这样做的有效方式是允许某些函数将对象放入调用者的堆栈框架中, 然后可以从返回值中引用这些对象. 这在任何普通的旧函数中都是行不通的；通常情况下, 调用者不会为函数预留放置对象的空间. 这需要成为函数签名的一部分.</p>
+<p>也许可以这样?</p>
+<pre><pre class="playground"><code class="language-rust edition2021"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>pub placing fn new_file(filename: &amp;str) -&gt; Writer {
+    super let mut file = File::create(filename).unwrap(); // Placed into caller's stack frame
+    Writer::new(&amp;file) // So we can borrow it in the return value!
+}
+<span class="boring">}</span></code></pre></pre>
+<p>这不是我现在提出的建议的一部分, 但想想也很有趣. ）</p>
+<h2 id="临时生命周期-2024-rfc"><a class="header" href="#临时生命周期-2024-rfc">临时生命周期 2024 RFC</a></h2>
+<p>几个月前, 我与<em>Niko Matsakis</em>和<em>Ding Xiang Fei</em>分享了我的想法--<code>super let</code>.他们一直在努力制定<code>super let</code>的确切定义和详细规则, 以及下一版<code>Rust</code>的临时生命周期的一些新规则.</p>
+<p>这项名为 <a href="https://rust-lang.zulipchat.com/#narrow/stream/403629-t-lang.2Ftemporary-lifetimes-2024"><code>“temporary lifetimes 2024” effort</code></a>的联合工作正在促成一项RFC, 该RFC主要建议尽可能减少临时生命周期, 以防止 <code>if let</code> 或匹配中的临时 <code>MutexGuard</code> 导致的死锁, 并添加 <code>super let</code> 作为选择更长生命周期的一种方式.</p>
+<h2 id="反馈"><a class="header" href="#反馈">反馈</a></h2>
+<p>你是否有意识地使用过临时延长寿命的方法？或者你被它咬过吗？</p>
+<p>你怎么看<code>super let</code>？你会使用它吗？或者你有更好的主意？</p>
+<p>请在下面的评论或 <code>GitHub</code> 上告诉我, 或加入 <code>Reddit``、Twitter</code> 或 <code>Mastodon</code> 上的讨论.</p>
+<h2 id="引用"><a class="header" href="#引用">引用</a></h2>
+<div class="footnote-definition" id="1"><sup class="footnote-definition-label">1</sup>
+<p><a href="https://blog.m-ou.se/super-let/">Rust Temporary Lifetimes and "Super Let"</a></p>
+</div>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="../daily-rust/01-using-immut-vec.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+
+                            <a rel="next prefetch" href="../daily-rust/03-macro.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="../daily-rust/01-using-immut-vec.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+
+                    <a rel="next prefetch" href="../daily-rust/03-macro.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+
+
+        <script>
+            window.playground_line_numbers = true;
+        </script>
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+        <script src="../ace.js"></script>
+        <script src="../editor.js"></script>
+        <script src="../mode-rust.js"></script>
+        <script src="../theme-dawn.js"></script>
+        <script src="../theme-tomorrow_night.js"></script>
+
+        <script src="../elasticlunr.min.js"></script>
+        <script src="../mark.min.js"></script>
+        <script src="../searcher.js"></script>
+
+        <script src="../clipboard.min.js"></script>
+        <script src="../highlight.js"></script>
+        <script src="../book.js"></script>
+
+        <!-- Custom JS scripts -->
+
+
+    </div>
+    </body>
+</html>
