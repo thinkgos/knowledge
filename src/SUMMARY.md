@@ -69,3 +69,5 @@
   - [rsa](./pickup/101-rsa.md)
   - [install ubuntu](./pickup/998-install-ubuntu.md)
   - [link](./pickup/999-link.md)
+- [Video](./video/README.md)
+  - [SDP](./video/01-sdp.md)
