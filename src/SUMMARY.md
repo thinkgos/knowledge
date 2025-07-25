@@ -65,6 +65,7 @@
   - [protobuf语法](./pickup/83-protobuf语法.md)
   - [ansible](./pickup/84-ansible.md)
   - [glob](./pickup/85-glob.md)
+  - [nats](./pickup/86-nats.md)
   - [git](./pickup/100-git.md)
   - [rsa](./pickup/101-rsa.md)
   - [install ubuntu](./pickup/998-install-ubuntu.md)
