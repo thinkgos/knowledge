@@ -1,0 +1,316 @@
+<!DOCTYPE HTML>
+<html lang="en" class="light sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>link - knowledge</title>
+
+
+        <!-- Custom HTML head -->
+
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="../favicon.svg">
+        <link rel="shortcut icon" href="../favicon.png">
+        <link rel="stylesheet" href="../css/variables.css">
+        <link rel="stylesheet" href="../css/general.css">
+        <link rel="stylesheet" href="../css/chrome.css">
+        <link rel="stylesheet" href="../css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="../FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="../fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" id="highlight-css" href="../highlight.css">
+        <link rel="stylesheet" id="tomorrow-night-css" href="../tomorrow-night.css">
+        <link rel="stylesheet" id="ayu-highlight-css" href="../ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+
+        <!-- MathJax -->
+        <script async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+        <!-- Provide site root and default themes to javascript -->
+        <script>
+            const path_to_root = "../";
+            const default_light_theme = "light";
+            const default_dark_theme = "navy";
+            window.path_to_searchindex_js = "../searchindex.js";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="../toc.js"></script>
+    </head>
+    <body>
+    <div id="mdbook-help-container">
+        <div id="mdbook-help-popup">
+            <h2 class="mdbook-help-title">Keyboard shortcuts</h2>
+            <div>
+                <p>Press <kbd>←</kbd> or <kbd>→</kbd> to navigate between chapters</p>
+                <p>Press <kbd>S</kbd> or <kbd>/</kbd> to search in the book</p>
+                <p>Press <kbd>?</kbd> to show this help</p>
+                <p>Press <kbd>Esc</kbd> to hide this help</p>
+            </div>
+        </div>
+    </div>
+    <div id="body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                let theme = localStorage.getItem('mdbook-theme');
+                let sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            const default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? default_dark_theme : default_light_theme;
+            let theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            let sidebar = null;
+            const sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+                sidebar_toggle.checked = false;
+            }
+            if (sidebar === 'visible') {
+                sidebar_toggle.checked = true;
+            } else {
+                html.classList.remove('sidebar-visible');
+            }
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="../toc.html"></iframe>
+            </noscript>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </label>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="default_theme">Auto</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search (`/`)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="/ s" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">knowledge</h1>
+
+                    <div class="right-buttons">
+                        <a href="../print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+                        <a href="https://github.com/thinkgos/knowledge" title="Git repository" aria-label="Git repository">
+                            <i id="git-repository-button" class="fa fa-github"></i>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <div class="search-wrapper">
+                            <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                            <div class="spinner-wrapper">
+                                <i class="fa fa-spinner fa-spin"></i>
+                            </div>
+                        </div>
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h1 id="link"><a class="header" href="#link">Link</a></h1>
+<h2 id="1-tcp-三次握手-tcp头部"><a class="header" href="#1-tcp-三次握手-tcp头部">1. tcp 三次握手, tcp头部</a></h2>
+<ul>
+<li><a href="https://mp.weixin.qq.com/s?__biz=MzAxMTA4Njc0OQ==&amp;mid=2651439650&amp;idx=5&amp;sn=12764c4477f850c3f5f627545c45ec40&amp;chksm=80bb1cd0b7cc95c6e3a52819cea3e1e36e17360a05fa5c8912c5299c98a9fa179d1681488487&amp;mpshare=1&amp;scene=1&amp;srcid=0115PDXWqhgsTG3xdDUHnULh&amp;sharer_sharetime=1610698449434&amp;sharer_shareid=fbafc624aa53cd09857fb0861ac2a16d&amp;exportkey=AeJQQ3o6DtKmP2nChhsXVFo%3D&amp;pass_ticket=vv4RPcR8dxxyU9301O0W%2FRibxJcJxhfVMIYs2XVP8GtDsx4DABTV1WTp%2BZI6w3AJ&amp;wx_header=0#rd">图解TCP三次握手和四次挥手面试题</a></li>
+<li><a href="https://mp.weixin.qq.com/s?__biz=MzAxMTA4Njc0OQ==&amp;mid=2651439692&amp;idx=4&amp;sn=8e616cf2e7cca18d1a6639c2111401de&amp;chksm=80bb1cbeb7cc95a804910499dd500385d7b7724177854a6d28e9f6e73ab154d37be5df3c72b9&amp;mpshare=1&amp;scene=1&amp;srcid=0115ZoC5vtytFKWL9pDOOiHZ&amp;sharer_sharetime=1610698640873&amp;sharer_shareid=fbafc624aa53cd09857fb0861ac2a16d&amp;exportkey=AQGo6olwwmOWcrJ1OffWvPg%3D&amp;pass_ticket=vv4RPcR8dxxyU9301O0W%2FRibxJcJxhfVMIYs2XVP8GtDsx4DABTV1WTp%2BZI6w3AJ&amp;wx_header=0#rd">图解TCP重传、滑动窗口、流量控制、拥塞控制</a></li>
+<li><a href="https://mp.weixin.qq.com/s?__biz=MzAxMTA4Njc0OQ==&amp;mid=2651439830&amp;idx=4&amp;sn=1656ea642a03fba188308ab7b124ff1a&amp;chksm=80bb1c24b7cc953260cc2bea029ca60d802303b436306427f8172efbb1b729c2f2c9904bd6b6&amp;mpshare=1&amp;scene=1&amp;srcid=0115NoThktmIdt5Dcv3YTKnW&amp;sharer_sharetime=1610698649909&amp;sharer_shareid=fbafc624aa53cd09857fb0861ac2a16d&amp;exportkey=AbBcToo0EQdMH9r0VpHjIvI%3D&amp;pass_ticket=vv4RPcR8dxxyU9301O0W%2FRibxJcJxhfVMIYs2XVP8GtDsx4DABTV1WTp%2BZI6w3AJ&amp;wx_header=0#rd">TCP 半连接队列和全连接队列满了如何应对</a></li>
+<li><a href="https://mp.weixin.qq.com/s?__biz=MzU3NzEwNjI5OA==&amp;mid=2247484654&amp;idx=1&amp;sn=7fb25c0c2c980baf9e4efc7f56c538d9&amp;chksm=fd08fcfbca7f75edbc73f854771b66836456239fac0e5fc7a713878f92cc1db5881a28711f5d&amp;mpshare=1&amp;scene=1&amp;srcid=0114tnzpzqgZ5QQ6FfrFbz2u&amp;sharer_sharetime=1610698664483&amp;sharer_shareid=fbafc624aa53cd09857fb0861ac2a16d&amp;exportkey=AePM%2BMwRumfmIJ7eQPQZUZY%3D&amp;pass_ticket=vv4RPcR8dxxyU9301O0W%2FRibxJcJxhfVMIYs2XVP8GtDsx4DABTV1WTp%2BZI6w3AJ&amp;wx_header=0#rd">TCP的内存开销</a></li>
+</ul>
+<h2 id="2-micro-services"><a class="header" href="#2-micro-services">2. micro services</a></h2>
+<ul>
+<li>
+<ul>
+<li><input disabled="" type="checkbox"/>
+<a href="https://mp.weixin.qq.com/s?__biz=MzAxMTA4Njc0OQ==&amp;mid=2651437896&amp;idx=5&amp;sn=5b8ec41097be22f0cb399be110fe736e&amp;chksm=80bb65bab7ccecac89d52d2ae92905a9d8b885ef8fa698639e2373d49448d183ac2c25e1eb22&amp;scene=0&amp;xtrack=1&amp;exportkey=AeCEwqhXz49767GtgC85Fqc%3D&amp;pass_ticket=edom3%2BQWJv2%2F6ag8wwGj83w98nQSUN8ex7sdZB89cFp%2FbMiUGbmDvKeH%2BLBfXRK2#rd">图文并茂讲解分布式事务的实现原理</a></li>
+</ul>
+</li>
+<li>
+<ul>
+<li><input disabled="" type="checkbox"/>
+<a href="https://mp.weixin.qq.com/s?__biz=MzAxMTA4Njc0OQ==&amp;mid=2651437478&amp;idx=1&amp;sn=2187aacae7d92024d9abb4fb93828688&amp;chksm=80bb6754b7ccee42ea53ffbda70406bdc3f829029c6235112bd5fd006cabbff836f436d11e58&amp;scene=0&amp;xtrack=1&amp;exportkey=Aap2eWS0jqrpoKE4AVQ6l94%3D&amp;pass_ticket=edom3%2BQWJv2%2F6ag8wwGj83w98nQSUN8ex7sdZB89cFp%2FbMiUGbmDvKeH%2BLBfXRK2#rd">Go微服务全链路跟踪详解</a></li>
+</ul>
+</li>
+<li>
+<ul>
+<li><input disabled="" type="checkbox"/>
+<a href="https://mp.weixin.qq.com/s?__biz=MzAxMTA4Njc0OQ==&amp;mid=2651437770&amp;idx=2&amp;sn=ba2a02df8bb89c02c6e620df349731a3&amp;chksm=80bb6438b7cced2e7dbe9ab39c6b027326cefdd576e9108113228f097184dceabbc3061611f2&amp;scene=0&amp;xtrack=1&amp;exportkey=AWNQJk%2FbQMuYeE0W7IA5cYc%3D&amp;pass_ticket=edom3%2BQWJv2%2F6ag8wwGj83w98nQSUN8ex7sdZB89cFp%2FbMiUGbmDvKeH%2BLBfXRK2#rd">微服务架构原理分析</a></li>
+</ul>
+</li>
+</ul>
+<h2 id="3-algorithm"><a class="header" href="#3-algorithm">3. algorithm</a></h2>
+<ul>
+<li>
+<ul>
+<li><input disabled="" type="checkbox" checked=""/>
+<a href="https://mp.weixin.qq.com/s?__biz=Mzg5NTEwNTE1Mw==&amp;mid=2247483996&amp;idx=1&amp;sn=5f22f8855690f0a1b9adc3402471c616&amp;chksm=c01423b2f763aaa45c1bc71c7e86e1e05c7d27b230cf0de9fc6330bd44b68ecea0b8255a0034&amp;scene=0&amp;xtrack=1&amp;exportkey=AWz484PUyWSEhkr5XWnRVWE%3D&amp;pass_ticket=edom3%2BQWJv2%2F6ag8wwGj83w98nQSUN8ex7sdZB89cFp%2FbMiUGbmDvKeH%2BLBfXRK2#rd">LRC缓存介绍与用法</a></li>
+</ul>
+</li>
+<li>
+<ul>
+<li><input disabled="" type="checkbox"/>
+<a href="https://mp.weixin.qq.com/s?__biz=MzUyNDkzNzczNQ==&amp;mid=2247487327&amp;idx=1&amp;sn=7172219769b69356c78f6b956760cb86&amp;chksm=fa24f037cd5379218f1002567d8c2f6d64a3bd6b3d21ce6dd3ee7e38b89b2bb026e3adb86bd0&amp;scene=0&amp;xtrack=1&amp;exportkey=ASEmKy0i163FV8waw8OKlbA%3D&amp;pass_ticket=edom3%2BQWJv2%2F6ag8wwGj83w98nQSUN8ex7sdZB89cFp%2FbMiUGbmDvKeH%2BLBfXRK2#rd">八种排序算法的思想</a></li>
+</ul>
+</li>
+<li>
+<ul>
+<li><input disabled="" type="checkbox" checked=""/>
+<a href="https://mp.weixin.qq.com/s?__biz=MzUyNjQxNjYyMg==&amp;mid=2247487946&amp;idx=2&amp;sn=316a05a5e4a91c072c723ba597856dee&amp;chksm=fa0e7e4bcd79f75d718e02cc97d074b4d5c8614a6345ee66e1e46b7922e8764d097e67359890&amp;scene=0&amp;xtrack=1&amp;exportkey=AcXMtLcRcHvk%2BKneOJDIxEc%3D&amp;pass_ticket=edom3%2BQWJv2%2F6ag8wwGj83w98nQSUN8ex7sdZB89cFp%2FbMiUGbmDvKeH%2BLBfXRK2#rd">以后有面试官问你「密码学」, 你就把这篇文章扔给他</a></li>
+</ul>
+</li>
+<li>
+<p>红黑树</p>
+<ul>
+<li>
+<ul>
+<li><input disabled="" type="checkbox"/>
+<a href="https://mp.weixin.qq.com/s?__biz=MzUyNjQxNjYyMg==&amp;mid=2247489352&amp;idx=3&amp;sn=84a19965b224fd05f2ccd505beef890f&amp;chksm=fa0e78c9cd79f1df81ab6a3194d1dee7b4aa3e9a8109e22894e24b96168a448ff0164f12ae9d&amp;mpshare=1&amp;scene=24&amp;srcid=&amp;sharer_sharetime=1591071849629&amp;sharer_shareid=fbafc624aa53cd09857fb0861ac2a16d&amp;exportkey=AQ3cAAivJ1iOy24H%2BlVGZWw%3D&amp;pass_ticket=hnxYbcWTDsWM%2F87p7FMBmRfEvyyVh6II8QNe8UFDv5E5mySMhm4S3Vzaj6GoWG%2F5#rd">图解：什么是红黑树?(上篇)</a></li>
+</ul>
+</li>
+<li>
+<ul>
+<li><input disabled="" type="checkbox"/>
+<a href="https://mp.weixin.qq.com/s?__biz=MzUyNjQxNjYyMg==&amp;mid=2247489352&amp;idx=4&amp;sn=498725b77ef8a7e79325c4175d809412&amp;chksm=fa0e78c9cd79f1dfc70a2df760f2f9366a74f3450e1785366d237afab1176aff2b38f0ca6c58&amp;mpshare=1&amp;scene=24&amp;srcid=&amp;sharer_sharetime=1591071856823&amp;sharer_shareid=fbafc624aa53cd09857fb0861ac2a16d&amp;exportkey=AXURQOXoBi5M6M7jxx4J81c%3D&amp;pass_ticket=hnxYbcWTDsWM%2F87p7FMBmRfEvyyVh6II8QNe8UFDv5E5mySMhm4S3Vzaj6GoWG%2F5#rd">图解：什么是红黑树?(中篇)</a></li>
+</ul>
+</li>
+<li>
+<ul>
+<li><input disabled="" type="checkbox"/>
+<a href="https://mp.weixin.qq.com/s?__biz=MzUyNjQxNjYyMg==&amp;mid=2247489352&amp;idx=5&amp;sn=82d3ddf1c14cf9f5c81c76d2ae16c910&amp;chksm=fa0e78c9cd79f1df1c2acf6506b40c8fe5a70c1f5e2f93fcc0c797db0cec596f91b46a1a04e1&amp;mpshare=1&amp;scene=24&amp;srcid=&amp;sharer_sharetime=1591071865638&amp;sharer_shareid=fbafc624aa53cd09857fb0861ac2a16d&amp;exportkey=AW6sRrjD2vNSf0ECh9%2B7DUU%3D&amp;pass_ticket=hnxYbcWTDsWM%2F87p7FMBmRfEvyyVh6II8QNe8UFDv5E5mySMhm4S3Vzaj6GoWG%2F5#rd">图解：什么是红黑树?(下篇)</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="../pickup/998-install-ubuntu.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+
+                            <a rel="next prefetch" href="../video/index.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="../pickup/998-install-ubuntu.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+
+                    <a rel="next prefetch" href="../video/index.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+
+
+        <script>
+            window.playground_line_numbers = true;
+        </script>
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+        <script src="../ace.js"></script>
+        <script src="../mode-rust.js"></script>
+        <script src="../editor.js"></script>
+        <script src="../theme-dawn.js"></script>
+        <script src="../theme-tomorrow_night.js"></script>
+
+        <script src="../elasticlunr.min.js"></script>
+        <script src="../mark.min.js"></script>
+        <script src="../searcher.js"></script>
+
+        <script src="../clipboard.min.js"></script>
+        <script src="../highlight.js"></script>
+        <script src="../book.js"></script>
+
+        <!-- Custom JS scripts -->
+
+
+
+    </div>
+    </body>
+</html>
