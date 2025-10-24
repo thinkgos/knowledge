@@ -1,0 +1,697 @@
+<!DOCTYPE HTML>
+<html lang="en" class="light sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>css选择器汇总 - knowledge</title>
+
+
+        <!-- Custom HTML head -->
+
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="../favicon.svg">
+        <link rel="shortcut icon" href="../favicon.png">
+        <link rel="stylesheet" href="../css/variables.css">
+        <link rel="stylesheet" href="../css/general.css">
+        <link rel="stylesheet" href="../css/chrome.css">
+        <link rel="stylesheet" href="../css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="../FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="../fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" id="highlight-css" href="../highlight.css">
+        <link rel="stylesheet" id="tomorrow-night-css" href="../tomorrow-night.css">
+        <link rel="stylesheet" id="ayu-highlight-css" href="../ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+
+        <!-- MathJax -->
+        <script async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+        <!-- Provide site root and default themes to javascript -->
+        <script>
+            const path_to_root = "../";
+            const default_light_theme = "light";
+            const default_dark_theme = "navy";
+            window.path_to_searchindex_js = "../searchindex.js";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="../toc.js"></script>
+    </head>
+    <body>
+    <div id="mdbook-help-container">
+        <div id="mdbook-help-popup">
+            <h2 class="mdbook-help-title">Keyboard shortcuts</h2>
+            <div>
+                <p>Press <kbd>←</kbd> or <kbd>→</kbd> to navigate between chapters</p>
+                <p>Press <kbd>S</kbd> or <kbd>/</kbd> to search in the book</p>
+                <p>Press <kbd>?</kbd> to show this help</p>
+                <p>Press <kbd>Esc</kbd> to hide this help</p>
+            </div>
+        </div>
+    </div>
+    <div id="body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                let theme = localStorage.getItem('mdbook-theme');
+                let sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            const default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? default_dark_theme : default_light_theme;
+            let theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            let sidebar = null;
+            const sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+                sidebar_toggle.checked = false;
+            }
+            if (sidebar === 'visible') {
+                sidebar_toggle.checked = true;
+            } else {
+                html.classList.remove('sidebar-visible');
+            }
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="../toc.html"></iframe>
+            </noscript>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </label>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="default_theme">Auto</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search (`/`)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="/ s" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">knowledge</h1>
+
+                    <div class="right-buttons">
+                        <a href="../print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+                        <a href="https://github.com/thinkgos/knowledge" title="Git repository" aria-label="Git repository">
+                            <i id="git-repository-button" class="fa fa-github"></i>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <div class="search-wrapper">
+                            <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                            <div class="spinner-wrapper">
+                                <i class="fa fa-spinner fa-spin"></i>
+                            </div>
+                        </div>
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h1 id="css选择器"><a class="header" href="#css选择器">css选择器</a></h1>
+<ul>
+<li><a href="#css%E9%80%89%E6%8B%A9%E5%99%A8">css选择器</a>
+<ul>
+<li><a href="#1-%E5%9F%BA%E6%9C%AC%E9%80%89%E6%8B%A9%E5%99%A8">1. 基本选择器</a>
+<ul>
+<li><a href="#11-%E9%80%9A%E9%85%8D%E9%80%89%E6%8B%A9%E5%99%A8">1.1 通配选择器</a></li>
+<li><a href="#12-%E5%85%83%E7%B4%A0%E9%80%89%E6%8B%A9%E5%99%A8">1.2 元素选择器</a></li>
+<li><a href="#13-%E7%B1%BB%E9%80%89%E6%8B%A9%E5%99%A8">1.3. 类选择器</a></li>
+<li><a href="#14-id%E9%80%89%E6%8B%A9%E5%99%A8">1.4. ID选择器</a></li>
+</ul>
+</li>
+<li><a href="#2-%E5%A4%8D%E5%90%88%E9%80%89%E6%8B%A9%E5%99%A8">2. 复合选择器</a>
+<ul>
+<li><a href="#21-%E4%BA%A4%E9%9B%86%E9%80%89%E6%8B%A9%E5%99%A8">2.1 交集选择器</a></li>
+<li><a href="#22-%E5%B9%B6%E9%9B%86%E9%80%89%E6%8B%A9%E5%99%A8">2.2 并集选择器</a></li>
+<li><a href="#23-%E5%90%8E%E4%BB%A3%E9%80%89%E6%8B%A9%E5%99%A8">2.3. 后代选择器</a></li>
+<li><a href="#24-%E5%AD%90%E4%BB%A3%E9%80%89%E6%8B%A9%E5%99%A8">2.4. 子代选择器</a></li>
+<li><a href="#25-%E7%9B%B8%E9%82%BB%E5%85%84%E5%BC%9F%E9%80%89%E6%8B%A9%E5%99%A8">2.5. 相邻兄弟选择器</a></li>
+<li><a href="#26-%E5%B1%9E%E6%80%A7%E9%80%89%E6%8B%A9%E5%99%A8">2.6. 属性选择器</a>
+<ul>
+<li><a href="#261-%E7%AE%80%E5%8D%95%E5%B1%9E%E6%80%A7%E9%80%89%E6%8B%A9">2.6.1. 简单属性选择</a></li>
+<li><a href="#262-%E6%A0%B9%E6%8D%AE%E5%85%B7%E4%BD%93%E5%B1%9E%E6%80%A7%E5%80%BC%E9%80%89%E6%8B%A9">2.6.2. 根据具体属性值选择</a></li>
+</ul>
+</li>
+<li><a href="#27-%E4%BC%AA%E7%B1%BB">2.7. 伪类</a>
+<ul>
+<li><a href="#271-%E9%94%9A%E4%BC%AA%E7%B1%BB">2.7.1. 锚伪类</a></li>
+<li><a href="#272-%E7%BB%93%E6%9E%84%E4%BC%AA%E7%B1%BB">2.7.2. 结构伪类</a></li>
+</ul>
+</li>
+<li><a href="#28-%E4%BC%AA%E5%85%83%E7%B4%A0">2.8. 伪元素</a>
+<ul>
+<li><a href="#281-first-line%E4%BC%AA%E5%85%83%E7%B4%A0">2.8.1. <code>"first-line"</code>伪元素</a></li>
+<li><a href="#282-first-letter%E4%BC%AA%E5%85%83%E7%B4%A0">2.8.2. <code>:first-letter</code>伪元素</a></li>
+<li><a href="#283-before%E4%BC%AA%E5%85%83%E7%B4%A0">2.8.3. <code>:before</code>伪元素</a></li>
+<li><a href="#284-after%E4%BC%AA%E5%85%83%E7%B4%A0">2.8.4. <code>after</code>伪元素</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#3-%E9%80%89%E6%8B%A9%E5%99%A8%E6%9D%83%E9%87%8D">3. 选择器权重</a></li>
+<li><a href="#4-css%E4%B8%89%E5%A4%A7%E7%89%B9%E6%80%A7">4. CSS三大特性</a>
+<ul>
+<li><a href="#41-%E5%B1%82%E5%8F%A0%E6%80%A7">4.1. 层叠性</a></li>
+<li><a href="#42-%E7%BB%A7%E6%89%BF%E6%80%A7">4.2 继承性</a></li>
+<li><a href="#43-%E4%BC%98%E5%85%88%E7%BA%A7">4.3 优先级</a></li>
+</ul>
+</li>
+<li><a href="#5-css%E5%B8%B8%E7%94%A8%E5%B1%9E%E6%80%A7">5. CSS常用属性</a>
+<ul>
+<li><a href="#51-%E9%A2%9C%E8%89%B2">5.1 颜色</a>
+<ul>
+<li><a href="#511-rgbrgba">5.1.1 rgb/rgba</a></li>
+<li><a href="#512-hexhexa">5.1.2 HEX/HEXA</a></li>
+<li><a href="#513-hslhsla">5.1.3 HSL/HSLA</a></li>
+</ul>
+</li>
+<li><a href="#52-%E5%AD%97%E4%BD%93%E5%B1%9E%E6%80%A7">5.2 字体属性</a>
+<ul>
+<li><a href="#521-%E5%AD%97%E4%BD%93%E5%A4%A7%E5%B0%8F">5.2.1 字体大小</a></li>
+<li><a href="#522-%E5%AD%97%E4%BD%93%E6%97%8F">5.2.2 字体族</a></li>
+<li><a href="#523-%E5%AD%97%E4%BD%93%E9%A3%8E%E6%A0%BC">5.2.3 字体风格</a></li>
+<li><a href="#524-%E5%AD%97%E4%BD%93%E7%B2%97%E7%BB%86">5.2.4 字体粗细</a></li>
+<li><a href="#525-%E5%AD%97%E4%BD%93%E5%A4%8D%E5%90%88%E5%86%99%E6%B3%95">5.2.5 字体复合写法</a></li>
+</ul>
+</li>
+<li><a href="#53-%E6%96%87%E6%9C%AC%E5%B1%9E%E6%80%A7">5.3 文本属性</a>
+<ul>
+<li><a href="#531-%E6%96%87%E6%9C%AC%E9%A2%9C%E8%89%B2">5.3.1 文本颜色</a></li>
+<li><a href="#532-%E6%96%87%E6%9C%AC%E9%97%B4%E8%B7%9D">5.3.2 文本间距</a></li>
+<li><a href="#533-%E6%96%87%E6%9C%AC%E4%BF%AE%E9%A5%B0">5.3.3 文本修饰</a></li>
+<li><a href="#534-%E6%96%87%E6%9C%AC%E7%BC%A9%E8%BF%9B">5.3.4 文本缩进</a></li>
+<li><a href="#535-%E6%96%87%E6%9C%AC%E6%B0%B4%E5%B9%B3%E5%AF%B9%E9%BD%90">5.3.5 文本水平对齐</a></li>
+<li><a href="#536-%E6%96%87%E6%9C%AC%E5%9E%82%E7%9B%B4%E5%AF%B9%E9%BD%90">5.3.6 文本垂直对齐</a></li>
+<li><a href="#537-%E8%A1%8C%E9%AB%98">5.3.7 行高</a></li>
+<li><a href="#537-vertical-align">5.3.7 vertical-align</a></li>
+</ul>
+</li>
+<li><a href="#54-%E5%88%97%E8%A1%A8%E5%B1%9E%E6%80%A7">5.4 列表属性</a></li>
+<li><a href="#55-%E8%BE%B9%E6%A1%86%E5%B1%9E%E6%80%A7">5.5 边框属性</a></li>
+<li><a href="#56-%E8%A1%A8%E6%A0%BC%E5%B1%9E%E6%80%A7">5.6 表格属性</a></li>
+<li><a href="#57-%E8%83%8C%E6%99%AF%E5%B1%9E%E6%80%A7">5.7 背景属性</a></li>
+<li><a href="#57%E9%BC%A0%E6%A0%87%E5%B1%9E%E6%80%A7">5.7鼠标属性</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p><img src="../assets/css_selector.gif" alt="selector" /></p>
+<h2 id="1-基本选择器"><a class="header" href="#1-基本选择器">1. 基本选择器</a></h2>
+<h3 id="11-通配选择器"><a class="header" href="#11-通配选择器">1.1 通配选择器</a></h3>
+<pre><code class="language-css">/* 选中所有元素 */
+* {
+  color: orange;
+  font-size: 40px;
+}
+</code></pre>
+<h3 id="12-元素选择器"><a class="header" href="#12-元素选择器">1.2 元素选择器</a></h3>
+<p>文档的元素就是元素选择器,是最基本的选择器</p>
+<pre><code class="language-css">html { color:black; }
+h1 { color:blue; }
+h2 { color:silver; }
+</code></pre>
+<h3 id="13-类选择器"><a class="header" href="#13-类选择器">1.3. 类选择器</a></h3>
+<p>类选择器允许以一种独立于文档元素的方式来指定样式.</p>
+<pre><code class="language-html">&lt;h1 class="important"&gt;
+This heading is very important.
+&lt;/h1&gt;
+</code></pre>
+<pre><code class="language-css">.important {color:red;}
+</code></pre>
+<h3 id="14-id选择器"><a class="header" href="#14-id选择器">1.4. ID选择器</a></h3>
+<p>ID选择器允许以一种独立于文档元素的方式来指定样式</p>
+<pre><code class="language-html">&lt;p id="intro"&gt;This is a paragraph of introduction.&lt;/p&gt;
+</code></pre>
+<pre><code class="language-css">#intro {font-weight:bold;}
+</code></pre>
+<h2 id="2-复合选择器"><a class="header" href="#2-复合选择器">2. 复合选择器</a></h2>
+<h3 id="21-交集选择器"><a class="header" href="#21-交集选择器">2.1 交集选择器</a></h3>
+<p>选中同时符合多个条件的元素</p>
+<pre><code class="language-css">/* 选中:类名为beauty的p元素, 为此种写法用的非常多!!!! */
+p.beauty {
+  color: blue;
+}
+/* 选中:类名包含rich和beauty的元素 */
+.rich.beauty {
+  color: green;
+}
+</code></pre>
+<h3 id="22-并集选择器"><a class="header" href="#22-并集选择器">2.2 并集选择器</a></h3>
+<p>选中多个选择器对应的元素(<code>以','分隔</code>), 被分组的选择器就可以分享相同的声明, 又称:分组选择器</p>
+<pre><code class="language-css">h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  color: green;
+}
+</code></pre>
+<h3 id="23-后代选择器"><a class="header" href="#23-后代选择器">2.3. 后代选择器</a></h3>
+<p>后代选择器可以选择作为某元素后代的元素(<code>以空格分隔</code>)</p>
+<pre><code class="language-css">h1 em {color:red;}
+</code></pre>
+<h3 id="24-子代选择器"><a class="header" href="#24-子代选择器">2.4. 子代选择器</a></h3>
+<p>与后代选择器相比, 子元素选择器只能选择作为某元素子元素的元素(<code>以&gt;分隔</code>).</p>
+<pre><code class="language-css">h1 &gt; strong {color:red;}
+</code></pre>
+<h3 id="25-相邻兄弟选择器"><a class="header" href="#25-相邻兄弟选择器">2.5. 相邻兄弟选择器</a></h3>
+<p>相邻兄弟选择器 (Adjacent sibling selector) 可选择<strong>紧接</strong>在另一元素后的元素, 且二者有相同父元素(<code>以+分隔</code>).</p>
+<pre><code class="language-css">h1 + p {margin-top:50px;}
+</code></pre>
+<h3 id="26-属性选择器"><a class="header" href="#26-属性选择器">2.6. 属性选择器</a></h3>
+<p>属性选择器可以根据元素的属性及属性值来选择元素.</p>
+<h4 id="261-简单属性选择"><a class="header" href="#261-简单属性选择">2.6.1. 简单属性选择</a></h4>
+<p>如果您希望把包含标题 (title) 的所有元素变为红色, 可以写作:</p>
+<pre><code class="language-css">*[title] {color:red;}  // 把包含标题 (title) 的所有元素变为红色
+a[href] {color:red;} // 只对有 href 属性的锚 (a 元素) 应用样式
+a[href][title] {color:red;} // 将同时有 href 和 title 属性的 HTML 超链接的文本设置为红色
+img[alt] {border: 5px solid red;} // 所有带有 alt 属性的图像应用样式, 从而突出显示这些有效的图像
+</code></pre>
+<h4 id="262-根据具体属性值选择"><a class="header" href="#262-根据具体属性值选择">2.6.2. 根据具体属性值选择</a></h4>
+<pre><code class="language-css">a[href="http://www.w3school.com.cn/"][title="W3School"] {color: red;} // 把多个属性-值选择器链接在一起来选择一个文档
+p[class="important warning"] {color: red;} // 根据具体属性值来选择该元素
+</code></pre>
+<div class="table-wrapper"><table><thead><tr><th style="text-align: left">选择器</th><th style="text-align: left">描述</th></tr></thead><tbody>
+<tr><td style="text-align: left">[<a href="https://www.w3school.com.cn/cssref/selector_attribute.asp"><em>attribute</em>]</a></td><td style="text-align: left">选取带有<code>attribute</code>属性的元素.</td></tr>
+<tr><td style="text-align: left">[<a href="https://www.w3school.com.cn/cssref/selector_attribute_value.asp"><em>attribute</em>=<em>value</em>]</a></td><td style="text-align: left">选取<code>attribute</code>属性值为<code>value</code>的元素.</td></tr>
+<tr><td style="text-align: left">[<a href="https://www.w3school.com.cn/cssref/selector_attribute_value_contain.asp"><em>attribute</em>~=<em>value</em>]</a></td><td style="text-align: left">选取<code>attribute</code>属性值中包含<code>value</code>的元素.</td></tr>
+<tr><td style="text-align: left">[<a href="https://www.w3school.com.cn/cssref/selector_attribute_value_start.asp"><em>attribute</em>|=<em>value</em>]</a></td><td style="text-align: left">选取<code>attribute</code>属性值等于<code>value</code>或<code>value</code>开头的元素, 该值必须是整个单词.</td></tr>
+<tr><td style="text-align: left">[<a href="https://www.w3school.com.cn/cssref/selector_attr_begin.asp"><em>attribute</em>^=<em>value</em>]</a></td><td style="text-align: left">选取<code>attribute</code>属性值<code>value</code>开头的每个元素.</td></tr>
+<tr><td style="text-align: left"><a href="https://www.w3school.com.cn/cssref/selector_attr_end.asp">[<em>attribute</em>$=value]</a></td><td style="text-align: left">选取<code>attribute</code>属性值value结尾的每个元素.</td></tr>
+<tr><td style="text-align: left"><a href="https://www.w3school.com.cn/cssref/selector_attr_contain.asp">[attribute*=value]</a></td><td style="text-align: left">选取<code>attribute</code>属性值包含<code>value</code>的每个元素.</td></tr>
+</tbody></table>
+</div>
+<h3 id="27-伪类"><a class="header" href="#27-伪类">2.7. 伪类</a></h3>
+<p>伪类用于向某些选择器添加特殊的效果</p>
+<pre><code class="language-css">selector : pseudo-class {property: value}
+</code></pre>
+<h4 id="271-锚伪类"><a class="header" href="#271-锚伪类">2.7.1. 锚伪类</a></h4>
+<pre><code class="language-css">a:link {color: #FF0000}    /* 未访问的元素 */
+a:visited {color: #00FF00}  /* 已访问的元素 */
+a:hover {color: #FF00FF}  /* 鼠标悬停在元素上 */
+a:active {color: #0000FF}  /* 激活的元素 */
+a:focus {color: #0000FF}  /* 获取焦点的元素 */
+</code></pre>
+<h4 id="272-结构伪类"><a class="header" href="#272-结构伪类">2.7.2. 结构伪类</a></h4>
+<ul>
+<li><code>:first-child</code> 所有兄弟元素中的<strong>第一个</strong>.</li>
+<li><code>:last-child</code> 所有兄弟元素中的<strong>最后一个</strong>.</li>
+<li><code>:nth-child(n)</code> 所有兄弟元素中的<strong>第 n 个</strong>.</li>
+<li><code>:first-of-type</code> 所有同类型兄弟元素中的<strong>第一个</strong>.</li>
+<li><code>:last-of-type</code> 所有同类型兄弟元素中的<strong>最后一个</strong>.</li>
+<li><code>:nth-of-type(n)</code> 所有同类型兄弟元素中的<strong>第n个</strong>.</li>
+<li><code>:nth-last-child(n)</code> 所有兄弟元素中的<strong>倒数第n个</strong>.</li>
+<li><code>:nth-last-of-type(n)</code> 所有同类型兄弟元素中的<strong>倒数第n个</strong>.</li>
+<li><code>:only-child</code> 选择没有兄弟的元素 (独生子女).</li>
+<li><code>:only-of-type</code> 选择没有<strong>同类型</strong>兄弟的元素.</li>
+<li><code>:root</code> 根元素.</li>
+<li><code>:empty</code> 内容为空元素 (空格也算内容).</li>
+<li><code>:not(选择器)</code> 排除满足括号中条件的元素.</li>
+<li><code>:checked</code> 被选中的复选框或单选按钮.</li>
+<li><code>:enable</code> 可用的表单元素 (没有 <code>disabled</code> 属性).</li>
+<li><code>:disabled</code> 不可用的表单元素 (有 <code>disabled</code> 属性)</li>
+<li><code>:target</code> 选中锚点指向的元素.</li>
+<li><code>:lang()</code> 根据指定的语言选择元素 (本质是看 lang 属性的值).</li>
+</ul>
+<h3 id="28-伪元素"><a class="header" href="#28-伪元素">2.8. 伪元素</a></h3>
+<p>伪元素用于向某些选择器设置特殊效果</p>
+<pre><code class="language-css">selector:pseudo-element {property:value;}
+</code></pre>
+<h4 id="281-first-line伪元素"><a class="header" href="#281-first-line伪元素">2.8.1. <code>"first-line"</code>伪元素</a></h4>
+<p><code>"first-line"</code> 伪元素用于向文本的首行设置特殊样式.</p>
+<pre><code class="language-css">p:first-line  {
+  color:#ff0000;
+  font-variant:small-caps;
+  }
+</code></pre>
+<p><strong>注释:</strong>"first-line" 伪元素只能用于块级元素.</p>
+<p>**注释:**下面的属性可应用于 "first-line" 伪元素:</p>
+<ul>
+<li>font</li>
+<li>color</li>
+<li>background</li>
+<li>word-spacing</li>
+<li>letter-spacing</li>
+<li>text-decoration</li>
+<li>vertical-align</li>
+<li>text-transform</li>
+<li>line-height</li>
+<li>clear</li>
+</ul>
+<h4 id="282-first-letter伪元素"><a class="header" href="#282-first-letter伪元素">2.8.2. <code>:first-letter</code>伪元素</a></h4>
+<p><code>first-letter</code> 伪元素用于向文本的首字母设置特殊样式:</p>
+<pre><code class="language-css">p:first-letter
+  {
+  color:#ff0000;
+  font-size:xx-large;
+  }
+</code></pre>
+<p><strong>注释:</strong>"first-letter" 伪元素只能用于块级元素.</p>
+<p>**注释:**下面的属性可应用于 "first-letter" 伪元素:</p>
+<ul>
+<li>font</li>
+<li>color</li>
+<li>background</li>
+<li>margin</li>
+<li>padding</li>
+<li>border</li>
+<li>text-decoration</li>
+<li>vertical-align (仅当 float 为 none 时)</li>
+<li>text-transform</li>
+<li>line-height</li>
+<li>float</li>
+<li>clear</li>
+</ul>
+<h4 id="283-before伪元素"><a class="header" href="#283-before伪元素">2.8.3. <code>:before</code>伪元素</a></h4>
+<p><code>:before</code>伪元素可以在元素的内容前面插入新内容</p>
+<pre><code class="language-css">h1:before{
+  content:url(logo.gif);
+  }
+</code></pre>
+<h4 id="284-after伪元素"><a class="header" href="#284-after伪元素">2.8.4. <code>after</code>伪元素</a></h4>
+<p><code>:after</code> 伪元素可以在元素的内容之后插入新内容.</p>
+<pre><code class="language-css">h1:after{
+  content:url(logo.gif);
+  }
+</code></pre>
+<div class="table-wrapper"><table><thead><tr><th style="text-align: left">属性</th><th style="text-align: left">描述</th><th style="text-align: left">CSS</th></tr></thead><tbody>
+<tr><td style="text-align: left"><a href="https://www.w3school.com.cn/cssref/pr_pseudo_first-letter.asp">:first-letter</a></td><td style="text-align: left">向文本的第一个字母添加特殊样式.</td><td style="text-align: left">1</td></tr>
+<tr><td style="text-align: left"><a href="https://www.w3school.com.cn/cssref/pr_pseudo_first-line.asp">:first-line</a></td><td style="text-align: left">向文本的首行添加特殊样式.</td><td style="text-align: left">1</td></tr>
+<tr><td style="text-align: left"><a href="https://www.w3school.com.cn/cssref/pr_pseudo_before.asp">:before</a></td><td style="text-align: left">在元素之前添加内容.</td><td style="text-align: left">2</td></tr>
+<tr><td style="text-align: left"><a href="https://www.w3school.com.cn/cssref/pr_pseudo_after.asp">:after</a></td><td style="text-align: left">在元素之后添加内容.</td><td style="text-align: left">2</td></tr>
+</tbody></table>
+</div>
+<h2 id="3-选择器权重"><a class="header" href="#3-选择器权重">3. 选择器权重</a></h2>
+<blockquote>
+<p>行内样式 &gt; ID选择器 &gt; 类选择器 &gt; 元素选择器 &gt; 通配选择器.</p>
+</blockquote>
+<h2 id="4-css三大特性"><a class="header" href="#4-css三大特性">4. CSS三大特性</a></h2>
+<h3 id="41-层叠性"><a class="header" href="#41-层叠性">4.1. 层叠性</a></h3>
+<p>如果发生了样式冲突, 那就会根据一定的规则 (选择器优先级), 进行样式的层叠 (覆
+盖).</p>
+<h3 id="42-继承性"><a class="header" href="#42-继承性">4.2 继承性</a></h3>
+<p>元素会自动拥有其父元素、或其祖先元素上所设置的某些样式. 优先继承离得近的.</p>
+<h3 id="43-优先级"><a class="header" href="#43-优先级">4.3 优先级</a></h3>
+<blockquote>
+<p><code>!important</code> &gt; 行内样式 &gt; ID选择器 &gt; 类选择器 &gt; 元素选择器 &gt; * &gt; 继承的样式</p>
+</blockquote>
+<h2 id="5-css常用属性"><a class="header" href="#5-css常用属性">5. CSS常用属性</a></h2>
+<h3 id="51-颜色"><a class="header" href="#51-颜色">5.1 颜色</a></h3>
+<h4 id="511-rgbrgba"><a class="header" href="#511-rgbrgba">5.1.1 rgb/rgba</a></h4>
+<pre><code class="language-css">/* 使用 0~255 之间的数字表示一种颜色 */
+color: rgb(255, 0, 0);/* 红色 */
+color: rgb(0, 255, 0);/* 绿色 */
+color: rgb(0, 0, 255);/* 蓝色 */
+color: rgb(0, 0, 0);/* 黑色 */
+color: rgb(255, 255, 255);/* 白色 */
+/* 混合出任意一种颜色 */
+color:rgb(138, 43, 226) /* 紫罗兰色 */
+color:rgba(255, 0, 0, 0.5);/* 半透明的红色 */
+/* 也可以使用百分比表示一种颜色 (用的少)  */
+color: rgb(100%, 0%, 0%);/* 红色 */
+color: rgba(100%, 0%, 0%,50%);/* 半透明的红色 */
+</code></pre>
+<h4 id="512-hexhexa"><a class="header" href="#512-hexhexa">5.1.2 HEX/HEXA</a></h4>
+<pre><code class="language-css">color: #ff0000;/* 红色 */
+color: #00ff00;/* 绿色 */
+color: #0000ff;/* 蓝色 */
+color: #000000;/* 黑色 */
+color: #ffffff;/* 白色 */
+/* 如果每种颜色的两位都是相同的, 就可以简写*/
+color: #ff9988;/* 可简为:#f98 */
+/* 但要注意前三位简写了, 那么透明度就也要简写 */
+color: #ff998866;/* 可简为:#f986 */
+</code></pre>
+<h4 id="513-hslhsla"><a class="header" href="#513-hslhsla">5.1.3 HSL/HSLA</a></h4>
+<p>格式: <code>hsl(色相,饱和度,亮度)</code>/<code>hsla(色相,饱和度,亮度,透明度)</code></p>
+<h3 id="52-字体属性"><a class="header" href="#52-字体属性">5.2 字体属性</a></h3>
+<h4 id="521-字体大小"><a class="header" href="#521-字体大小">5.2.1 字体大小</a></h4>
+<p><code>font-size</code>控制字体的大小</p>
+<pre><code class="language-css">div {
+  font-size: 40px;
+}
+</code></pre>
+<h4 id="522-字体族"><a class="header" href="#522-字体族">5.2.2 字体族</a></h4>
+<p><code>font-family</code>控制字体类型</p>
+<pre><code class="language-css">div {
+  font-family: "STCaiyun","Microsoft YaHei",sans-serif
+}
+</code></pre>
+<h4 id="523-字体风格"><a class="header" href="#523-字体风格">5.2.3 字体风格</a></h4>
+<p><code>font-style</code>控制字体是否为斜体</p>
+<pre><code class="language-css">div {
+  font-style: italic;
+}
+</code></pre>
+<h4 id="524-字体粗细"><a class="header" href="#524-字体粗细">5.2.4 字体粗细</a></h4>
+<p><code>font-weight</code>控制字体的粗细</p>
+<ul>
+<li><code>lighter</code>:细</li>
+<li><code>normal</code>: 正常</li>
+<li><code>bold</code>:粗</li>
+<li><code>bolder</code>:很粗</li>
+</ul>
+<pre><code class="language-css">div {
+  font-weight: bold;
+}
+div {
+  font-weight: 600;
+}
+</code></pre>
+<h4 id="525-字体复合写法"><a class="header" href="#525-字体复合写法">5.2.5 字体复合写法</a></h4>
+<p>字体大小、字体族必须都写上, 字体族必须是最后一位、字体大小必须是倒数第二位.各个属性间用空格隔开.</p>
+<pre><code class="language-css">div {
+  font: 20px "STCaiyun","Microsoft YaHei",sans-serif;
+}
+</code></pre>
+<h3 id="53-文本属性"><a class="header" href="#53-文本属性">5.3 文本属性</a></h3>
+<h4 id="531-文本颜色"><a class="header" href="#531-文本颜色">5.3.1 文本颜色</a></h4>
+<p><code>color</code>控制文字的颜色</p>
+<pre><code class="language-css">p {
+  color: rgb(112,45,78);
+}
+</code></pre>
+<h4 id="532-文本间距"><a class="header" href="#532-文本间距">5.3.2 文本间距</a></h4>
+<ul>
+<li>字母间距: <code>letter-spacing</code></li>
+<li>单词间距: <code>word-spacing</code> (通过空格识别词)</li>
+<li>属性值为像素 (<code>px</code>) , 正值让间距增大, 负值让间距缩小</li>
+</ul>
+<h4 id="533-文本修饰"><a class="header" href="#533-文本修饰">5.3.3 文本修饰</a></h4>
+<p><code>text-decoration</code>控制文本的各种装饰线, 可选值:</p>
+<ul>
+<li><code>none</code>: 无装饰线 (常用)</li>
+<li><code>underline</code>:下划线 (常用)</li>
+<li><code>overline</code>: 上划线</li>
+<li><code>line-through</code>: 删除线</li>
+</ul>
+<h4 id="534-文本缩进"><a class="header" href="#534-文本缩进">5.3.4 文本缩进</a></h4>
+<p><code>text-indent</code>控制文本首字母的缩进.</p>
+<pre><code class="language-css">div {
+  text-indent:40px;
+}
+</code></pre>
+<h4 id="535-文本水平对齐"><a class="header" href="#535-文本水平对齐">5.3.5 文本水平对齐</a></h4>
+<p><code>text-align</code>控制文本的水平对齐方式:</p>
+<ul>
+<li><code>left</code>: 左对齐 (默认值)</li>
+<li><code>right</code>: 右对齐</li>
+<li><code>center</code>: 居中对齐</li>
+</ul>
+<pre><code class="language-css">div {
+  text-align: center;
+}
+</code></pre>
+<h4 id="536-文本垂直对齐"><a class="header" href="#536-文本垂直对齐">5.3.6 文本垂直对齐</a></h4>
+<p>顶部:无需任何属性, 在垂直方向上, 默认就是顶部对齐
+居中:对于单行文字, 让 <code>height = line-height</code> 即可</p>
+<h4 id="537-行高"><a class="header" href="#537-行高">5.3.7 行高</a></h4>
+<p><code>line-height</code>控制一行文字的高度.</p>
+<pre><code class="language-css">div {
+  line-height: 60px;
+  line-height: 1.5; /* 参考自身 font-size 的倍数 */
+  line-height: 150%; /* 参考自身 font-size 的百分比 */
+}
+</code></pre>
+<h4 id="537-vertical-align"><a class="header" href="#537-vertical-align">5.3.7 vertical-align</a></h4>
+<p><code>vertical-align</code>用于指定同一行元素之间, 或 表格单元格 内文字的 垂直对齐方式, 不能控制块元素.</p>
+<ul>
+<li><code>baseline</code>  (默认值) :使元素的基线与父元素的基线对齐.</li>
+<li><code>top</code>:使元素的顶部与其所在行的顶部对齐.</li>
+<li><code>middle</code>:使元素的中部与父元素的基线加上父元素字母 x 的一半对齐.</li>
+<li><code>bottom</code>:使元素的底部与其所在行的底部对齐.</li>
+</ul>
+<h3 id="54-列表属性"><a class="header" href="#54-列表属性">5.4 列表属性</a></h3>
+<p>列表相关的属性, 可以作用在 <code>ul</code> 、 <code>ol</code> 、 <code>li</code> 元素上.</p>
+<p><code>list-style-type</code>设置列表符号</p>
+<ul>
+<li><code>none</code>:不显示前面的标识 (很常用!)</li>
+<li><code>square</code>:实心方块</li>
+<li><code>disc</code>:圆形</li>
+<li><code>decimal</code>:数字</li>
+<li><code>lower-roman</code>:小写罗马字</li>
+<li><code>upper-roman</code>:大写罗马字</li>
+<li><code>lower-alpha</code>:小写字母</li>
+<li><code>upper-alpha</code>:大写字母</li>
+</ul>
+<p><code>list-style-position</code>设置列表符号的位置</p>
+<ul>
+<li><code>inside</code>:在 <code>li</code> 的里面</li>
+<li><code>outside</code>:在 <code>li</code> 的外边</li>
+</ul>
+<p><code>list-style-image</code>自定义列表符号, <code>url(图片地址)</code>
+<code>list-style</code>复合属性, 没有数量、顺序的要求</p>
+<h3 id="55-边框属性"><a class="header" href="#55-边框属性">5.5 边框属性</a></h3>
+<p><code>border-width</code>边框宽度CSS 中可用的长度值
+<code>border-color</code>边框颜色CSS 中可用的颜色值
+<code>border-style</code>边框风格</p>
+<ul>
+<li><code>none</code> 默认值</li>
+<li><code>solid</code> 实线</li>
+<li><code>dashed</code> 虚线</li>
+<li><code>dotted</code> 点线</li>
+<li><code>double</code> 双实线</li>
+</ul>
+<p><code>border</code>边框复合属性, 没有数量、顺序的要求</p>
+<h3 id="56-表格属性"><a class="header" href="#56-表格属性">5.6 表格属性</a></h3>
+<p><img src="../assets/css-table.png" alt="background" /></p>
+<h3 id="57-背景属性"><a class="header" href="#57-背景属性">5.7 背景属性</a></h3>
+<p><img src="../assets/css-background.png" alt="background" /></p>
+<h3 id="57鼠标属性"><a class="header" href="#57鼠标属性">5.7鼠标属性</a></h3>
+<p><img src="../assets/css-cursor.png" alt="background" /></p>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="../pickup/04-xpath语法.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+
+                            <a rel="next prefetch" href="../pickup/06-opentelemetry.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="../pickup/04-xpath语法.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+
+                    <a rel="next prefetch" href="../pickup/06-opentelemetry.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+
+
+        <script>
+            window.playground_line_numbers = true;
+        </script>
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+        <script src="../ace.js"></script>
+        <script src="../mode-rust.js"></script>
+        <script src="../editor.js"></script>
+        <script src="../theme-dawn.js"></script>
+        <script src="../theme-tomorrow_night.js"></script>
+
+        <script src="../elasticlunr.min.js"></script>
+        <script src="../mark.min.js"></script>
+        <script src="../searcher.js"></script>
+
+        <script src="../clipboard.min.js"></script>
+        <script src="../highlight.js"></script>
+        <script src="../book.js"></script>
+
+        <!-- Custom JS scripts -->
+
+
+
+    </div>
+    </body>
+</html>
