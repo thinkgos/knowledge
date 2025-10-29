@@ -42,7 +42,7 @@ pub unsafe auto trait Sync {}
 
 ## 2. 并发常见工作模式
 
-![image-20221108080915636](http://imgur.thinkgos.cn/imgur/202211080809744.png)
+![image-20221108080915636](../assets/202211080809744.png)
 
 - **自由竞争模式**下, 多个并发任务会竞争同一个临界区的访问权
 - **map/reduce 模式**, 把工作打散, 按照相同的处理完成后, 再按照一定的顺序将结果组织起来
@@ -102,7 +102,7 @@ while self
 
 通用的解决方案是: 当多个线程竞争同一个 `Mutex` 时, 获得锁的线程得到临界区的访问, 其它线程被挂起, 放入该 `Mutex` 上的一个等待队列里. 当获得锁的线程完成工作, 退出临界区时, `Mutex` 会给等待队列发一个信号, 把队列中第一个线程唤醒, 于是这个线程可以进行后续的访问. 整个过程如下:
 
-![image-20221109085449640](http://imgur.thinkgos.cn/imgur/202211090854786.png)
+![image-20221109085449640](../assets/202211090854786.png)
 
 当然, 这样实现会带来公平性的问题: 如果新来的线程恰巧在 `spin` 过程中拿到了锁, 而当前等待队列中还有其它线程在等待锁, 那么等待的线程只能继续等待下去, 这不符合 `FIFO`, 不适合那些需要严格按先来后到排队的使用场景. 为此, [`parking_lot`](https://github.com/Amanieu/parking_lot) 提供了 `fair mutex`.
 
@@ -125,7 +125,7 @@ while self
 - `bounded`: `bounded channel` 有一个队列, 但队列有上限. 一旦队列被写满了, 写者也需要被挂起等待. 当阻塞发生后, 读者一旦读取数据, `channel` 内部就会使用 `Condvar` 的 `notify_one` 通知写者, 唤醒某个写者使其能够继续写入.
 - `unbounded`: `queue` 没有上限, 如果写满了, 就自动扩容. 我们知道, `Rust` 的很多数据结构如 `Vec` 、`VecDeque` 都是自动扩容的. `unbounded` 和 `bounded` 相比, 除了不阻塞写者, 其它实现都很类似.
 
-![image-20221109111700680](http://imgur.thinkgos.cn/imgur/202211091117761.png)
+![image-20221109111700680](../assets/202211091117761.png)
 
 根据 `Channel` 读者和写者的数量, `Channel` 又可以分为:
 

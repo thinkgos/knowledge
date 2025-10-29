@@ -44,7 +44,7 @@ match result {
 
 `Rust` 还为 `Option` 和 `Result` 提供了大量的辅助函数, 如 `map` / `map_err` / `and_then`, 你可以很方便地处理数据结构中部分情况. 如下图所示: 
 
-![image-20230115183216477](http://imgur.thinkgos.cn/imgur/202301151832614.png)
+![image-20230115183216477](../assets/202301151832614.png)
 
 
 

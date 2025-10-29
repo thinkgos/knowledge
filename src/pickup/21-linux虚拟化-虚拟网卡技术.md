@@ -20,7 +20,7 @@
 
 不同的`Network Namespace`的资源互相不可见, 彼此之间无法通信。
 
-![network_namespace](http://imgur.thinkgos.cn/imgur/202205071132290.jpeg)
+![network_namespace](../assets/202205071132290.jpeg)
 
 **ip netns命令**
 
@@ -66,7 +66,7 @@ $ ip netns exec ns0 /bin/bash
 
 可以使用 Linux 提供的`veth pair`来完成通信, veth pair你可以理解为使用网线连接好的两个接口, 把两个端口放到两个namespace中, 那么这两个namespace就能打通。
 
-![ns_com](http://imgur.thinkgos.cn/imgur/202205071132203.jpeg)
+![ns_com](../assets/202205071132203.jpeg)
 
 ```shell
 # 创建veth pair
@@ -109,7 +109,7 @@ $ ip netns delete ns1
 
 如果多个network namespace需要进行通信, 则需要借助`bridge`。
 
-![ns_bridge](http://imgur.thinkgos.cn/imgur/202205071134226.jpeg)
+![ns_bridge](../assets/202205071134226.jpeg)
 
 ```shell
 # 创建网桥
@@ -138,10 +138,10 @@ $ ip link delete docker0
 - TUN 是一个虚拟网络设备, 它模拟的是一个三层设备, 通过它可以处理来自网络层的数据包, 也就是 IP 数据包。由于它只模拟到了 IP 层, 所以它无法与物理网卡做 bridge, 也没有 MAC 地址, 但是可以通过三层交换的方式来与物理网卡相互通信。
 - TAP 模拟的是一个二层设备, 它比 TUN 更加深入, 它可以处理数据链路层的数据包, 拥有 MAC 地址, 可以与物理网卡做 bridge, 支持 MAC 层广播, 也可以给它设置 IP 地址。
 
-![tap-tun](http://imgur.thinkgos.cn/imgur/202205071134636.jpg)
+![tap-tun](../assets/202205071134636.jpg)
 
 
 
 
 
-![vepa](http://imgur.thinkgos.cn/imgur/202205071136355.jpeg)
+![vepa](../assets/202205071136355.jpeg)

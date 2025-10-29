@@ -47,7 +47,7 @@ Usage: tcpdump [-aAbdDefhHIJKlLnNOpqStuUvxX#] [ -B size ] [ -c count ]
 
 过滤器简单可分为三类：`协议（proto）`,`传输方向（dir）`和`类型（type）`。
 
-![tcpdump](http://imgur.thinkgos.cn/imgur/202205071133428.png)
+![tcpdump](../assets/202205071133428.png)
 
 - `proto`：可选有 **ip, arp, rarp, tcp, udp, icmp, ether **等, 默认是所有协议的包
 - `dir`：可选有 **src, dst, src or dst, src and dst**, 默认为 src or dst

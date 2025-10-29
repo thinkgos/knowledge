@@ -24,7 +24,7 @@ pub trait Drop {
 
 智能指针 `String` 和 `&str` 的区别: 
 
-![image-20230115191903977](http://imgur.thinkgos.cn/imgur/202301151919034.png)
+![image-20230115191903977](../assets/202301151919034.png)
 
 但 `String` 对堆上的值有所有权, 而 `&str` 是没有所有权的, 这是 `Rust` 中**智能指针**和**普通胖指针**的区别. 
 

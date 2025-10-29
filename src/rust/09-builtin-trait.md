@@ -190,7 +190,7 @@ pub trait DerefMut: Deref {
 }
 ```
 
-![image-20221107082655636](http://imgur.thinkgos.cn/imgur/202211070826785.png)
+![image-20221107082655636](../assets/202211070826785.png)
 
 ## 5. `Debug` / `Display` / `Default`
 
@@ -217,4 +217,4 @@ pub trait Default {
 
 ## 总结
 
-![image-20221107083458598](http://imgur.thinkgos.cn/imgur/202211070834776.png)
+![image-20221107083458598](../assets/202211070834776.png)

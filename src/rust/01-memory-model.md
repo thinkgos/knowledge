@@ -478,7 +478,7 @@ The set of traits is made up of an object safe base trait plus any number of aut
 
 trait 是 `DST` 类型 ,对trait的引用称之为 trait object, trait object是个胖指针, 包含两个普通指针分别为 `data`和 `vtable`.
 
-![2](http://imgur.thinkgos.cn/imgur/202205141636711.jpeg)
+![2](../assets/202205141636711.jpeg)
 
 ## 13. Dynamically Sized Types(DST) 动态类型
 
@@ -520,4 +520,4 @@ stack
 
 ## 18. 生命周期
 
-![image-20221111224011998](http://imgur.thinkgos.cn/imgur/202211112240020.png)
+![image-20221111224011998](../assets/202211112240020.png)
