@@ -1,0 +1,401 @@
+<!DOCTYPE HTML>
+<html lang="en" class="light sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>闭包 - knowledge</title>
+
+
+        <!-- Custom HTML head -->
+
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="../favicon.svg">
+        <link rel="shortcut icon" href="../favicon.png">
+        <link rel="stylesheet" href="../css/variables.css">
+        <link rel="stylesheet" href="../css/general.css">
+        <link rel="stylesheet" href="../css/chrome.css">
+        <link rel="stylesheet" href="../css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="../FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="../fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" id="highlight-css" href="../highlight.css">
+        <link rel="stylesheet" id="tomorrow-night-css" href="../tomorrow-night.css">
+        <link rel="stylesheet" id="ayu-highlight-css" href="../ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+
+        <!-- MathJax -->
+        <script async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+        <!-- Provide site root and default themes to javascript -->
+        <script>
+            const path_to_root = "../";
+            const default_light_theme = "light";
+            const default_dark_theme = "navy";
+            window.path_to_searchindex_js = "../searchindex.js";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="../toc.js"></script>
+    </head>
+    <body>
+    <div id="mdbook-help-container">
+        <div id="mdbook-help-popup">
+            <h2 class="mdbook-help-title">Keyboard shortcuts</h2>
+            <div>
+                <p>Press <kbd>←</kbd> or <kbd>→</kbd> to navigate between chapters</p>
+                <p>Press <kbd>S</kbd> or <kbd>/</kbd> to search in the book</p>
+                <p>Press <kbd>?</kbd> to show this help</p>
+                <p>Press <kbd>Esc</kbd> to hide this help</p>
+            </div>
+        </div>
+    </div>
+    <div id="body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                let theme = localStorage.getItem('mdbook-theme');
+                let sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            const default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? default_dark_theme : default_light_theme;
+            let theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            let sidebar = null;
+            const sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+                sidebar_toggle.checked = false;
+            }
+            if (sidebar === 'visible') {
+                sidebar_toggle.checked = true;
+            } else {
+                html.classList.remove('sidebar-visible');
+            }
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="../toc.html"></iframe>
+            </noscript>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </label>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="default_theme">Auto</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search (`/`)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="/ s" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">knowledge</h1>
+
+                    <div class="right-buttons">
+                        <a href="../print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+                        <a href="https://github.com/thinkgos/knowledge" title="Git repository" aria-label="Git repository">
+                            <i id="git-repository-button" class="fa fa-github"></i>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <div class="search-wrapper">
+                            <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                            <div class="spinner-wrapper">
+                                <i class="fa fa-spinner fa-spin"></i>
+                            </div>
+                        </div>
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h1 id="闭包closure-fnonce-fnmut-fn"><a class="header" href="#闭包closure-fnonce-fnmut-fn">闭包(closure): FnOnce, FnMut, Fn</a></h1>
+<h2 id="1-闭包定义"><a class="header" href="#1-闭包定义">1. 闭包定义</a></h2>
+<blockquote>
+<p>闭包是将函数, 或者说代码和其环境一起存储的一种数据结构. 闭包引用的上下文中的自由变量, 会被捕获到闭包的结构中, 成为闭包类型的一部分</p>
+</blockquote>
+<p>在 Rust 里, 闭包可以用 <code>|args| { code }</code> 来表述, 除了用引用来捕获自由变量之外, 还有另外一个方法使用 <code>move</code> 关键字 <code>move |args| { code }</code></p>
+<p>图中闭包 <code>c</code> 捕获了上下文中的 <code>a</code> 和 <code>b</code>, 并通过<strong>引用</strong>来使用这两个自由变量:</p>
+<p><img src="../assets/202301142131136.png" alt="image-20230114213128033" /></p>
+<h2 id="2-闭包的本质"><a class="header" href="#2-闭包的本质">2. 闭包的本质</a></h2>
+<ul>
+<li>
+<p>闭包是一种匿名类型, <strong>一旦声明, 就会产生一个新的类型</strong>, 但这个类型无法被其它地方使用. <strong>这个类型就像一个结构体, 会包含所有捕获的变量</strong>.</p>
+</li>
+<li>
+<p><strong>闭包的大小跟参数、局部变量都无关, 只跟捕获的变量有关.</strong></p>
+</li>
+<li>
+<p><strong>闭包是存储在栈上, 并且除了捕获的数据外, 闭包本身不包含任何额外函数指针指向闭包的代码</strong></p>
+</li>
+<li>
+<p>闭包变量的所有权:</p>
+<ul>
+<li>如果不使用 <code>move</code> 转移所有权, 闭包会引用上下文中的变量, <strong>这个引用受借用规则的约束</strong>, 所以只要编译通过, 那么闭包对变量的引用就不会超过变量的生命周期, 没有内存安全问题.</li>
+<li>如果使用 <code>move</code> 转移所有权, 上下文中的变量在转移后就无法访问, <strong>闭包完全接管这些变量</strong>, 它们的生命周期和闭包一致, 所以也不会有内存安全问题.</li>
+</ul>
+</li>
+</ul>
+<h2 id="3-闭包类型"><a class="header" href="#3-闭包类型">3. 闭包类型</a></h2>
+<p><code>FnOnce</code> / <code>FnMut</code> / <code>Fn</code> 这三种闭包类型有什么区别.</p>
+<h3 id="31-fnonce"><a class="header" href="#31-fnonce">3.1 FnOnce</a></h3>
+<pre><pre class="playground"><code class="language-rust edition2021"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>pub trait FnOnce&lt;Args&gt; {
+    type Output;
+    
+    extern "rust-call" fn call_once(self, args: Args) -&gt; Self::Output;
+}
+<span class="boring">}</span></code></pre></pre>
+<p><code>FnOnce</code>有一个关联类型, 这是闭包的返回值类型, 还有一个方法 <code>call_once</code>, 注意<code>call_once</code>第一个参数是<code>self</code>,它会转移<code>self</code>的所有权到<code>call_once</code>函数中.</p>
+<p>这也是为什么<code>FnOnce</code>被称为 <strong>Once</strong>: <strong>它只能被调用一次</strong>, 再次调用, 编译器将报变量已被 move 的所有权错误.</p>
+<p><code>FnOnce</code> 的参数, 是一个叫 <code>Args</code> 的泛型参数, 它并没有任何约束.</p>
+<pre><pre class="playground"><code class="language-rust edition2021">fn main() {
+    let name = String::from("Tyr");
+    // 这个闭包啥也不干, 只是把捕获的参数返回去
+    // 这是一个FnOnce闭包
+    let c = move |greeting: String| (greeting, name);
+
+    let result = c("hello".to_string());
+
+    println!("result: {:?}", result);
+
+    // 无法再次调用
+    let result = c("hi".to_string());
+}</code></pre></pre>
+<h2 id="32-fnmut"><a class="header" href="#32-fnmut">3.2 FnMut</a></h2>
+<pre><pre class="playground"><code class="language-rust edition2021"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>pub trait FnMut&lt;Args&gt;: FnOnce&lt;Args&gt; {
+    extern "rust-call" fn call_mut(&amp;mut self, args: Args) -&gt; Self::Output;
+}
+<span class="boring">}</span></code></pre></pre>
+<ul>
+<li><code>FnMut</code> “继承”了 <code>FnOnce</code>, 所以 <code>FnMut</code> 也拥有 <code>Output</code> 这个关联类型和 <code>call_once</code> 这个方法. 此外, 它还有一个 <code>call_mut()</code> 方法. <strong>注意 <code>call_mut()</code> 传入 <code>&amp;mut self</code>, 它不移动 <code>self</code>, 所以 <code>FnMut</code> 可以被多次调用.</strong></li>
+<li><code>FnMut</code> “继承”了 <code>FnOnce</code>, 所以, 一个 <code>FnMut</code> 闭包, 可以被传给一个需要 <code>FnOnce</code> 的上下文, 此时调用闭包相当于调用了 <code>call_once()</code>.</li>
+</ul>
+<pre><pre class="playground"><code class="language-rust edition2021">fn main() {
+    let mut name = String::from("hello");
+  
+    // 捕获 &amp;mut name
+    let mut c = || {
+        name.push_str(" Tyr");
+        println!("c: {}", name);
+    };
+
+    call_mut(&amp;mut c);
+    call_once(c);
+}
+
+// 在作为参数时, FnMut 也要显式地使用 mut, 或者 &amp;mut
+fn call_mut(c: &amp;mut impl FnMut()) {
+    c();
+}
+
+// 为啥 call_once 不需要 mut？
+fn call_once(c: impl FnOnce()) {
+    c();
+}</code></pre></pre>
+<h2 id="33-fn"><a class="header" href="#33-fn">3.3 Fn</a></h2>
+<pre><pre class="playground"><code class="language-rust edition2021"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>pub trait Fn&lt;Args&gt;: FnMut&lt;Args&gt; {
+    extern "rust-call" fn call(&amp;self, args: Args) -&gt; Self::Output;
+}
+<span class="boring">}</span></code></pre></pre>
+<p><code>Fn</code>“继承”了 <code>FnMut</code>. 这也就意味着任何需要 <code>FnOnce</code> 或者 <code>FnMut</code> 的场合, 都可以传入满足 <code>Fn</code> 的闭包</p>
+<pre><pre class="playground"><code class="language-rust edition2021">fn main() {
+    let v = vec![0u8; 1024];
+
+    // Fn, 不移动所有权
+    let mut c = |x: u64| v.len() as u64 * x;
+    // Fn, 移动所有权
+    // let mut c = move |x: u64| v.len() as u64 * x;
+
+    println!("direct call: {}", c(2));
+    println!("call: {}", call(3, &amp;c));
+    println!("call_mut: {}", call_mut(4, &amp;mut c));
+    println!("call_once: {}", call_once(5, c));
+}
+
+fn call(arg: u64, c: &amp;impl Fn(u64) -&gt; u64) -&gt; u64 {
+    c(arg)
+}
+
+fn call_mut(arg: u64, c: &amp;mut impl FnMut(u64) -&gt; u64) -&gt; u64 {
+    c(arg)
+}
+
+fn call_once(arg: u64, c: impl FnOnce(u64) -&gt; u64) -&gt; u64 {
+    c(arg)
+}</code></pre></pre>
+<h2 id="34-闭包使用场景"><a class="header" href="#34-闭包使用场景">3.4 闭包使用场景</a></h2>
+<ul>
+<li>
+<p>作为参数</p>
+</li>
+<li>
+<p>作为函数返回值</p>
+</li>
+<li>
+<p>为它实现某个<code>trait</code></p>
+<ul>
+<li>使其能表现出其他行为, 而不仅仅作为函数被调用. 比如有些接口既可以传入一个结构体, 又可以传入一个函数或者闭包.</li>
+</ul>
+</li>
+</ul>
+<blockquote>
+<p><a href="https://github.com/hyperium/tonic">tonic</a> (Rust 下的 gRPC 库) 的<a href="https://docs.rs/tonic/0.5.2/src/tonic/service/interceptor.rs.html#41-53">例子</a>:</p>
+<pre><pre class="playground"><code class="language-rust edition2021"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>pub trait Interceptor {
+    /// Intercept a request before it is sent, optionally cancelling it.
+    fn call(&amp;mut self, request: crate::Request&lt;()&gt;) -&gt; Result&lt;crate::Request&lt;()&gt;, Status&gt;;
+}
+
+impl&lt;F&gt; Interceptor for F
+where
+    F: FnMut(crate::Request&lt;()&gt;) -&gt; Result&lt;crate::Request&lt;()&gt;, Status&gt;,
+{
+    fn call(&amp;mut self, request: crate::Request&lt;()&gt;) -&gt;  Result&lt;crate::Request&lt;()&gt;, Status&gt; {
+        self(request)
+    }
+}
+<span class="boring">}</span></code></pre></pre>
+<p><code>Interceptor</code> 有一个 <code>call</code> 方法, 它可以让 gRPC Request 被发送出去之前被修改, 一般是添加各种头, 比如 <code>Authorization</code> 头.</p>
+</blockquote>
+<h2 id="4总结"><a class="header" href="#4总结">4.总结</a></h2>
+<p><code>Rust</code> 闭包的效率非常高. 首先闭包捕获的变量, 都储存在栈上, 没有堆内存分配. 其次因为闭包在创建时会隐式地创建自己的类型, 每个闭包都是一个新的类型. 通过闭包自己唯一的类型, <code>Rust</code> 不需要额外的函数指针来运行闭包, 所以闭包的调用效率和函数调用几乎一致.</p>
+<p><img src="../assets/202211051621413.png" alt="image-20221105162134886" /></p>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="../rust/05-macro.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+
+                            <a rel="next prefetch" href="../rust/07-error-handling.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="../rust/05-macro.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+
+                    <a rel="next prefetch" href="../rust/07-error-handling.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+
+
+        <script>
+            window.playground_line_numbers = true;
+        </script>
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+        <script src="../ace.js"></script>
+        <script src="../mode-rust.js"></script>
+        <script src="../editor.js"></script>
+        <script src="../theme-dawn.js"></script>
+        <script src="../theme-tomorrow_night.js"></script>
+
+        <script src="../elasticlunr.min.js"></script>
+        <script src="../mark.min.js"></script>
+        <script src="../searcher.js"></script>
+
+        <script src="../clipboard.min.js"></script>
+        <script src="../highlight.js"></script>
+        <script src="../book.js"></script>
+
+        <!-- Custom JS scripts -->
+
+
+
+    </div>
+    </body>
+</html>

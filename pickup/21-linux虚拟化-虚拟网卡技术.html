@@ -1,0 +1,362 @@
+<!DOCTYPE HTML>
+<html lang="en" class="light sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>linux虚拟化 虚拟网卡技术 - knowledge</title>
+
+
+        <!-- Custom HTML head -->
+
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="../favicon.svg">
+        <link rel="shortcut icon" href="../favicon.png">
+        <link rel="stylesheet" href="../css/variables.css">
+        <link rel="stylesheet" href="../css/general.css">
+        <link rel="stylesheet" href="../css/chrome.css">
+        <link rel="stylesheet" href="../css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="../FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="../fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" id="highlight-css" href="../highlight.css">
+        <link rel="stylesheet" id="tomorrow-night-css" href="../tomorrow-night.css">
+        <link rel="stylesheet" id="ayu-highlight-css" href="../ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+
+        <!-- MathJax -->
+        <script async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+        <!-- Provide site root and default themes to javascript -->
+        <script>
+            const path_to_root = "../";
+            const default_light_theme = "light";
+            const default_dark_theme = "navy";
+            window.path_to_searchindex_js = "../searchindex.js";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="../toc.js"></script>
+    </head>
+    <body>
+    <div id="mdbook-help-container">
+        <div id="mdbook-help-popup">
+            <h2 class="mdbook-help-title">Keyboard shortcuts</h2>
+            <div>
+                <p>Press <kbd>←</kbd> or <kbd>→</kbd> to navigate between chapters</p>
+                <p>Press <kbd>S</kbd> or <kbd>/</kbd> to search in the book</p>
+                <p>Press <kbd>?</kbd> to show this help</p>
+                <p>Press <kbd>Esc</kbd> to hide this help</p>
+            </div>
+        </div>
+    </div>
+    <div id="body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                let theme = localStorage.getItem('mdbook-theme');
+                let sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            const default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? default_dark_theme : default_light_theme;
+            let theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            let sidebar = null;
+            const sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+                sidebar_toggle.checked = false;
+            }
+            if (sidebar === 'visible') {
+                sidebar_toggle.checked = true;
+            } else {
+                html.classList.remove('sidebar-visible');
+            }
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="../toc.html"></iframe>
+            </noscript>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </label>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="default_theme">Auto</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search (`/`)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="/ s" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">knowledge</h1>
+
+                    <div class="right-buttons">
+                        <a href="../print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+                        <a href="https://github.com/thinkgos/knowledge" title="Git repository" aria-label="Git repository">
+                            <i id="git-repository-button" class="fa fa-github"></i>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <div class="search-wrapper">
+                            <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                            <div class="spinner-wrapper">
+                                <i class="fa fa-spinner fa-spin"></i>
+                            </div>
+                        </div>
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h1 id="linux虚拟网络技术"><a class="header" href="#linux虚拟网络技术">linux虚拟网络技术</a></h1>
+<p>在Linux虚拟化技术中, 网络层面, 通常重要的三个技术分别是<code>Network Namespace</code>、<code>veth pair</code>、以及<code>网桥</code>或<code>虚拟交换机</code>技术.</p>
+<blockquote>
+<p>参考资料:</p>
+<ul>
+<li>
+<p><a href="https://www.cnblogs.com/bakari/p/10450711.html">虚拟网络设备 tap/tun 原理解析</a></p>
+</li>
+<li>
+<p><a href="https://www.cnblogs.com/bakari/p/10613710.html">Linux 虚拟网络设备 veth-pair 详解</a></p>
+</li>
+<li>
+<p><a href="https://www.cnblogs.com/bakari/p/10529575.html">Linux 虚拟网络设备详解之 Bridge 网桥</a></p>
+</li>
+<li>
+<p><a href="https://www.cnblogs.com/bakari/p/10641915.html">网卡也能虚拟化？网卡虚拟化技术 macvlan 详解</a></p>
+</li>
+</ul>
+</blockquote>
+<h2 id="一-network-namespace"><a class="header" href="#一-network-namespace">一. Network Namespace</a></h2>
+<p><code>Network Namespace</code>, 它是由Linux内核提供, 是实现网络虚拟化的重要功能。</p>
+<p>通过创建多个隔离的网络空间, 实现网络资源的隔离。</p>
+<p>不同的<code>Network Namespace</code>的资源互相不可见, 彼此之间无法通信。</p>
+<p><img src="../assets/202205071132290.jpeg" alt="network_namespace" /></p>
+<p><strong>ip netns命令</strong></p>
+<p><code>ip命令</code>管理的功能很多, 和<code>Network Namespace</code>有关的操作都在其子命令<code>ip netns</code>下进行的, 可以通过<code>ip netns help</code>查询命令帮助信息.</p>
+<pre><code class="language-shell">$ ip netns help
+Usage: ip netns list
+       ip netns add NAME
+       ip netns set NAME NETNSID
+       ip [-all] netns delete [NAME]
+       ip netns identify [PID]
+       ip netns pids NAME
+       ip [-all] netns exec [NAME] cmd ...
+       ip netns monitor
+       ip netns list-id
+       
+# ip netns add命令创建一个ns0的网络命名空间
+$ ip netns add ns0
+# 查看命名空间
+$ ip netns list
+# 命名空间所在的目录
+# 新创建的 Network Namespace 会出现在/var/run/netns/目录下。如果需要管理其他不是 ip netns 创建的 network namespace, 只要在这个目录下创建一个指向对应 network namespace 文件的链接即可。
+$ ls /var/run/netns/
+</code></pre>
+<p>对于每个 <code>Network Namespace</code> 来说, 它会有自己独立的网卡、路由表、ARP 表、iptables 等和网络相关的资源。</p>
+<p>ip命令提供了<code>ip netns exec</code>子命令可以在对应的 <code>Network Namespace</code> 中执行命令。</p>
+<pre><code class="language-shell"># 查看网络命名空间ns0的网卡信息
+$ ip netns exec ns0 ip addr
+# 默认loopback网卡是不启用的,下面是启用
+$ ip netns exec ns0 ip link set lo up
+# 在网络命名空间ns0打开shell
+$ ip netns exec ns0 /bin/bash
+</code></pre>
+<h2 id="二-veth-pair"><a class="header" href="#二-veth-pair">二. veth pair</a></h2>
+<p>默认情况下, <code>network namespace</code> 是不能和主机网络或者其他 network namespace 通信的</p>
+<p>可以使用 Linux 提供的<code>veth pair</code>来完成通信, veth pair你可以理解为使用网线连接好的两个接口, 把两个端口放到两个namespace中, 那么这两个namespace就能打通。</p>
+<p><img src="../assets/202205071132203.jpeg" alt="ns_com" /></p>
+<pre><code class="language-shell"># 创建veth pair
+$ ip link add type veth
+# 查看veth pair
+$ ip link
+# 可以创建时指定两个端点的名称
+$ ip link add veth001 type veth peer name veth002
+
+# 再创建一个网络命名空间ns1
+$ ip netns add ns1
+
+# 将veth pair 分别加入ns0 ns1
+$ ip link set veth0 netns ns0
+$ ip link set veth1 netns ns01
+
+# 分别为这对veth pair 配置ip地址并启用
+$ ip netns exec ns0 ip addr add 192.168.1.98/24 dev veth0
+$ ip netns exec ns0 ip link set veth0 up
+$ ip netns exec ns1 ip addr add 192.168.1.99/24 dev veth1
+$ ip netns exec ns1 ip link set veth1 up
+# 查看这对veth pair的状态
+$ sudo ip netns exec ns0 ip addr
+$ sudo ip netns exec ns1 ip addr
+# 验证互通
+$ ip netns exec ns0 ping -c 10 192.168.1.99
+$ ip netns exec ns1 ping -c 10 192.168.1.98
+</code></pre>
+<p><strong>删除 Network Namespace</strong></p>
+<pre><code class="language-shell">$ ip netns delete ns0
+$ ip netns delete ns1
+</code></pre>
+<h2 id="三-bridge"><a class="header" href="#三-bridge">三. bridge</a></h2>
+<p>虽然veth pair可以实现两个 Network Namespace 之间的通信, 但 veth pair 有一个明显的缺陷, 就是只能实现两个网络接口之间的通信。</p>
+<p>如果多个network namespace需要进行通信, 则需要借助<code>bridge</code>。</p>
+<p><img src="../assets/202205071134226.jpeg" alt="ns_bridge" /></p>
+<pre><code class="language-shell"># 创建网桥
+$ ip link add docker0 type bridge
+# 配置网桥ip 
+$ ip addr add 172.17.0.1/16 dev  docker0 
+# 启动网桥
+$ ip link set dev docker0 up
+# 查看网桥状态
+$ ip addr docker0
+# or
+$ ip link show docker0
+# or 
+$ ifconfig docker0
+
+# 删除网桥 
+$ ip link delete docker0
+</code></pre>
+<blockquote>
+<p>其它操作同上,可以将所有veth pair加入网桥,形成多个Network Namespace互通</p>
+</blockquote>
+<h2 id="四-taptun"><a class="header" href="#四-taptun">四. tap/tun</a></h2>
+<p><code>tap/tun</code>设备文件就像一个管道, 一端连接着用户空间, 一端连接着内核空间。当用户程序向文件 <code>/dev/net/tun</code> 或 <code>/dev/tap0</code> 写数据时, 内核就可以从对应的 <code>tunX</code> 或 <code>tapX</code> 接口读到数据, 反之, 内核可以通过相反的方式向用户程序发送数据。</p>
+<ul>
+<li>TUN 是一个虚拟网络设备, 它模拟的是一个三层设备, 通过它可以处理来自网络层的数据包, 也就是 IP 数据包。由于它只模拟到了 IP 层, 所以它无法与物理网卡做 bridge, 也没有 MAC 地址, 但是可以通过三层交换的方式来与物理网卡相互通信。</li>
+<li>TAP 模拟的是一个二层设备, 它比 TUN 更加深入, 它可以处理数据链路层的数据包, 拥有 MAC 地址, 可以与物理网卡做 bridge, 支持 MAC 层广播, 也可以给它设置 IP 地址。</li>
+</ul>
+<p><img src="../assets/202205071134636.jpg" alt="tap-tun" /></p>
+<p><img src="../assets/202205071136355.jpeg" alt="vepa" /></p>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="../pickup/20-linux信号.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+
+                            <a rel="next prefetch" href="../pickup/22-iptables.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="../pickup/20-linux信号.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+
+                    <a rel="next prefetch" href="../pickup/22-iptables.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+
+
+        <script>
+            window.playground_line_numbers = true;
+        </script>
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+        <script src="../ace.js"></script>
+        <script src="../mode-rust.js"></script>
+        <script src="../editor.js"></script>
+        <script src="../theme-dawn.js"></script>
+        <script src="../theme-tomorrow_night.js"></script>
+
+        <script src="../elasticlunr.min.js"></script>
+        <script src="../mark.min.js"></script>
+        <script src="../searcher.js"></script>
+
+        <script src="../clipboard.min.js"></script>
+        <script src="../highlight.js"></script>
+        <script src="../book.js"></script>
+
+        <!-- Custom JS scripts -->
+
+
+
+    </div>
+    </body>
+</html>

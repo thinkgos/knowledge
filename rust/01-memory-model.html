@@ -1,0 +1,706 @@
+<!DOCTYPE HTML>
+<html lang="en" class="light sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>内存模型 - knowledge</title>
+
+
+        <!-- Custom HTML head -->
+
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="../favicon.svg">
+        <link rel="shortcut icon" href="../favicon.png">
+        <link rel="stylesheet" href="../css/variables.css">
+        <link rel="stylesheet" href="../css/general.css">
+        <link rel="stylesheet" href="../css/chrome.css">
+        <link rel="stylesheet" href="../css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="../FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="../fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" id="highlight-css" href="../highlight.css">
+        <link rel="stylesheet" id="tomorrow-night-css" href="../tomorrow-night.css">
+        <link rel="stylesheet" id="ayu-highlight-css" href="../ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+
+        <!-- MathJax -->
+        <script async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+        <!-- Provide site root and default themes to javascript -->
+        <script>
+            const path_to_root = "../";
+            const default_light_theme = "light";
+            const default_dark_theme = "navy";
+            window.path_to_searchindex_js = "../searchindex.js";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="../toc.js"></script>
+    </head>
+    <body>
+    <div id="mdbook-help-container">
+        <div id="mdbook-help-popup">
+            <h2 class="mdbook-help-title">Keyboard shortcuts</h2>
+            <div>
+                <p>Press <kbd>←</kbd> or <kbd>→</kbd> to navigate between chapters</p>
+                <p>Press <kbd>S</kbd> or <kbd>/</kbd> to search in the book</p>
+                <p>Press <kbd>?</kbd> to show this help</p>
+                <p>Press <kbd>Esc</kbd> to hide this help</p>
+            </div>
+        </div>
+    </div>
+    <div id="body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                let theme = localStorage.getItem('mdbook-theme');
+                let sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            const default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? default_dark_theme : default_light_theme;
+            let theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            let sidebar = null;
+            const sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+                sidebar_toggle.checked = false;
+            }
+            if (sidebar === 'visible') {
+                sidebar_toggle.checked = true;
+            } else {
+                html.classList.remove('sidebar-visible');
+            }
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="../toc.html"></iframe>
+            </noscript>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </label>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="default_theme">Auto</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search (`/`)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="/ s" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">knowledge</h1>
+
+                    <div class="right-buttons">
+                        <a href="../print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+                        <a href="https://github.com/thinkgos/knowledge" title="Git repository" aria-label="Git repository">
+                            <i id="git-repository-button" class="fa fa-github"></i>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <div class="search-wrapper">
+                            <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                            <div class="spinner-wrapper">
+                                <i class="fa fa-spinner fa-spin"></i>
+                            </div>
+                        </div>
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h1 id="内存模型"><a class="header" href="#内存模型">内存模型</a></h1>
+<p>类型的布局是其大小 (size) 、对齐方式 (align) 及其字段的相对偏移量. 对于枚举, 如何布局和解释判别式也是类型布局的一部分.  对于 Sized 的数据类型, 可以在编译时知道内存布局, 可以通过 <a href="https://doc.rust-lang.org/stable/std/mem/fn.size_of.html">size_of</a> 和 <a href="https://doc.rust-lang.org/stable/std/mem/fn.align_of.html">align_of</a> 获得其 size 和 align.</p>
+<pre><code class="language-text">The layout of a type is its size, alignment, and the relative offsets of its fields. 
+For enums, how the discriminant is laid out and interpreted is also part of type layout.
+Type layout can be changed with each compilation.
+</code></pre>
+<p><strong>Note: 本文内存模型不考虑优化,是广文上的模型,实际中 Rust会对一些数据类型做优化.</strong></p>
+<h2 id="1-整型"><a class="header" href="#1-整型">1. 整型</a></h2>
+<div class="table-wrapper"><table><thead><tr><th>Type</th><th>size(bytes)</th><th>align(bytes)</th></tr></thead><tbody>
+<tr><td><code>u8</code></td><td>1</td><td>1</td></tr>
+<tr><td><code>i8</code></td><td>1</td><td>1</td></tr>
+<tr><td><code>u16</code></td><td>2</td><td>2</td></tr>
+<tr><td><code>i16</code></td><td>2</td><td>2</td></tr>
+<tr><td><code>u32</code></td><td>4</td><td>4</td></tr>
+<tr><td><code>i32</code></td><td>4</td><td>4</td></tr>
+<tr><td><code>i64</code></td><td>8</td><td>8</td></tr>
+<tr><td><code>u64</code></td><td>8</td><td>8</td></tr>
+<tr><td><code>i128</code></td><td>16</td><td>16</td></tr>
+<tr><td><code>u128</code></td><td>16</td><td>16</td></tr>
+</tbody></table>
+</div>
+<h2 id="2-浮点型"><a class="header" href="#2-浮点型">2. 浮点型</a></h2>
+<p>The IEEE 754-2008 "binary32" and "binary64" floating-point types are <code>f32</code> and <code>f64</code>, respectively.</p>
+<div class="table-wrapper"><table><thead><tr><th>Type</th><th>size(bytes)</th><th>align(bytes)</th></tr></thead><tbody>
+<tr><td><code>f32</code></td><td>4</td><td>4</td></tr>
+<tr><td><code>f64</code></td><td>8</td><td>8</td></tr>
+</tbody></table>
+</div>
+<h2 id="3-usized--isized"><a class="header" href="#3-usized--isized">3. <code>usized</code> &amp; <code>isized</code></a></h2>
+<div class="table-wrapper"><table><thead><tr><th>Type</th><th>size(bytes)/ 32位系统</th><th>size(bytes)/ 64位系统</th></tr></thead><tbody>
+<tr><td><code>usize</code></td><td>4</td><td>8</td></tr>
+<tr><td><code>isize</code></td><td>4</td><td>8</td></tr>
+</tbody></table>
+</div>
+<h2 id="4-str"><a class="header" href="#4-str">4. str</a></h2>
+<h3 id="41-char-类型"><a class="header" href="#41-char-类型">4.1 char 类型</a></h3>
+<p><code>char</code>表示：一个 32 位(4 Bytes)长度字符, Unicode 标量值 <a href="http://www.unicode.org/glossary/#unicode_scalar_value">Unicode Scalar Value</a> 范围为 0x0000 - 0xD7FF 或者是 0xE000 - 0x10FFFF.</p>
+<h3 id="42-str-类型"><a class="header" href="#42-str-类型">4.2 str 类型</a></h3>
+<p>str 与 [u8] 一样表示一个 u8 的 slice. Rust 中标准库中对 str 有个假设：符合 UTF-8 编码. 内存布局与 [u8] 相同.</p>
+<h2 id="5--和t-引用"><a class="header" href="#5--和t-引用">5. <code>&amp;</code> 和<code>&amp;[T]</code> 引用</a></h2>
+<h3 id="51"><a class="header" href="#51">5.1 <code>&amp;</code></a></h3>
+<pre><pre class="playground"><code class="language-rust edition2021"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>let a: i32 = 25;
+let b: &amp;i32 = &amp;a;
+let c: &amp;&amp;i32 = &amp;b;
+
+stack
+      |  a |    | b  |    │  c │
+      +––––+––––+––––+––––+––––+
+      │ 25 │    │ *  │    │ *  │ 
+      +––^–+––––+–│^–+––––+–│––+
+         │        │|________|
+         │________│
+<span class="boring">}</span></code></pre></pre>
+<h3 id="52-t-slice-引用"><a class="header" href="#52-t-slice-引用">5.2 <code>&amp;[T]</code> slice 引用</a></h3>
+<p>slice 的使用必须要通过指针, <code>&amp;[T]</code> 是一个胖指针, 保存指向数据的地址和元素个数.  slice 的内存布局与其指向的 array 部分相同.</p>
+<pre><pre class="playground"><code class="language-rust edition2021"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>// array &amp;[T]
+let a:[i32;3] = [55,66,77];
+let b:&amp;[i32] = &amp;a[..2]
+
+
+stack       [––––  a   ––––|   |–––  b ––|
+            +––––+––––+––––+–––+––––+––––+
+            │ 55 │ 66 │ 77 │   |  * |  2 | 
+            +––––+––––+––––+–––+––––+––––+
+            |         |          /     /
+            –––––––––––&lt;––––––––/     / 
+                               /  length
+                        buffer point
+<span class="boring">}</span></code></pre></pre>
+<pre><pre class="playground"><code class="language-rust edition2021"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>// Vec&lt;T&gt; &amp;[T]
+let a:Vec&lt;i32&gt; = vec![55,66,77];
+let b:&amp;[i32] = &amp;a[..2]
+
+stack       [–––  a   ––|     |–––  b ––|
+            +–––+–––+–––+     +––––+––––+
+            │ • │ 3 │ 4 │     |  * |  2 | 
+            +–│–+–––+–––+     +–│––+––––+
+              │                 │
+heap          │                 │
+            +–V––+––––+––––+    │
+            │ 55 │ 66 │ 77 │    │
+            +––––+––––+––––+    │
+            |         │         │ 
+            –––––––––––&lt;––––––––/
+<span class="boring">}</span></code></pre></pre>
+<h2 id="6-strstr-和-string-的区别"><a class="header" href="#6-strstr-和-string-的区别">6. <code>&amp;str</code>,<code>str</code> 和 <code>String</code> 的区别</a></h2>
+<h3 id="61-string"><a class="header" href="#61-string">6.1 <code>String</code></a></h3>
+<pre><pre class="playground"><code class="language-rust edition2021"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>String: let s: String = String::from("hello");
+
+
+              buffer point
+                  /   capacity
+                 /   /  length
+stack           /   /   /
+            +–––+–––+–––+
+            │ • │ 8 │ 5 │ 
+            +–│–+–––+–––+
+              │
+heap          │
+            +–V–+–––+–––+–––+–––+–––+–––+–––+
+            │ h │ e │ l │ l │ o │   │   │   │
+            +–––+–––+–––+–––+–––+–––+–––+–––+
+            [––––––– length ––––]
+            [–-–––––––– capacity –––––––––––]
+<span class="boring">}</span></code></pre></pre>
+<h3 id="62-str和str"><a class="header" href="#62-str和str">6.2 <code>str</code>和<code>&amp;str</code></a></h3>
+<pre><pre class="playground"><code class="language-rust edition2021"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>&amp;str: let s: &amp;str = "hello";
+
+          buffer point
+                /   length
+stack          /   /  
+            +–––+–––+
+            │ • │ 5 │    &amp;str
+            +–│–+–––+
+              │                       
+read-only     │ 
+memory        │                     
+            [–│–––––– str ––––––] 
+            +–V–+–––+–––+–––+–––+
+            │ h │ e │ l │ l │ o │  
+            +–––+–––+–––+–––+–––+
+<span class="boring">}</span></code></pre></pre>
+<h2 id="7-tuple"><a class="header" href="#7-tuple">7. tuple</a></h2>
+<pre><pre class="playground"><code class="language-rust edition2021"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>let a: (char, u8, i32) = ('a', 7, 356)
+
+stack
+            [–––––––––––––– 12 Bytes –––––––––––––––––––|
+            +–––––––––––––+–––––+–––––––––+–––––––––––––+
+            │      'a'    │  7  │ padding │      356    │  
+            +–––––––––––––+–––––+–––––––––+–––––––––––––+
+            |–– 4 Bytes ––|    4 Bytes    |–– 4 Bytes ––|
+<span class="boring">}</span></code></pre></pre>
+<h2 id="8-struct"><a class="header" href="#8-struct">8. struct</a></h2>
+<p>结构体是带命名的复合类型, rust有三种结构体类型: <code>struct</code>, <code>StructExprStruct</code>,<code>StructExprUnit</code></p>
+<h3 id="81-struct-含有字段的结构体"><a class="header" href="#81-struct-含有字段的结构体">8.1 <code>struct</code> 含有字段的结构体</a></h3>
+<pre><pre class="playground"><code class="language-rust edition2021"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>struct Data {
+    nums: Vec&lt;u8&gt;,
+    a: u8,
+}
+
+stack       [––– nums ––|– a –]
+            +–––+–––+–––+–––––+
+            │ • │ 8 │ 5 │  10 |
+            +–│–+–––+–––+–––––+
+              │
+heap          │
+            +–V–+–––+–––+–––+–––+–––+–––+–––+
+            │ 0 │ 0 │ 0 │ 0 │ 0 │   │   │   │
+            +–––+–––+–––+–––+–––+–––+–––+–––+
+<span class="boring">}</span></code></pre></pre>
+<h3 id="82-structexprtuple-元组结构体"><a class="header" href="#82-structexprtuple-元组结构体">8.2 <code>StructExprTuple</code> 元组结构体</a></h3>
+<pre><pre class="playground"><code class="language-rust edition2021"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>struct Data(i32, i32, i32);
+
+stack       [––– Data ––|
+            +–––+–––+–––+
+            │ 1 │ 2 │ 3 │
+            +–––+–––+–––+
+<span class="boring">}</span></code></pre></pre>
+<h3 id="83-structexprunit-单元结构体"><a class="header" href="#83-structexprunit-单元结构体">8.3 <code>StructExprUnit</code> 单元结构体</a></h3>
+<p>单元结构体没有任何数据,所以Rust编译器甚至不会为它分配任何内存.</p>
+<pre><pre class="playground"><code class="language-rust edition2021"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>struct Data;
+<span class="boring">}</span></code></pre></pre>
+<h2 id="9-enum"><a class="header" href="#9-enum">9. enum</a></h2>
+<h3 id="91-c风格枚举"><a class="header" href="#91-c风格枚举">9.1 C风格枚举</a></h3>
+<pre><pre class="playground"><code class="language-rust edition2021"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>// 占一个字节
+enum HTTPStatus {
+    Ok;
+    NotFound,
+}
+
+HTTPStatus::Ok
+stack
+            +–––+
+            │ 0 │
+            +–––+
+
+HTTPStatus::NotFound
+stack
+            +–––+
+            │ 1 │
+            +–––+
+<span class="boring">}</span></code></pre></pre>
+<h3 id="92-c风格指定值枚举"><a class="header" href="#92-c风格指定值枚举">9.2 C风格指定值枚举</a></h3>
+<pre><pre class="playground"><code class="language-rust edition2021"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>// 占两个字节
+enum HTTPStatus {
+    Ok = 200;
+    NotFound = 404,
+}
+
+HTTPStatus::Ok
+stack
+            +–––––+
+            │ 200 │
+            +–––––+
+
+HTTPStatus::NotFound
+stack
+            +–––––+
+            │ 404 │
+            +–––––+
+<span class="boring">}</span></code></pre></pre>
+<h3 id="93-变体枚举"><a class="header" href="#93-变体枚举">9.3 变体枚举</a></h3>
+<pre><pre class="playground"><code class="language-rust edition2021"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>enum Data {
+    Empty;
+    Number(i32),
+    Array(Vec&lt;i32&gt;),
+}
+
+stack
+
+Data::Empty
+            +–––––+––––––––––––––––––––––––––––––––––––––––––––––+
+            │  0  │ padding                                      │  
+            +–––––+––––––––––––––––––––––––––––––––––––––––––––––+
+            | mark|     
+Data::Number
+            +–––––+–––––––––+–––––––––––+––––––––––––––––––––––––+
+            │  1  │ padding │     0     │      padding           │  
+            +–––––+–––––––––+–––––––––––+––––––––––––––––––––––––+
+            | mark|         |––  i32 –––|
+                            |–– value ––|
+
+Data::Array(Vec&lt;i32&gt;)
+            [––––––––––––––––––––– 32 Bytes –––––––––––––––––––––|
+            +–––––+–––––––––+–––––––––––+––––––––––––+–––––––––––+
+            │  2  │ padding │    none   │      0     │     0     │  
+            +–––––+–––––––––+–––––––––––+––––––––––––+–––––––––––+
+            | mark|         |–––––––––––––  Vec&lt;i32&gt; ––––––––––––|
+                            |– pointer –|– capacity –|– length  –|
+––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––
+ enum Data {
+    Empty;
+    Number(i32),
+    Array(Box&lt;Vec&lt;i32&gt;&gt;),
+}
+
+stack
+
+Data::Empty
+            +–––––+–––––––––––––––––––––+
+            │  0  │ padding             │  
+            +–––––+–––––––––––––––––––––+
+            | mark|     
+Data::Number
+            +–––––+–––––––––+–––––––––––+
+            │  1  │ padding │     0     │ 
+            +–––––+–––––––––+–––––––––––+
+            | mark|         |––  i32 –––|
+                            |–– value ––|
+
+Data::Array(Vec&lt;i32&gt;)
+            [––––––– 16 Bytes ––––––––––|
+            +–––––+–––––––––+–––––––––––+
+            │  2  │ padding │      *    │    
+            +–––––+–––––––––+––│––––––––+
+            | mark|         |– │ Box&lt;T&gt;–|
+                            |– │ pointer|
+                               │
+heap                           V
+                       +–––––––––––+––––––––––––+–––––––––––+
+                       │    none   │      0     │     0     │  
+                       +–––––––––––+––––––––––––+–––––––––––+           
+<span class="boring">}</span></code></pre></pre>
+<h3 id="94-optiont"><a class="header" href="#94-optiont">9.4 <code>Option&lt;T&gt;</code></a></h3>
+<pre><pre class="playground"><code class="language-rust edition2021"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>Option&lt;Box&lt;i32&gt;&gt;
+
+None
+            +–––––+–––––––––––––––––––––+
+            │  0  │ padding             │  
+            +–––––+–––––––––––––––––––––+
+            | mark|  
+Some(Box&lt;i32&gt;)
+            +–––––+–––––––––+–––––––––––+
+            │  1  │ padding │     *     │ 
+            +–––––+–––––––––+–––––––––––+
+            +–––––+–––––––––+––│––––––––+
+            | mark|         |– │ Box&lt;T&gt;–|
+                            |– │ pointer|
+                               │
+heap                           V
+                       +–––––––––––+
+                       │     0     │    
+                       +–––––––––––+
+
+// 因为智能指针的值都不允许为0, 所以实际上上面会进行优化成下面的方式
+None
+            +–––––––––––+
+            │     0     │  
+            +–––––––––––+
+            | mark|   
+Some(Box&lt;i32&gt;)
+            +–––––––––––+
+            │     *     │ 
+            +–––––––––––+
+            +––│––––––––+
+            |– │ Box&lt;T&gt;–|
+            |– │ pointer|
+               │
+heap           V
+               +–––––––––––+
+               │     0     │    
+               +–––––––––––+
+<span class="boring">}</span></code></pre></pre>
+<h2 id="10-arrayt和vect"><a class="header" href="#10-arrayt和vect">10. <code>array</code>,<code>[T]</code>和<code>Vec&lt;T&gt;</code></a></h2>
+<h3 id="101-array"><a class="header" href="#101-array">10.1 <code>array</code></a></h3>
+<pre><pre class="playground"><code class="language-rust edition2021"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>let a:[i32;3] = [55,66,77];
+
+stack       [––––  a   ––––|
+            +––––+––––+––––+
+            │ 55 │ 66 │ 77 │
+            +––––+––––+––––+
+<span class="boring">}</span></code></pre></pre>
+<h3 id="102-t"><a class="header" href="#102-t">10.2 <code>[T]</code></a></h3>
+<p><code>[T]</code>即<code>slice</code> 是<code>DST</code> 类型, 是类型 T 序列的一种视图. 所以它只能使用<code>&amp;[T]</code>宽指针进行引用,参考[&amp;[T] 引用](# 5. &amp; 和&amp;[T] 引用)</p>
+<h3 id="103-vect"><a class="header" href="#103-vect">10.3 <code>Vec&lt;T&gt;</code></a></h3>
+<pre><pre class="playground"><code class="language-rust edition2021"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>let a:Vec&lt;i32&gt; = vec![55,66,77];
+
+stack       [–––  a   ––|
+            +–––+–––+–––+
+            │ • │ 3 │ 4 │
+            +–│–+–––+–––+
+              │
+heap          │
+            +–V––+––––+––––+
+            │ 55 │ 66 │ 77 │
+            +––––+––––+––––+
+<span class="boring">}</span></code></pre></pre>
+<h2 id="11-智能指针"><a class="header" href="#11-智能指针">11. 智能指针</a></h2>
+<h3 id="111-boxt"><a class="header" href="#111-boxt">11.1 <code>Box&lt;T&gt;</code></a></h3>
+<p><code>Box&lt;T&gt;</code>单所有权,只适用于单线程</p>
+<pre><pre class="playground"><code class="language-rust edition2021"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>let v: Box&lt;Vec&lt;i32&gt;&gt; = Box::new(vec![55,66,77]);
+
+stack    
+            [ v ]  
+            +–––+   
+            │ * │      
+            +–│–+    
+              |
+heap          |
+            +–V–+–––+–––+
+            │ * │ 3 │ 3 │
+            +–│–+–––+–––+
+              │
+              │
+            +–V––+––––+––––+
+            │ 55 │ 66 │ 77 | 
+            +––––+––––+––––+
+<span class="boring">}</span></code></pre></pre>
+<h3 id="112-rct"><a class="header" href="#112-rct">11.2 <code>Rc&lt;T&gt;</code></a></h3>
+<p><code>Rc&lt;T&gt;</code> 多所有权,只适用于单线程,且只可用于不可变借用.</p>
+<pre><pre class="playground"><code class="language-rust edition2021"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>let v: Rc&lt;Vec&lt;i32&gt;&gt; = Rc::new(vec![55,66,77]);
+let v2 = v.clone()
+
+stack    
+            [ v ]       [ v2 ]
+            +–––+       +–––+
+            │ * │       * │ 
+            +–│–+      +–│–+
+              |___________|
+heap          |
+            +–V–+–––+–––+–––+
+            │ 2 │ * │ 3 │ 3 |
+            +–––+–│–+–––+–––+
+              /   │
+ ref count&lt;– /    │
+                +–V––+––––+––––+
+                │ 55 │ 66 │ 77 | 
+                +––––+––––+––––+
+                
+<span class="boring">}</span></code></pre></pre>
+<h3 id="113-arct"><a class="header" href="#113-arct">11.3 <code>Arc&lt;T&gt;</code></a></h3>
+<p><code>Arc&lt;T&gt;</code> 数据模型同<code>Rc&lt;T&gt;</code>但可使用于多线程, 多所有权,只可用于不可变借用.</p>
+<p><code>Arc&lt;T&gt;</code> 与<code>Rc&lt;T&gt;</code>区别在于,引用计数是原子计数</p>
+<pre><pre class="playground"><code class="language-rust edition2021"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>stack    
+            [ptr |meta]
+            +–––-+–––+
+            │ *  │   │ 
+            +–│-–+--–│
+              |
+heap          |
+            +–V–+–––+–––+
+            │   │   │ T │
+            +–––+--–+–––+
+              /   │
+ ref count &lt;–/    V 
+            weak ref count
+<span class="boring">}</span></code></pre></pre>
+<h2 id="12-trait-object"><a class="header" href="#12-trait-object">12. trait object</a></h2>
+<p>官方定义：</p>
+<pre><code class="language-text">A trait object is an opaque value of another type that implements a set of traits. 
+The set of traits is made up of an object safe base trait plus any number of auto traits.  
+</code></pre>
+<p>trait 是 <code>DST</code> 类型 ,对trait的引用称之为 trait object, trait object是个胖指针, 包含两个普通指针分别为 <code>data</code>和 <code>vtable</code>.</p>
+<p><img src="../assets/202205141636711.jpeg" alt="2" /></p>
+<h2 id="13-dynamically-sized-typesdst-动态类型"><a class="header" href="#13-dynamically-sized-typesdst-动态类型">13. Dynamically Sized Types(DST) 动态类型</a></h2>
+<p>一般来说大多数类型, 可以在编译阶段确定大小和对齐属性, <a href="https://doc.rust-lang.org/stable/reference/special-types-and-traits.html#sized">Sized trait</a> 就是保证了这种特性.</p>
+<p>非 size (<code>?Sized</code>) 及 <code>DST</code> 类型.</p>
+<ul>
+<li>DST 类型有 slice 和 trait object.</li>
+<li>DST 类型必须通过指针来使用,需要注意：</li>
+<li>DST 可以作为泛型参数, 但是需要注意泛型参数默认是 <code>Sized</code>, 如果是 DST 类型需要特别的指定为 <code>?Sized</code>.</li>
+</ul>
+<h2 id="14-空类型-empty-types"><a class="header" href="#14-空类型-empty-types">14. 空类型 (Empty Types)</a></h2>
+<pre><pre class="playground"><code class="language-rust edition2021"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>enum Void {}
+<span class="boring">}</span></code></pre></pre>
+<p>空类型的一个主要应用场景是在类型层面声明不可到达性. 假如, 一个 API 一般需要返回一个 Result, 但是在特殊情况下它是绝对不会运行失败的. 这种情况下将返回值设为 Result&lt;T, Void&gt;, API 的调用者就可以信心十足地使用 unwrap, 因为不可能产生一个 Void 类型的值, 所以返回值不可能是一个 Err.</p>
+<h2 id="15-function"><a class="header" href="#15-function">15. function</a></h2>
+<pre><pre class="playground"><code class="language-rust edition2021"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>stack    
+            [ f |  
+            +–––+   
+            │ * │      
+            +–│–+    
+              |
+        machine code of function
+<span class="boring">}</span></code></pre></pre>
+<h2 id="16-closure"><a class="header" href="#16-closure">16. closure</a></h2>
+<p>闭包相当于一个捕获变量的结构体, 实现了 <code>FnOnce</code> 或 <code>FnMut</code> 或 <code>Fn</code>.</p>
+<h2 id="17-reference"><a class="header" href="#17-reference">17. Reference</a></h2>
+<ul>
+<li><a href="https://rustmagazine.github.io/rust_magazine_2021/chapter_6/ant-rust-data-layout.html">Rust数据内存布局</a></li>
+</ul>
+<h2 id="18-生命周期"><a class="header" href="#18-生命周期">18. 生命周期</a></h2>
+<p><img src="../assets/202211112240020.png" alt="image-20221111224011998" /></p>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="../rust/00-material.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+
+                            <a rel="next prefetch" href="../rust/02-owner-borrow.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="../rust/00-material.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+
+                    <a rel="next prefetch" href="../rust/02-owner-borrow.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+
+
+        <script>
+            window.playground_line_numbers = true;
+        </script>
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+        <script src="../ace.js"></script>
+        <script src="../mode-rust.js"></script>
+        <script src="../editor.js"></script>
+        <script src="../theme-dawn.js"></script>
+        <script src="../theme-tomorrow_night.js"></script>
+
+        <script src="../elasticlunr.min.js"></script>
+        <script src="../mark.min.js"></script>
+        <script src="../searcher.js"></script>
+
+        <script src="../clipboard.min.js"></script>
+        <script src="../highlight.js"></script>
+        <script src="../book.js"></script>
+
+        <!-- Custom JS scripts -->
+
+
+
+    </div>
+    </body>
+</html>
