@@ -1,5 +1,8 @@
 # 音视频
 
+- [sdp](./01-sdp.md)
+- [nat type](./02-nat-type.md)
+
 ## SIP
 
 - [sip-rfc3261](https://datatracker.ietf.org/doc/html/rfc3261)
