@@ -1,0 +1,625 @@
+<!DOCTYPE HTML>
+<html lang="en" class="light sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>quiz - knowledge</title>
+
+
+        <!-- Custom HTML head -->
+
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="../favicon.svg">
+        <link rel="shortcut icon" href="../favicon.png">
+        <link rel="stylesheet" href="../css/variables.css">
+        <link rel="stylesheet" href="../css/general.css">
+        <link rel="stylesheet" href="../css/chrome.css">
+        <link rel="stylesheet" href="../css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="../FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="../fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" id="highlight-css" href="../highlight.css">
+        <link rel="stylesheet" id="tomorrow-night-css" href="../tomorrow-night.css">
+        <link rel="stylesheet" id="ayu-highlight-css" href="../ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+
+        <!-- MathJax -->
+        <script async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+        <!-- Provide site root and default themes to javascript -->
+        <script>
+            const path_to_root = "../";
+            const default_light_theme = "light";
+            const default_dark_theme = "navy";
+            window.path_to_searchindex_js = "../searchindex.js";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="../toc.js"></script>
+    </head>
+    <body>
+    <div id="mdbook-help-container">
+        <div id="mdbook-help-popup">
+            <h2 class="mdbook-help-title">Keyboard shortcuts</h2>
+            <div>
+                <p>Press <kbd>←</kbd> or <kbd>→</kbd> to navigate between chapters</p>
+                <p>Press <kbd>S</kbd> or <kbd>/</kbd> to search in the book</p>
+                <p>Press <kbd>?</kbd> to show this help</p>
+                <p>Press <kbd>Esc</kbd> to hide this help</p>
+            </div>
+        </div>
+    </div>
+    <div id="body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                let theme = localStorage.getItem('mdbook-theme');
+                let sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            const default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? default_dark_theme : default_light_theme;
+            let theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            let sidebar = null;
+            const sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+                sidebar_toggle.checked = false;
+            }
+            if (sidebar === 'visible') {
+                sidebar_toggle.checked = true;
+            } else {
+                html.classList.remove('sidebar-visible');
+            }
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="../toc.html"></iframe>
+            </noscript>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </label>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="default_theme">Auto</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search (`/`)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="/ s" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">knowledge</h1>
+
+                    <div class="right-buttons">
+                        <a href="../print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+                        <a href="https://github.com/thinkgos/knowledge" title="Git repository" aria-label="Git repository">
+                            <i id="git-repository-button" class="fa fa-github"></i>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <div class="search-wrapper">
+                            <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                            <div class="spinner-wrapper">
+                                <i class="fa fa-spinner fa-spin"></i>
+                            </div>
+                        </div>
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h1 id="quiz-basic"><a class="header" href="#quiz-basic">quiz basic</a></h1>
+<h2 id="1-defer-和-panic"><a class="header" href="#1-defer-和-panic">1. <code>defer</code> 和 <code>panic</code></a></h2>
+<p><strong>问题: 代码输出什么?</strong></p>
+<pre><code class="language-go">package main
+
+import "fmt"
+
+// `defer` 和 `panic`
+func main() {
+    defer_call()
+}
+
+func defer_call() {
+    defer func() { fmt.Println("打印前") }()
+    defer func() { fmt.Println("打印中") }()
+    defer func() { fmt.Println("打印后") }()
+
+    panic("触发异常")
+}
+</code></pre>
+<p><strong>解答</strong>:</p>
+<pre><code class="language-text">打印后
+打印中
+打印前
+panic: 触发异常
+</code></pre>
+<p><strong>解析</strong>:</p>
+<blockquote>
+<p><code>defer</code> 的执行顺序是<strong>先进后出,后进先出</strong>的顺序执行.
+出现panic语句的时候,会先按照<code>defer</code> 的后进先出顺序执行,最后才会执行<code>panic</code>.</p>
+</blockquote>
+<h2 id="2-array和slice"><a class="header" href="#2-array和slice">2. <code>array</code>和<code>slice</code></a></h2>
+<p><strong>问题: 以下代码只注释掉 ② 输出什么？如果只注释 ① 又输出什么?</strong></p>
+<pre><code class="language-go">package main
+
+import "fmt"
+
+func main() {
+    a := [2]int{5, 6}
+    b := [2]int{5, 6}
+
+    // ①
+    if a == b {
+        fmt.Println("equal")
+    } else {
+        fmt.Println("not equal")
+    }
+
+    // ②
+    // if a[:] == b[:] {
+    //     fmt.Println("equal")
+    // } else {
+    //     fmt.Println("not equal")
+    // }
+}
+</code></pre>
+<p><strong>解答</strong>:</p>
+<pre><code class="language-text">  array是可以比较的,slice是不可以比较的.
+  所以:
+    ①为equal
+    ②为编译不通过
+</code></pre>
+<p><strong>解析</strong>:</p>
+<blockquote>
+<p><code>array</code>是可以比较的,必须要求一样数组大小才可以比较,且len和cap是一样的.
+<code>slice</code>不可直接比较,只可以与nil比较.</p>
+</blockquote>
+<h2 id="3-nil的chan"><a class="header" href="#3-nil的chan">3. <code>nil</code>的<code>chan</code></a></h2>
+<p><strong>问题: 代码输出什么?</strong></p>
+<pre><code class="language-go">package main
+
+func main() {
+    var ch chan int
+    select {
+    case v, ok := &lt;-ch:
+        println(v, ok)
+    default:
+        println("default")
+    }
+}
+</code></pre>
+<p><strong>解答</strong>:</p>
+<pre><code class="language-text">输出: 
+    default
+</code></pre>
+<p><strong>解析</strong>:</p>
+<blockquote>
+<p>一个nil的chan是永远不会被select到,<br />
+一个nil的chan发送和接收会永远的阻塞<br />
+关闭的chan永远能select到</p>
+</blockquote>
+<h2 id="4-传值共享slice"><a class="header" href="#4-传值共享slice">4. 传值共享slice</a></h2>
+<p><strong>问题: 代码输出什么?</strong></p>
+<pre><code class="language-go">package main
+
+import "fmt"
+
+type T struct {
+    ls []int
+}
+
+func foo(t T) {
+    t.ls[0] = 100
+}
+
+func main() {
+    var t = T{
+        ls: []int{1, 2, 3},
+    }
+
+    foo(t)
+    fmt.Println(t.ls[0])
+}
+
+</code></pre>
+<ul>
+<li>A. 1</li>
+<li>B. 100</li>
+<li>C. compilation error</li>
+</ul>
+<p><strong>解答</strong>: 输出B</p>
+<p><strong>解析</strong>:</p>
+<blockquote>
+<p>调用<code>foo()</code>函数时虽然是传值，但<code>foo()</code>函数中，字段<code>ls</code>依旧可以看成是指向底层数组的指针。</p>
+</blockquote>
+<h2 id="5-不可寻址的临时变量"><a class="header" href="#5-不可寻址的临时变量">5. 不可寻址的临时变量</a></h2>
+<p><strong>问题: 代码输出什么?</strong></p>
+<pre><code class="language-go">package main
+
+type X struct{}
+
+func (x *X) test() {
+    println(x)
+}
+
+func main() {
+    var a *X
+    a.test()
+
+    // X{}.test()
+}
+</code></pre>
+<p><strong>解答</strong>:</p>
+<pre><code class="language-text">    但是nil是可以调用方法的
+    X{} 是不可寻址的，不能直接调用方法
+</code></pre>
+<p><strong>解析</strong>:</p>
+<blockquote>
+<p>在方法中，指针类型的接收者必须是合法指针（包括 nil）,或能获取实例地址。</p>
+</blockquote>
+<h2 id="6-切片截取问题"><a class="header" href="#6-切片截取问题">6. 切片截取问题</a></h2>
+<p><strong>问题: 代码输出什么?</strong></p>
+<pre><code class="language-go">package main
+
+import "fmt"
+
+func main() {
+    s := make([]int, 3, 9)
+    fmt.Println(len(s))
+    s2 := s[4:8]
+    fmt.Println(len(s2))
+}
+</code></pre>
+<p><strong>解答</strong>:</p>
+<pre><code class="language-text">    3
+    4
+</code></pre>
+<p><strong>解析</strong>:</p>
+<blockquote>
+<p>从一个基础切片派生出的子切片的长度可能大于基础切片的长度。<br />
+假设基础切片是 baseSlice，使用操作符 [low,high]，有如下规则：0 &lt;= low &lt;= high &lt;= cap(baseSlice)，<br />
+只要上述满足这个关系，下标 low 和 high 都可以大于 len(baseSlice)。</p>
+</blockquote>
+<h2 id="7-方法值传递"><a class="header" href="#7-方法值传递">7. 方法值传递</a></h2>
+<p><strong>问题: 代码输出什么?</strong></p>
+<pre><code class="language-go">package main
+
+import "fmt"
+
+type N int
+
+func (n N) test() {
+    fmt.Println(n)
+}
+
+func main() {
+    var n N = 10
+    p := &amp;n
+
+    n++
+    f1 := n.test
+
+    n++
+    f2 := p.test
+
+    n++
+    fmt.Println(n)
+
+    f1()
+    f2()
+}
+</code></pre>
+<p><strong>解答</strong>:</p>
+<pre><code class="language-text">13
+11
+12
+</code></pre>
+<p><strong>解析</strong>:</p>
+<blockquote>
+<p>知识点：方法值。<br />
+当指针值赋值给变量或者作为函数参数传递时，会立即计算并复制该方法执行所需的接收者对象，与其绑定，以便在稍后执行时，能隐式第传入接收者参数。</p>
+</blockquote>
+<h2 id="8-方法指针传递"><a class="header" href="#8-方法指针传递">8. 方法指针传递</a></h2>
+<p><strong>问题: 代码输出什么?</strong></p>
+<pre><code class="language-go">package main
+
+import "fmt"
+
+type N int
+
+func (n *N) test() {
+    fmt.Println(*n)
+}
+
+func main() {
+    var n N = 10
+
+    n++
+    f1 := n.test
+
+    n++
+    f2 := n.test
+
+    n++
+    fmt.Println(n)
+
+    f1()
+    f2()
+}
+</code></pre>
+<p><strong>解答</strong>:</p>
+<pre><code class="language-text">13
+13
+13
+</code></pre>
+<p><strong>解析</strong>:</p>
+<blockquote>
+<p>传入的为指针,所以值为最后的结果值</p>
+</blockquote>
+<h2 id="9-切片截取问题"><a class="header" href="#9-切片截取问题">9. 切片截取问题</a></h2>
+<p><strong>问题: 代码输出什么?</strong></p>
+<pre><code class="language-go">package main
+
+func main() {
+    x := make([]int, 2, 10)
+    _ = x[6:10]
+    _ = x[2:]
+    _ = x[6:]
+}
+</code></pre>
+<p><strong>解答</strong>:</p>
+<pre><code class="language-text">    _ = x[6:] 将panic
+</code></pre>
+<p><strong>解析</strong>:</p>
+<blockquote>
+<p>_ = x[6:] 在截取符号 [i:j]，如果 j 省略，默认是原切片或者数组的长度,即len(x)，x 的长度是 2，小于起始下标 6 ，所以 panic。</p>
+</blockquote>
+<h2 id="10-空struct内存对齐"><a class="header" href="#10-空struct内存对齐">10. 空struct内存对齐</a></h2>
+<p><strong>问题: 代码输出什么?</strong></p>
+<pre><code class="language-go">package main
+
+import (
+    "fmt"
+    "unsafe"
+)
+
+type demo0 struct {
+    b int32
+    c int32
+    a struct{}
+}
+
+type demo1 struct {
+    a struct{}
+    b int32
+    c int32
+}
+
+type demo2 struct {
+    b int32
+    a struct{}
+    c int32
+}
+
+func main() {
+    fmt.Println(unsafe.Sizeof(demo0{}), unsafe.Sizeof(demo1{}), unsafe.Sizeof(demo2{}))
+}
+</code></pre>
+<p><strong>解答</strong>:</p>
+<pre><code class="language-text"> 12 8 8 
+</code></pre>
+<p><strong>解析</strong>:</p>
+<blockquote>
+<p>空 <code>struct{}</code> 大小为 0，作为其他 struct 的字段时，一般不需要内存对齐。<br />
+但是有一种情况除外：即当 <code>struct{}</code> 作为结构体最后一个字段时，需要内存对齐。
+因为如果有指针指向该字段, 返回的地址将在结构体之外，如果此指针一直存活不释放对应的内存，就会有内存泄露的问题（该内存不因结构体释放而释放）。</p>
+</blockquote>
+<h2 id="11-len内置函数"><a class="header" href="#11-len内置函数">11. len内置函数</a></h2>
+<p><strong>问题: 代码输出什么?</strong></p>
+<p><a href="https://mp.weixin.qq.com/s?__biz=MzAxMTA4Njc0OQ==&amp;mid=2651442060&amp;idx=2&amp;sn=29a3f39ec2d95d6b5177e53277c5f94c&amp;chksm=80bb157eb7cc9c68f9b2574cb259678580b194cf20d83d84840818bae9712fe3e0246e249a97&amp;mpshare=1&amp;scene=24&amp;srcid=1130fgz3Kg9VvJpRLR3OLUVS&amp;sharer_sharetime=1606715319571&amp;sharer_shareid=fbafc624aa53cd09857fb0861ac2a16d&amp;exportkey=AZIxDLHvvkwjXPkmuEeWCtI%3D&amp;pass_ticket=xSGb7TkoIuLZz7AFBdlYeR4qEQC4h9uTHgeYZjnzNlVCg1RDSSP3MJjeOxdI2wvs&amp;wx_header=0#rd">原文</a></p>
+<pre><code class="language-go">package main
+
+const s = "Go101.org"
+
+// len(s) == 9
+// 1 &lt;&lt; 9 == 512
+// 512 / 128 == 4
+
+var a byte = 1 &lt;&lt; len(s) / 128
+var b byte = 1 &lt;&lt; len(s[:]) / 128
+
+func main() {
+    println(a, b)
+}
+</code></pre>
+<p><strong>解答</strong>:</p>
+<pre><code class="language-text">4 0
+</code></pre>
+<p><strong>解析</strong>:</p>
+<blockquote>
+<p><strong>a. 常量与求值</strong><br />
+当参数是字符串字面量和简单 array 表达式，len 函数返回值是常量.</p>
+<blockquote>
+<p>内置函数 len 和 cap 获取各种类型的实参并返回一个 int 类型结果。实现会保证结果总是一个 int 值。</p>
+<ul>
+<li>如果 s 是一个字符串常量，那么 len(s) 是一个常量 。</li>
+<li>如果 s 类型是一个数组或到数组的指针且表达式 s 不包含 信道接收 或（非常量的） 函数调用的话， 那么表达式 len(s) 和 cap(s) 是常量；这种情况下， s 是不求值的。</li>
+<li>否则的话， len 和 cap 的调用结果不是常量且 s 会被求值
+所以<code>len(s)</code>与<code>len(s[:])</code>前者返回是常量,后者是求值的值</li>
+</ul>
+</blockquote>
+<p><strong>b. 位移</strong></p>
+<blockquote>
+<p>在位移表达式的右侧的操作数必须为整数类型，或者可以被 uint 类型的值所表示的无类型的常量。</p>
+<ul>
+<li>
+<p>如果<strong>一个<code>非常量位移表达式的左侧</code>的操作数是一个无类型常量</strong>，那么它会先被隐式地转换为假如位移表达式被其左侧操作数单独替换后的类型。</p>
+</li>
+<li>
+<p>如果**<code>常量位移表达式 的左侧</code>的操作数是一个无类型常量**，那么其结果是一个整数常量；否则就是和左侧操作数同一类型的常量</p>
+</li>
+</ul>
+</blockquote>
+<p>因此对于 <code>var a byte = 1 &lt;&lt; len(s) / 128</code>，因为 <code>1 &lt;&lt; len(s)</code>是<em><strong>一个常量位移表达式</strong></em>，因此它的结果也是一个整数常量，所以是 512，最后除以 128，最终结果就是 4。</p>
+<p>而对于 <code>var b byte = 1 &lt;&lt; len(s[:]) / 1281</code>，因为 <code>1 &lt;&lt; len(s[:])</code>是一个<em><strong>非常量位移表达式</strong></em>，而做操作数是 1，一个无类型常量，根据规范定义它是 byte 类型（根据：如果一个非常量位移表达式的左侧的操作数是一个无类号常量，那么它会先被隐式地转换为假如位移表达式被其左侧操作数单独替换后的类型.
+即1为byte型,右移溢出,所以为0</p>
+</blockquote>
+<h2 id="12-补码"><a class="header" href="#12-补码">12. 补码</a></h2>
+<p><strong>问题: 代码输出什么?</strong><br />
+<a href="https://mp.weixin.qq.com/s?__biz=MzAxMTA4Njc0OQ==&amp;mid=2651442141&amp;idx=2&amp;sn=1e565dd411fb82584a7093f40a750be2&amp;chksm=80bb152fb7cc9c390add4b13d217984bd3334ea9bbb1b45357c6d979b9d37499fb8cf9e26004&amp;mpshare=1&amp;scene=24&amp;srcid=1130xlWjBiMct2BMLtmpjm5S&amp;sharer_sharetime=1606715340255&amp;sharer_shareid=fbafc624aa53cd09857fb0861ac2a16d&amp;exportkey=Aa%2Fz3pSgi%2B5meJijFHg1ppE%3D&amp;pass_ticket=xSGb7TkoIuLZz7AFBdlYeR4qEQC4h9uTHgeYZjnzNlVCg1RDSSP3MJjeOxdI2wvs&amp;wx_header=0#rd">原文</a></p>
+<pre><code class="language-go">package main
+
+func main() {
+    // // 题1
+    var a int8 = -1
+    var b int8 = -128 / a
+    println(b)
+
+    // 题2
+    // const c int8 = -1
+    // var d int8 = -128 / c
+    // println(d)
+}
+</code></pre>
+<p><strong>解答</strong>:</p>
+<pre><code class="language-text">    题1: -128
+    题2: 编译错误
+</code></pre>
+<p><strong>解析</strong>:</p>
+<blockquote>
+<p>const隐式转换不允许溢出,所以编译错误</p>
+</blockquote>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="../golang/00-material.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+
+                            <a rel="next prefetch" href="../golang/02-performance-analysis.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="../golang/00-material.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+
+                    <a rel="next prefetch" href="../golang/02-performance-analysis.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+
+
+        <script>
+            window.playground_line_numbers = true;
+        </script>
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+        <script src="../ace.js"></script>
+        <script src="../mode-rust.js"></script>
+        <script src="../editor.js"></script>
+        <script src="../theme-dawn.js"></script>
+        <script src="../theme-tomorrow_night.js"></script>
+
+        <script src="../elasticlunr.min.js"></script>
+        <script src="../mark.min.js"></script>
+        <script src="../searcher.js"></script>
+
+        <script src="../clipboard.min.js"></script>
+        <script src="../highlight.js"></script>
+        <script src="../book.js"></script>
+
+        <!-- Custom JS scripts -->
+
+
+
+    </div>
+    </body>
+</html>

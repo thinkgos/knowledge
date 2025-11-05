@@ -1,0 +1,317 @@
+<!DOCTYPE HTML>
+<html lang="en" class="light sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>数据库的锁 - knowledge</title>
+
+
+        <!-- Custom HTML head -->
+
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="../favicon.svg">
+        <link rel="shortcut icon" href="../favicon.png">
+        <link rel="stylesheet" href="../css/variables.css">
+        <link rel="stylesheet" href="../css/general.css">
+        <link rel="stylesheet" href="../css/chrome.css">
+        <link rel="stylesheet" href="../css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="../FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="../fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" id="highlight-css" href="../highlight.css">
+        <link rel="stylesheet" id="tomorrow-night-css" href="../tomorrow-night.css">
+        <link rel="stylesheet" id="ayu-highlight-css" href="../ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+
+        <!-- MathJax -->
+        <script async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+        <!-- Provide site root and default themes to javascript -->
+        <script>
+            const path_to_root = "../";
+            const default_light_theme = "light";
+            const default_dark_theme = "navy";
+            window.path_to_searchindex_js = "../searchindex.js";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="../toc.js"></script>
+    </head>
+    <body>
+    <div id="mdbook-help-container">
+        <div id="mdbook-help-popup">
+            <h2 class="mdbook-help-title">Keyboard shortcuts</h2>
+            <div>
+                <p>Press <kbd>←</kbd> or <kbd>→</kbd> to navigate between chapters</p>
+                <p>Press <kbd>S</kbd> or <kbd>/</kbd> to search in the book</p>
+                <p>Press <kbd>?</kbd> to show this help</p>
+                <p>Press <kbd>Esc</kbd> to hide this help</p>
+            </div>
+        </div>
+    </div>
+    <div id="body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                let theme = localStorage.getItem('mdbook-theme');
+                let sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            const default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? default_dark_theme : default_light_theme;
+            let theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            let sidebar = null;
+            const sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+                sidebar_toggle.checked = false;
+            }
+            if (sidebar === 'visible') {
+                sidebar_toggle.checked = true;
+            } else {
+                html.classList.remove('sidebar-visible');
+            }
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="../toc.html"></iframe>
+            </noscript>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </label>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="default_theme">Auto</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search (`/`)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="/ s" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">knowledge</h1>
+
+                    <div class="right-buttons">
+                        <a href="../print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+                        <a href="https://github.com/thinkgos/knowledge" title="Git repository" aria-label="Git repository">
+                            <i id="git-repository-button" class="fa fa-github"></i>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <div class="search-wrapper">
+                            <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                            <div class="spinner-wrapper">
+                                <i class="fa fa-spinner fa-spin"></i>
+                            </div>
+                        </div>
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h1 id="四-数据库的锁"><a class="header" href="#四-数据库的锁">四. 数据库的锁</a></h1>
+<h2 id="1-全局锁表锁行锁"><a class="header" href="#1-全局锁表锁行锁">1. 全局锁,表锁,行锁</a></h2>
+<h3 id="11-全局锁"><a class="header" href="#11-全局锁">1.1. 全局锁</a></h3>
+<p><strong>全局锁</strong>就是<strong>对整个数据库实例加锁</strong>,MySQL 提供了一个加全局读锁的方法, 命令是 <code>Flush tables with read lock (FTWRL)</code>,整个库处于只读状态.</p>
+<p><strong>全局锁的典型使用场景</strong>是, 做全库逻辑备份。也就是把整库每个表都 select 出来存成文本.</p>
+<blockquote>
+<p>官方自带的逻辑备份工具是 <code>mysqldump</code>。当 <code>mysqldump</code> 使用参数<code>–single-transaction</code> 的时候, 导数据之前就会启动一个事务, 来确保拿到一致性视图.</p>
+<p>**一致性读是好, 但前提是引擎要支持这个隔离级别。**对于 MyISAM 这种不支持事务的引擎, 如果备份过程中有更新, 总是只能取到最新的数据, 那么就破坏了备份的一致性。这时, 我们就需要使用 FTWRL 命令了</p>
+<p><strong>--single-transaction 方法只适用于所有的表使用事务引擎的库。</strong></p>
+</blockquote>
+<p>​既然要全库只读, 为什么不使用 <code>set global readonly=true</code> 的方式呢?</p>
+<ul>
+<li>
+<p>在有些系统中, <code>readonly</code> 的值会被用来做其他逻辑, 比如用来判断一个库是主库还是备库。因此, 修改 global 变量的方式影响面更大, 我不建议你使用.</p>
+</li>
+<li>
+<p>在异常处理机制上有差异。</p>
+<blockquote>
+<p>如果执行 FTWRL 命令之后由于客户端发生异常断开, 那么 MySQL 会自动释放这个全局锁, 整个库回到可以正常更新的状态。而将整个库设置为 readonly 之后, 如果客户端发生异常, 则数据库就会一直保持 readonly 状态, 这样会导致整个库长时间处于不可写状态, 风险较高。</p>
+</blockquote>
+</li>
+</ul>
+<h3 id="12-表级锁"><a class="header" href="#12-表级锁">1.2. 表级锁</a></h3>
+<ul>
+<li>
+<p><strong>表锁</strong>: 表锁的语法是 <code>lock tables t read/write</code>。需要注意, <code>lock tables</code>语法除了会限制别的线程的读写外, 也限定了本线程接下来的操作对象.</p>
+<blockquote>
+<p>在还没有出现更细粒度的锁的时候, 表锁是最常用的处理并发的方式。</p>
+<p>而对于 InnoDB 这种支持行锁的引擎, 一般不使用 lock tables 命令来控制并发, 毕竟锁住整个表的影响面还是太大
+如何安全地给小表加字段？</p>
+<ul>
+<li><code>MariaDB</code>已支持</li>
+<li><code>mysql</code>未知</li>
+</ul>
+<pre><code class="language-sql">ALTER TABLE tbl_name NOWAIT add column ...
+ALTER TABLE tbl_name WAIT N add column ... 
+</code></pre>
+</blockquote>
+</li>
+<li>
+<p><strong>元数据锁(meta data lock, MDL)</strong>:</p>
+<ul>
+<li><code>MDL</code>是server层的锁, 表级锁, 主要用于隔离<code>DML</code>和<code>DDL</code>操作之间的干扰</li>
+<li><code>MDL</code> 的作用是,保证读写的正确性,一个表做增删改查操作的时候,加 <code>MDL</code> 读锁；当要对表做结构变更操作的时候,加 <code>MDL</code> 写锁。</li>
+<li>读锁之间不互斥, 因此你可以有多个线程同时对一张表增删改查。</li>
+<li>读写锁之间、写锁之间是互斥的, 用来保证变更表结构操作的安全性.</li>
+<li><code>MDL</code> 会直到事务提交才释放, 在做表结构变更的时候, 你一定要小心不要导致锁住线上查询和更新。</li>
+</ul>
+</li>
+</ul>
+<blockquote>
+<p>表锁一般是在数据库引擎不支持行锁的时候才会被用到的。如果你发现你的应用程序里有 <code>lock tables</code> 这样的语句, 你需要追查一下, 比较可能的情况是：</p>
+<ul>
+<li>要么是你的系统现在还在用 MyISAM 这类不支持事务的引擎, 那要安排升级换引擎；</li>
+<li>要么是你的引擎升级了, 但是代码还没升级。我见过这样的情况, 最后业务开发就是把<code>lock tables</code> 和 <code>unlock tables</code> 改成 <code>begin</code> 和 <code>commit</code>, 问题就解决了</li>
+</ul>
+</blockquote>
+<h3 id="13-行锁"><a class="header" href="#13-行锁">1.3. 行锁</a></h3>
+<p>MySQL 的行锁是在<strong>引擎层由各个引擎自己实现的</strong>。但并不是所有的引擎都支持行锁.比如 MyISAM 引擎就不支持行锁。</p>
+<ul>
+<li>在 InnoDB 事务中, 行锁是在需要的时候才加上的, 但并不是不需要了就立刻释放, 而是要等到事务结束时才释放。这个就是<strong>两阶段锁协议</strong></li>
+<li>如果你的事务中需要锁多个行, 要把最可能造成锁冲突、最可能影响并发度的锁尽量往后放.</li>
+</ul>
+<h2 id="2-死锁和死锁检测"><a class="header" href="#2-死锁和死锁检测">2. 死锁和死锁检测</a></h2>
+<p>两种策略：</p>
+<ul>
+<li>一种策略是, 直接进入等待, 直到超时。这个超时时间可以通过参数<code>innodb_lock_wait_timeout</code>(默认50s) 来设置。</li>
+<li>另一种策略是, <strong>主动死锁检测</strong>, 发现死锁后, 主动回滚死锁链条中的某一个事务, 让其他事务得以继续执行。将参数 <code>innodb_deadlock_detect</code>(默认<code>on</code>) 设置为 <code>on</code>, 表示开启这个逻辑。
+<ul>
+<li>业务避免死锁</li>
+<li>控制并发度,中间件或修改mysql源码来进行控制并发. 基本思路就是, 对于相同行的更新, 在进入引擎之前排队。这样在 InnoDB 内部就不会有大量的死锁检测工作了</li>
+</ul>
+</li>
+</ul>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="../mysql/02-深入索引全局锁表锁行锁.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+
+                            <a rel="next prefetch" href="../mysql/04-事务到底是隔离还是不隔离.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="../mysql/02-深入索引全局锁表锁行锁.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+
+                    <a rel="next prefetch" href="../mysql/04-事务到底是隔离还是不隔离.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+
+
+        <script>
+            window.playground_line_numbers = true;
+        </script>
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+        <script src="../ace.js"></script>
+        <script src="../mode-rust.js"></script>
+        <script src="../editor.js"></script>
+        <script src="../theme-dawn.js"></script>
+        <script src="../theme-tomorrow_night.js"></script>
+
+        <script src="../elasticlunr.min.js"></script>
+        <script src="../mark.min.js"></script>
+        <script src="../searcher.js"></script>
+
+        <script src="../clipboard.min.js"></script>
+        <script src="../highlight.js"></script>
+        <script src="../book.js"></script>
+
+        <!-- Custom JS scripts -->
+
+
+
+    </div>
+    </body>
+</html>

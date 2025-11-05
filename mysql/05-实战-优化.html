@@ -1,0 +1,365 @@
+<!DOCTYPE HTML>
+<html lang="en" class="light sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>实战-优化 - knowledge</title>
+
+
+        <!-- Custom HTML head -->
+
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="../favicon.svg">
+        <link rel="shortcut icon" href="../favicon.png">
+        <link rel="stylesheet" href="../css/variables.css">
+        <link rel="stylesheet" href="../css/general.css">
+        <link rel="stylesheet" href="../css/chrome.css">
+        <link rel="stylesheet" href="../css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="../FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="../fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" id="highlight-css" href="../highlight.css">
+        <link rel="stylesheet" id="tomorrow-night-css" href="../tomorrow-night.css">
+        <link rel="stylesheet" id="ayu-highlight-css" href="../ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+
+        <!-- MathJax -->
+        <script async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+        <!-- Provide site root and default themes to javascript -->
+        <script>
+            const path_to_root = "../";
+            const default_light_theme = "light";
+            const default_dark_theme = "navy";
+            window.path_to_searchindex_js = "../searchindex.js";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="../toc.js"></script>
+    </head>
+    <body>
+    <div id="mdbook-help-container">
+        <div id="mdbook-help-popup">
+            <h2 class="mdbook-help-title">Keyboard shortcuts</h2>
+            <div>
+                <p>Press <kbd>←</kbd> or <kbd>→</kbd> to navigate between chapters</p>
+                <p>Press <kbd>S</kbd> or <kbd>/</kbd> to search in the book</p>
+                <p>Press <kbd>?</kbd> to show this help</p>
+                <p>Press <kbd>Esc</kbd> to hide this help</p>
+            </div>
+        </div>
+    </div>
+    <div id="body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                let theme = localStorage.getItem('mdbook-theme');
+                let sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            const default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? default_dark_theme : default_light_theme;
+            let theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            let sidebar = null;
+            const sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+                sidebar_toggle.checked = false;
+            }
+            if (sidebar === 'visible') {
+                sidebar_toggle.checked = true;
+            } else {
+                html.classList.remove('sidebar-visible');
+            }
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="../toc.html"></iframe>
+            </noscript>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </label>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="default_theme">Auto</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search (`/`)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="/ s" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">knowledge</h1>
+
+                    <div class="right-buttons">
+                        <a href="../print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+                        <a href="https://github.com/thinkgos/knowledge" title="Git repository" aria-label="Git repository">
+                            <i id="git-repository-button" class="fa fa-github"></i>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <div class="search-wrapper">
+                            <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                            <div class="spinner-wrapper">
+                                <i class="fa fa-spinner fa-spin"></i>
+                            </div>
+                        </div>
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h1 id="五-优化参数"><a class="header" href="#五-优化参数">五. 优化参数</a></h1>
+<div class="table-wrapper"><table><thead><tr><th>参数</th><th>说明</th></tr></thead><tbody>
+<tr><td><code>innodb_file_per_table</code></td><td><strong>OFF</strong>: 表的数据放在系统共享表空间, 也就是跟数据字典放在一起；<br /><strong>ON</strong>: 表示的是, 每个 InnoDB 表数据存储在一个以 .ibd 为后缀的文件中. <br />         mysql 5.6.6后,该值默认为<strong>ON</strong>.<br /><strong>ON</strong>: (建议设置)一个表单独存储为一个文件更容易管理, 而且在你不需要这个表的时候, 通过 drop table 命令, 系统就会直接删除这个文件.而如果是放在共享表空间中, 即使表删掉了, 空间也是不会回收的. <br />解决方法: 重建表 <code>alter table A engine=InnoDB</code> <br />推荐github开源项目<a href="https://github.com/github/gh-ost">gh-ost</a>来做<code>online DDL</code>.</td></tr>
+<tr><td><code>wait_timeout</code></td><td>客户端连接超时时间.</td></tr>
+<tr><td><code>innodb_flush_log_at_trx_commit</code></td><td>0: 表示每次事务提交时都只是把 redo log 留在 redo log buffer 中 ;<br />1: 表示每次事务的 redo log 都直接持久化到磁盘.(推荐 )<br />2: 表示每次事务提交时都只是把 redo log 写到 page cache.</td></tr>
+<tr><td><code>sync_binlog</code></td><td>0: 每次提交事务都只 write, 不 fsync；<br />1: 表示每次事务的 binlog 都持久化到磁盘(推荐)<br />N: 表示每次提交事务都 write, 但累积 N 个事务后才 fsync. 建议100~1000</td></tr>
+<tr><td><code>transaction-isolation</code></td><td>隔离级别</td></tr>
+<tr><td><code>autocommit</code></td><td>ON 显示的启动事务,提交和回滚,</td></tr>
+<tr><td><code>innodb_change_buffer_max_size</code></td><td>这个参数设置为 50 的时候, 表示 change buffer 的大小最多只能占用 buffer pool 的 50%.</td></tr>
+<tr><td><code>long_query_time</code></td><td>慢查询阀值</td></tr>
+<tr><td><code>innodb_stats_persistent</code></td><td>存储索引统计的方式:<br />设置为 on 的时候, 表示统计信息会持久化存储. 这时, 默认的 N 是 20, M 是 10. <br />设置为 off 的时候, 表示统计信息只存储在内存中. 这时, 默认的 N 是 8, M 是 16.</td></tr>
+<tr><td><code>innodb_io_capacity</code></td><td>告诉 InnoDB 你的磁盘能力,建议你设置成磁盘的 IOPS.<br />可用此命令查询: <code>fio -filename=$filename -direct=1 -iodepth 1 -thread -rw=randrw -ioengine=psync -bs=16k -size=500M -numjobs=10 -runtime=10 -group_reporting -name=mytest</code></td></tr>
+<tr><td><code>innodb_max_dirty_pages_pct</code></td><td>脏页比例上限, 默认值是 75%,通过Innodb_buffer_pool_pages_dirty/Innodb_buffer_pool_pages_total得到.</td></tr>
+<tr><td><code>innodb_flush_neighbors</code></td><td>1: 表示有上述的“连坐”机制, <br />0: 表示不找邻居, 自己刷自己的.</td></tr>
+<tr><td><code>sort_buffer_size</code></td><td>MySQL 为排序开辟的内存（sort_buffer）的大小</td></tr>
+<tr><td><code>sql_log_bin</code></td><td>off: 不写binlog<br />on: 不写binlog</td></tr>
+<tr><td><code>binlog_group_commit_sync_delay</code></td><td>表示延迟多少微秒后才调用 fsync;</td></tr>
+<tr><td><code>binlog_group_commit_sync_no_delay_count</code></td><td>表示累积多少次以后才调用 fsync.</td></tr>
+</tbody></table>
+</div>
+<ul>
+<li>
+<p>在 InnoDB 中, 每个<strong>数据页的大小默认是16KB</strong>.</p>
+</li>
+<li>
+<p>如果内存够, 就要多利用内存, 尽量减少磁盘访问.</p>
+</li>
+<li>
+<p><strong>唯一索引的更新就不能使用 <code>change buffer</code></strong>, 实际上也<strong>只有普通索引</strong>可以使用</p>
+<ul>
+<li>
+<p><code>change buffer</code> 用的是 <code>buffer pool</code> 里的内存, 因此不能无限增大.</p>
+</li>
+<li>
+<p><code>change buffer</code> 的大小, 可以通过参数 <code>innodb_change_buffer_max_size</code> 来动态设置. (这个参数设置为 50 的时候, 表示<code>change buffer</code> 的大小最多只能占用 <code>buffer pool</code>的 <code>50%</code>. )</p>
+</li>
+</ul>
+</li>
+<li>
+<p>优化器逻辑</p>
+<ul>
+<li>扫描行数是影响执行代价的因素之一. 扫描的行数越少, 意味着访问磁盘数据的次数越少, 消耗的 CPU 资源越少.</li>
+<li>扫描行数并不是唯一的判断标准, 优化器还会结合是否使用临时表、是否排序等因素进行综合判断.</li>
+</ul>
+<blockquote>
+<p>MySQL 在真正开始执行语句之前, 并不能精确地知道满足这个条件的记录有多少条, 而只能根据统计信息来估算记录数.</p>
+<p>这个统计信息就是索引的“区分度”. 显然, 一个索引上不同的值越多, 这个索引的区分度就越好. 而一个索引上不同的值的个数, 我们称之为**“基数”（cardinality）**. 也就是说, 这个基数越大, 索引的区分度越好.</p>
+<p>在 MySQL 中, 有两种存储索引统计的方式, 可以通过设置参数 <code>innodb_stats_persistent</code>的值来选择：</p>
+<ul>
+<li>设置为 <code>on</code>的时候, 表示统计信息会持久化存储. 这时, 默认的 N 是 20, M 是 10.</li>
+<li>设置为 <code>off</code>的时候, 表示统计信息只存储在内存中. 这时, 默认的 N 是 8, M 是 16.</li>
+</ul>
+</blockquote>
+</li>
+<li>
+<p>给字符串加索引</p>
+<ul>
+<li>
+<p><strong>完整索引</strong>: 这样可能比较占用空间；</p>
+<blockquote>
+<p><code>alter table SUser add index index1(email);</code></p>
+</blockquote>
+</li>
+<li>
+<p><strong>前缀索引</strong>: 节省空间, 但会增加查询扫描次数, 并且不能使用覆盖索引, 因为必须回表查询确认一次；</p>
+<blockquote>
+<p>前缀索引, 定义好长度, 就可以做到既节省空间, 又不用额外增加太多的查询成本.</p>
+<p><code>alter table SUser add index index2(email(6));</code></p>
+<pre><code class="language-sql">select   count(distinct left(email,4)）as L4,  
+            count(distinct left(email,5)）as L5,  
+            count(distinct left(email,6)）as L6,  
+            count(distinct left(email,7)）as L7,
+from SUser;
+</code></pre>
+</blockquote>
+</li>
+<li>
+<p><strong>倒序存储</strong>: 再创建前缀索引, 用于绕过字符串本身前缀的区分度不够的问题；但是不支持范围查询.</p>
+</li>
+<li>
+<p><strong>hash字段</strong>: 查询性能稳定, 有额外的存储和计算消耗, 跟第三种方式一样, 都不支持范围扫描.</p>
+<blockquote>
+<p>可以在表上再创建一个整数字段, 来保存身份证的校验码, 同时在这个字段上创建索引.</p>
+</blockquote>
+</li>
+</ul>
+</li>
+<li>
+<p>刷脏页逻辑, mysql抖动原因.</p>
+<blockquote>
+<ul>
+<li><code>innodb_io_capacity</code>这个参数了, 它会告诉 InnoDB 你的磁盘能力. 这个值我建议你设置成磁盘的 <code>IOPS</code>. 通过<code>fio</code>工具获取磁盘<code>IOPS</code>能力<code>fio -filename=$filename -direct=1 -iodepth 1 -thread -rw=randrw -ioengine=psync -bs=16k -size=500M -numjobs=10 -runtime=10 -group_reporting -name=mytest</code></li>
+<li><code>innodb_max_dirty_pages_pct</code> 是脏页比例上限, 默认值是 75%. InnoDB 会根据当前的脏页比例（假设为 M）, 算出一个范围在 0 到 100 之间的数字. 脏页比例获取通过<code>Innodb_buffer_pool_pages_dirty/Innodb_buffer_pool_pages_total</code>具体使用<code>select VARIABLE_VALUE into @a from global_status where VARIABLE_NAME = 'Innodb_buffer_pool_pages_dirty';select VARIABLE_VALUE into @b from global_status where VARIABLE_NAME = 'Innodb_buffer_pool_pages_total';select @a/@b;</code></li>
+<li><code>innodb_flush_neighbors</code> 用来控制刷脏页时是否刷邻居脏页.</li>
+</ul>
+</blockquote>
+</li>
+<li>
+<p>如何删除数据并缩小表文件.</p>
+<ul>
+<li>
+<p>可以使用以下命令要重建表</p>
+<pre><code class="language-sql">alter table A engine=InnoDB -- 与下一句相同
+alter table t engine=innodb,ALGORITHM=inplace;
+alter table t engine=innodb,ALGORITHM=copy;
+</code></pre>
+</li>
+<li>
+<p>建议使用 <a href="https://github.com/github/gh-ost">gh-ost</a> 来做.</p>
+</li>
+</ul>
+<p><code>optimize table</code>、<code>analyze table</code> 和 <code>alter table</code> 这三种方式重建表的区别.</p>
+<ul>
+<li>从 MySQL 5.6 版本开始，alter table t engine = InnoDB（也就是 recreate）；</li>
+<li><code>analyze table t</code> 其实不是重建表，只是对表的索引信息做重新统计，没有修改数据，这个过程中加了 MDL 读锁；</li>
+<li><code>optimize table t</code> 等于 recreate+analyze.</li>
+</ul>
+</li>
+<li>
+<p>对索引字段做函数操作, 可能会破坏索引值的有序性, 因此优化器就决定放弃走树搜索功能. 比如隐式转换(字符转数字),字符集不一致(utf-8与uft8mb4)等都有可能产生函数操作,引起优化器放弃树搜索.</p>
+</li>
+</ul>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="../mysql/04-事务到底是隔离还是不隔离.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+
+                            <a rel="next prefetch" href="../mysql/06-实战-性能提升.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="../mysql/04-事务到底是隔离还是不隔离.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+
+                    <a rel="next prefetch" href="../mysql/06-实战-性能提升.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+
+
+        <script>
+            window.playground_line_numbers = true;
+        </script>
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+        <script src="../ace.js"></script>
+        <script src="../mode-rust.js"></script>
+        <script src="../editor.js"></script>
+        <script src="../theme-dawn.js"></script>
+        <script src="../theme-tomorrow_night.js"></script>
+
+        <script src="../elasticlunr.min.js"></script>
+        <script src="../mark.min.js"></script>
+        <script src="../searcher.js"></script>
+
+        <script src="../clipboard.min.js"></script>
+        <script src="../highlight.js"></script>
+        <script src="../book.js"></script>
+
+        <!-- Custom JS scripts -->
+
+
+
+    </div>
+    </body>
+</html>

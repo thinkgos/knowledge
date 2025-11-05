@@ -1,0 +1,398 @@
+<!DOCTYPE HTML>
+<html lang="en" class="light sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>并发模型 - knowledge</title>
+
+
+        <!-- Custom HTML head -->
+
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="../favicon.svg">
+        <link rel="shortcut icon" href="../favicon.png">
+        <link rel="stylesheet" href="../css/variables.css">
+        <link rel="stylesheet" href="../css/general.css">
+        <link rel="stylesheet" href="../css/chrome.css">
+        <link rel="stylesheet" href="../css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="../FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="../fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" id="highlight-css" href="../highlight.css">
+        <link rel="stylesheet" id="tomorrow-night-css" href="../tomorrow-night.css">
+        <link rel="stylesheet" id="ayu-highlight-css" href="../ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+
+        <!-- MathJax -->
+        <script async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+        <!-- Provide site root and default themes to javascript -->
+        <script>
+            const path_to_root = "../";
+            const default_light_theme = "light";
+            const default_dark_theme = "navy";
+            window.path_to_searchindex_js = "../searchindex.js";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="../toc.js"></script>
+    </head>
+    <body>
+    <div id="mdbook-help-container">
+        <div id="mdbook-help-popup">
+            <h2 class="mdbook-help-title">Keyboard shortcuts</h2>
+            <div>
+                <p>Press <kbd>←</kbd> or <kbd>→</kbd> to navigate between chapters</p>
+                <p>Press <kbd>S</kbd> or <kbd>/</kbd> to search in the book</p>
+                <p>Press <kbd>?</kbd> to show this help</p>
+                <p>Press <kbd>Esc</kbd> to hide this help</p>
+            </div>
+        </div>
+    </div>
+    <div id="body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                let theme = localStorage.getItem('mdbook-theme');
+                let sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            const default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? default_dark_theme : default_light_theme;
+            let theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            let sidebar = null;
+            const sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+                sidebar_toggle.checked = false;
+            }
+            if (sidebar === 'visible') {
+                sidebar_toggle.checked = true;
+            } else {
+                html.classList.remove('sidebar-visible');
+            }
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="../toc.html"></iframe>
+            </noscript>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </label>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="default_theme">Auto</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search (`/`)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="/ s" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">knowledge</h1>
+
+                    <div class="right-buttons">
+                        <a href="../print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+                        <a href="https://github.com/thinkgos/knowledge" title="Git repository" aria-label="Git repository">
+                            <i id="git-repository-button" class="fa fa-github"></i>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <div class="search-wrapper">
+                            <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                            <div class="spinner-wrapper">
+                                <i class="fa fa-spinner fa-spin"></i>
+                            </div>
+                        </div>
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h1 id="无畏并发"><a class="header" href="#无畏并发">无畏并发</a></h1>
+<ul>
+<li><code>Concurrent</code>: 程序的不同部分之间独立的运行, 同时处理很多事情的能力.</li>
+<li><code>Parallel</code>: 程序的不同部分同时运行, 同时执行很多事情的手段.</li>
+</ul>
+<h2 id="1-sync和send-trait"><a class="header" href="#1-sync和send-trait">1. <code>Sync</code>和<code>Send</code> trait</a></h2>
+<pre><pre class="playground"><code class="language-rust edition2021"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>pub unsafe auto trait Send {}
+pub unsafe auto trait Sync {}
+<span class="boring">}</span></code></pre></pre>
+<p>这两个<code>trait</code>(<code>std::marker::Sync</code>和<code>std::marker::Send</code>)都是 <code>unsafe auto trait</code>,  <code>auto</code> 意味着编译器会在合适的场合, 自动为数据结构添加它们的实现,  而 <code>unsafe</code> 代表实现的这个 <code>trait</code> 可能会违背 <code>Rust</code> 的内存安全准则,  如果开发者手工实现这两个 <code>trait</code>, 要自己为它们的安全性负责.</p>
+<p><code>Send/Sync</code> 是 <code>Rust</code> 并发安全的基础:</p>
+<ul>
+<li>
+<p><code>Send</code>: 允许线程间<strong>转移所有权</strong>, <code>Rc&lt;T&gt;</code>没有实现<code>Send</code>,它只用于单线程的情景.</p>
+<ul>
+<li>任何完全由<code>Send</code>类型组成的类型也被标记为<code>Send</code></li>
+<li>除了原始指针之外,几乎所有的基础类型都是实现了<code>Send</code></li>
+</ul>
+</li>
+<li>
+<p><code>Sync</code>: 允许从<strong>多线程访问</strong>.</p>
+<ul>
+<li>实现了<code>Sync</code>的类型可以安全的被多个线程引用</li>
+<li>如果<code>T</code>是<code>Sync</code>,那<code>&amp;T</code>就是<code>Send</code>, 引用可以被安全的送往另一个线程.</li>
+</ul>
+</li>
+<li>
+<p>手动来实现<code>Send</code>和<code>Sync</code>是很难保证安全的,需要很谨慎的使用<code>unsafe</code>代码.</p>
+<ul>
+<li>
+<p>如果一个类型 <code>T</code> 实现了 <code>Send trait</code>,  意味着 <code>T</code> 可以安全地从一个线程移动到另一个线程,  也就是说所有权可以在线程间移动.</p>
+</li>
+<li>
+<p>如果一个类型 <code>T</code> 实现了 <code>Sync trait</code>,  则意味着 <code>&amp;T</code> 可以安全地在多个线程中共享. 一个类型 <code>T</code> 满足 <code>Sync trait</code>,  当且仅当 <code>&amp;T</code> 满足 <code>Send trait</code>.</p>
+</li>
+</ul>
+</li>
+</ul>
+<p>对于 <code>Send/Sync</code> 在线程安全中的作用,  可以这么看, <strong>如果一个类型 <code>T: Send</code>, 那么 <code>T</code> 在某个线程中的独占访问是线程安全的；如果一个类型 <code>T: Sync</code>, 那么 <code>T</code> 在线程间的只读共享是安全的.</strong></p>
+<p>对于我们自己定义的数据结构,  如果其内部的所有域都实现了 <code>Send</code> / <code>Sync</code>,  那么这个数据结构会被自动添加 <code>Send</code> / <code>Sync</code>.</p>
+<p>标准库中, 不支持 <code>Send</code> / <code>Sync</code> 的数据结构主要有:</p>
+<ul>
+<li>裸指针 <code>*const T</code> /<code>*mut T</code>. 它们是不安全的,  所以既不是 <code>Send</code> 也不是 <code>Sync</code>.</li>
+<li><code>UnsafeCell</code> 不支持 <code>Sync</code>. 也就是说,  任何使用了 <code>Cell</code> 或者 <code>RefCell</code> 的数据结构不支持 <code>Sync</code>.</li>
+<li>引用计数 <code>Rc</code> 不支持 <code>Send</code> 也不支持 <code>Sync</code>. 所以 <code>Rc</code> 无法跨线程.</li>
+</ul>
+<h2 id="2-并发常见工作模式"><a class="header" href="#2-并发常见工作模式">2. 并发常见工作模式</a></h2>
+<p><img src="../assets/202211080809744.png" alt="image-20221108080915636" /></p>
+<ul>
+<li><strong>自由竞争模式</strong>下, 多个并发任务会竞争同一个临界区的访问权</li>
+<li><strong>map/reduce 模式</strong>, 把工作打散, 按照相同的处理完成后, 再按照一定的顺序将结果组织起来</li>
+<li><strong>DAG 模式</strong>, 把工作切成不相交的、有依赖关系的子任务, 然后按依赖关系并发执行.</li>
+</ul>
+<h2 id="3-atomic"><a class="header" href="#3-atomic">3. Atomic</a></h2>
+<p><code>Atomic</code>是所有并发原语的基础, 它为并发任务的同步奠定了坚实的基础.可以通过一条指令读取某个内存地址, 判断其值是否等于某个前置值, 如果相等, 将其修改为新的值. 这就是 <code>Compare-and-swap</code> 操作, 简称<a href="https://en.wikipedia.org/wiki/Compare-and-swap"><code>CAS</code></a></p>
+<pre><pre class="playground"><code class="language-rust edition2021"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>pub fn compare_exchange(
+    &amp;self,
+    current: bool,
+    new: bool,
+    success: Ordering,
+    failure: Ordering
+) -&gt; Result&lt;bool, bool&gt;
+
+pub enum Ordering {
+    Relaxed,
+    Release,
+    Acquire,
+    AcqRel,
+    SeqCst,
+}
+<span class="boring">}</span></code></pre></pre>
+<p>可以看到 <code>compare_exchange</code>函数有两个和<code>Ordering</code>的奇怪参数, <a href="https://doc.rust-lang.org/std/sync/atomic/enum.Ordering.html"><code>Ordering</code></a>是一个 <code>enum</code>.</p>
+<ul>
+<li><code>Relaxed</code> : 最宽松的规则, 它对编译器和CPU不做任何限制, 可以乱序执行.</li>
+<li><code>Release</code>, 当我们<strong>写入数据</strong>时, 那么
+<ul>
+<li>对于当前线程, 任何读取或写入操作都不能被乱序排在这个 store 之后.</li>
+<li>对于其它线程, 任何使用了<code>Acquire</code>来读取这个<code>atomic</code>的数据, 那么它们看到的是修改后的结果.</li>
+</ul>
+</li>
+<li><code>Acquire</code>, 当我们<strong>读取数据</strong>时, 那么
+<ul>
+<li>对于当前线程, 任何读取或者写入操作都不能被乱序排在这个读取之前.</li>
+<li>对于其它线程, 如果使用了 <code>Release</code> 来修改数据, 那么, 修改的值对当前线程可见.</li>
+</ul>
+</li>
+<li><code>AcqRel</code>是<code>Acquire</code>和<code>Release</code>的结合, 同时拥有<code>Acquire</code>和<code>Release</code>的保证. 这个一般用在 <code>fetch_xxx</code> 上, 比如你要对一个<code>atomic</code>自增1, 你希望这个操作之前和之后的读取或写入操作不会被乱序, 并且操作的结果对其它线程可见.</li>
+<li><code>SeqCst</code> 是最严格的<code>Ordering</code>,除了<code>AcqRel</code>的保证外,它还保证所有线程看到的所有<code>SeqCst</code>操作的顺序是一致的.</li>
+</ul>
+<pre><pre class="playground"><code class="language-rust edition2021"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>while self
+    .locked
+    .compare_exchange(false, true, Ordering::Acquire, Ordering::Relaxed)
+    .is_err()
+{
+    // 性能优化: compare_exchange 需要独占访问, 当拿不到锁时, 我们
+    // 先不停检测 locked 的状态, 直到其 unlocked 后, 再尝试拿锁
+    while self.locked.load(Ordering::Relaxed) == true {}
+}
+<span class="boring">}</span></code></pre></pre>
+<blockquote>
+<p>注意, 我们在 <code>while loop</code> 里, 又嵌入了一个 <code>loop</code>. 这是因为 <code>CAS</code> 是个代价比较高的操作, 它需要获得对应内存的独占访问 (<code>exclusive access</code>) , 我们希望失败的时候只是简单读取 atomic 的状态, 只有符合条件的时候再去做独占访问, 进行 <code>CAS</code>. 所以, 看上去多做了一层循环, 实际代码的效率更高.</p>
+</blockquote>
+<h2 id="4-mutex"><a class="header" href="#4-mutex">4. Mutex</a></h2>
+<p><code>SpinLock</code>, 顾名思义,就是线程通过<strong>CPU 空转</strong>(<code>spin</code>, 就像前面的 while loop)忙等 (busy wait) , 来等待某个临界区可用的一种锁. 这种通过 <code>SpinLock</code>做互斥的实现方式有使用场景的限制: 如果受保护的临界区太大, 那么整体的性能会急剧下降,  CPU 忙等, 浪费资源还不干实事, 不适合作为一种通用的处理方法.</p>
+<p>通用的解决方案是: 当多个线程竞争同一个 <code>Mutex</code> 时, 获得锁的线程得到临界区的访问, 其它线程被挂起, 放入该 <code>Mutex</code> 上的一个等待队列里. 当获得锁的线程完成工作, 退出临界区时, <code>Mutex</code> 会给等待队列发一个信号, 把队列中第一个线程唤醒, 于是这个线程可以进行后续的访问. 整个过程如下:</p>
+<p><img src="../assets/202211090854786.png" alt="image-20221109085449640" /></p>
+<p>当然, 这样实现会带来公平性的问题: 如果新来的线程恰巧在 <code>spin</code> 过程中拿到了锁, 而当前等待队列中还有其它线程在等待锁, 那么等待的线程只能继续等待下去, 这不符合 <code>FIFO</code>, 不适合那些需要严格按先来后到排队的使用场景. 为此, <a href="https://github.com/Amanieu/parking_lot"><code>parking_lot</code></a> 提供了 <code>fair mutex</code>.</p>
+<h2 id="5-condvar"><a class="header" href="#5-condvar">5. Condvar</a></h2>
+<p>操作系统还提供了 <code>Condvar</code>. <code>Condvar</code> 有两种状态:</p>
+<ul>
+<li>等待 (wait) : 线程在队列中等待, 直到满足某个条件.</li>
+<li>通知 (notify) : 当<code>condvar</code>的条件满足时, 当前线程通知其他等待的线程可以被唤醒. 通知可以是单个通知, 也可以是多个通知, 甚至广播 (通知所有人).</li>
+</ul>
+<h2 id="6-channel"><a class="header" href="#6-channel">6. Channel</a></h2>
+<p><code>Channel</code> 把锁封装在了队列写入和读取的小块区域内, 然后把读者和写者完全分离, 使得读者读取数据和写者写入数据, 对开发者而言, 除了潜在的上下文切换外, 完全和锁无关, 就像访问一个本地队列一样. 所以, 对于大部分并发问题, 我们都可以用 <code>Channel</code> 或者类似的思想来处理 (比如 actor model).</p>
+<p><code>Rust</code>提供了以下四种<code>Channel</code>:</p>
+<ul>
+<li>
+<p><code>oneshot</code>: 这可能是最简单的 <code>Channel</code>, 写者就只发一次数据, 而读者也只读一次. 这种一次性的、多个线程间的同步可以用 <code>oneshot channel</code> 完成. 由于 <code>oneshot</code> 特殊的用途, 实现的时候可以直接用 <code>atomic swap</code> 来完成</p>
+</li>
+<li>
+<p><code>rendezvous</code>: 很多时候, 我们只需要通过 <code>Channel</code> 来控制线程间的同步, 并不需要发送数据. <code>rendezvous channel</code> 是 <code>channel size</code> 为 <strong>0</strong> 的一种特殊情况.</p>
+</li>
+<li>
+<p><code>bounded</code>: <code>bounded channel</code> 有一个队列, 但队列有上限. 一旦队列被写满了, 写者也需要被挂起等待. 当阻塞发生后, 读者一旦读取数据, <code>channel</code> 内部就会使用 <code>Condvar</code> 的 <code>notify_one</code> 通知写者, 唤醒某个写者使其能够继续写入.</p>
+</li>
+<li>
+<p><code>unbounded</code>: <code>queue</code> 没有上限, 如果写满了, 就自动扩容. 我们知道, <code>Rust</code> 的很多数据结构如 <code>Vec</code> 、<code>VecDeque</code> 都是自动扩容的. <code>unbounded</code> 和 <code>bounded</code> 相比, 除了不阻塞写者, 其它实现都很类似.</p>
+</li>
+</ul>
+<p><img src="../assets/202211091117761.png" alt="image-20221109111700680" /></p>
+<p>根据 <code>Channel</code> 读者和写者的数量, <code>Channel</code> 又可以分为:</p>
+<ul>
+<li><code>SPSC</code>: Single-Producer Single-Consumer, 单生产者, 单消费者. 最简单, 可以不依赖于 <code>Mutex</code>, 只用 <code>atomics</code> 就可以实现.</li>
+<li><code>SPMC</code>: Single-Producer Multi-Consumer, 单生产者, 多消费者. 需要在消费者这侧读取时加锁.</li>
+<li><code>MPSC</code>: Multi-Producer Single-Consumer, 多生产者, 单消费者. 需要在生产者这侧写入时加锁.</li>
+<li><code>MPMC</code>: Multi-Producer Multi-Consumer. 多生产者, 多消费者. 需要在生产者写入或者消费者读取时加锁.</li>
+</ul>
+<h2 id="7-actor"><a class="header" href="#7-actor">7. Actor</a></h2>
+<p><a href="https://en.wikipedia.org/wiki/Actor_model"><code>actor model</code></a>, <code>actor</code> 是一种有栈协程. 每个 <code>actor</code>, 有自己的一个独立的、轻量级的调用栈, 以及一个用来接受消息的消息队列 (<code>mailbox</code> 或者 <code>message queue</code>) , 外界跟 <code>actor</code> 打交道的唯一手段就是, 给它发送消息.</p>
+<h2 id="9-参考"><a class="header" href="#9-参考">9. 参考</a></h2>
+<ul>
+<li>Robe Pike 的演讲 <a href="https://go.dev/blog/waza-talk">concurrency is not parallelism</a></li>
+<li>Jon Gjengset 的视频: <a href="https://www.youtube.com/watch?v=rMGWeSjctlY">Crust of Rust: Atomics and Memory Ordering</a></li>
+<li>Rust 的 <a href="https://github.com/mvdnes/spin-rs">spin-rs crate</a> 提供了 <code>Spinlock</code> 的实现</li>
+<li><a href="https://github.com/actix/actix">atcix</a> actor 实现</li>
+<li><a href="https://github.com/bastion-rs/bastion">bastion</a> actor 实现</li>
+<li>concurrent hash map: <a href="https://github.com/xacrimon/dashmap">dashmap</a> , <a href="https://github.com/jonhoo/left-right">left-right</a></li>
+</ul>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="../rust/03-type-system.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+
+                            <a rel="next prefetch" href="../rust/05-macro.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="../rust/03-type-system.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+
+                    <a rel="next prefetch" href="../rust/05-macro.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+
+
+        <script>
+            window.playground_line_numbers = true;
+        </script>
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+        <script src="../ace.js"></script>
+        <script src="../mode-rust.js"></script>
+        <script src="../editor.js"></script>
+        <script src="../theme-dawn.js"></script>
+        <script src="../theme-tomorrow_night.js"></script>
+
+        <script src="../elasticlunr.min.js"></script>
+        <script src="../mark.min.js"></script>
+        <script src="../searcher.js"></script>
+
+        <script src="../clipboard.min.js"></script>
+        <script src="../highlight.js"></script>
+        <script src="../book.js"></script>
+
+        <!-- Custom JS scripts -->
+
+
+
+    </div>
+    </body>
+</html>

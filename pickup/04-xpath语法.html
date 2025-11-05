@@ -1,0 +1,381 @@
+<!DOCTYPE HTML>
+<html lang="en" class="light sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>xpath语法 - knowledge</title>
+
+
+        <!-- Custom HTML head -->
+
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="../favicon.svg">
+        <link rel="shortcut icon" href="../favicon.png">
+        <link rel="stylesheet" href="../css/variables.css">
+        <link rel="stylesheet" href="../css/general.css">
+        <link rel="stylesheet" href="../css/chrome.css">
+        <link rel="stylesheet" href="../css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="../FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="../fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" id="highlight-css" href="../highlight.css">
+        <link rel="stylesheet" id="tomorrow-night-css" href="../tomorrow-night.css">
+        <link rel="stylesheet" id="ayu-highlight-css" href="../ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+
+        <!-- MathJax -->
+        <script async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+        <!-- Provide site root and default themes to javascript -->
+        <script>
+            const path_to_root = "../";
+            const default_light_theme = "light";
+            const default_dark_theme = "navy";
+            window.path_to_searchindex_js = "../searchindex.js";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="../toc.js"></script>
+    </head>
+    <body>
+    <div id="mdbook-help-container">
+        <div id="mdbook-help-popup">
+            <h2 class="mdbook-help-title">Keyboard shortcuts</h2>
+            <div>
+                <p>Press <kbd>←</kbd> or <kbd>→</kbd> to navigate between chapters</p>
+                <p>Press <kbd>S</kbd> or <kbd>/</kbd> to search in the book</p>
+                <p>Press <kbd>?</kbd> to show this help</p>
+                <p>Press <kbd>Esc</kbd> to hide this help</p>
+            </div>
+        </div>
+    </div>
+    <div id="body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                let theme = localStorage.getItem('mdbook-theme');
+                let sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            const default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? default_dark_theme : default_light_theme;
+            let theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            let sidebar = null;
+            const sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+                sidebar_toggle.checked = false;
+            }
+            if (sidebar === 'visible') {
+                sidebar_toggle.checked = true;
+            } else {
+                html.classList.remove('sidebar-visible');
+            }
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="../toc.html"></iframe>
+            </noscript>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </label>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="default_theme">Auto</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search (`/`)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="/ s" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">knowledge</h1>
+
+                    <div class="right-buttons">
+                        <a href="../print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+                        <a href="https://github.com/thinkgos/knowledge" title="Git repository" aria-label="Git repository">
+                            <i id="git-repository-button" class="fa fa-github"></i>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <div class="search-wrapper">
+                            <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                            <div class="spinner-wrapper">
+                                <i class="fa fa-spinner fa-spin"></i>
+                            </div>
+                        </div>
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h1 id="xpath语法"><a class="header" href="#xpath语法">XPath语法</a></h1>
+<p>XPath 是一门在XML文档中查找信息的语言.</p>
+<h2 id="一-简介"><a class="header" href="#一-简介">一. 简介</a></h2>
+<h3 id="1-xpath-路径表达式"><a class="header" href="#1-xpath-路径表达式">1. XPath 路径表达式</a></h3>
+<p>XPath 使用<strong>路径表达式</strong>来选取 XML 文档中的节点或者节点集.</p>
+<p>这些路径表达式和我们在常规的电脑文件系统中看到的表达式非常相似.</p>
+<h3 id="2-xpath-标准函数"><a class="header" href="#2-xpath-标准函数">2. XPath 标准函数</a></h3>
+<p>XPath 含有超过 100 个内建的函数.这些函数用于字符串值、数值、日期和时间比较、节点和 QName 处理、序列处理、逻辑值等等.</p>
+<h2 id="二-xpath节点"><a class="header" href="#二-xpath节点">二. XPath节点</a></h2>
+<p>在 XPath 中,有七种类型的节点：<code>元素</code>、<code>属性</code>、<code>文本</code>、<code>命名空间</code>、<code>处理指令</code>、<code>注释</code>以及<code>文档(根)节点</code>.</p>
+<ul>
+<li>
+<p>XML文档是被作为节点树来对待的.</p>
+</li>
+<li>
+<p>树的根被称为文档节点或者根节点.</p>
+</li>
+</ul>
+<h2 id="三-xpath语法"><a class="header" href="#三-xpath语法">三. XPath语法</a></h2>
+<h3 id="1-选取节点"><a class="header" href="#1-选取节点">1. 选取节点</a></h3>
+<p>XPath 使用<code>路径表达式</code>来选取 XML 文档中的节点或节点集, 节点是通过沿着<code>路径(path)</code>或者<code>步(steps)</code> 来选取的.</p>
+<p>下面列出了最有用的路径表达式</p>
+<div class="table-wrapper"><table><thead><tr><th style="text-align: left">表达式</th><th style="text-align: left">描述</th></tr></thead><tbody>
+<tr><td style="text-align: left"><code>nodename</code></td><td style="text-align: left">选取此节点的所有子节点。</td></tr>
+<tr><td style="text-align: left"><code>/</code></td><td style="text-align: left">从根节点选取。</td></tr>
+<tr><td style="text-align: left"><code>//</code></td><td style="text-align: left">从匹配选择的当前节点选择文档中的节点, 而不考虑它们的位置。</td></tr>
+<tr><td style="text-align: left"><code>.</code></td><td style="text-align: left">选取当前节点。</td></tr>
+<tr><td style="text-align: left"><code>..</code></td><td style="text-align: left">选取当前节点的父节点。</td></tr>
+<tr><td style="text-align: left"><code>@</code></td><td style="text-align: left">选取属性。</td></tr>
+</tbody></table>
+</div>
+<blockquote>
+<p>实例:</p>
+<pre><code class="language-xml">&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+ 
+&lt;bookstore&gt;
+     &lt;book&gt;
+        &lt;title lang="eng"&gt;Harry Potter&lt;/title&gt;
+          &lt;price&gt;29.99&lt;/price&gt;
+      &lt;/book&gt;
+
+     &lt;book&gt;
+        &lt;title lang="eng"&gt;Learning XML&lt;/title&gt;
+          &lt;price&gt;39.95&lt;/price&gt;
+      &lt;/book&gt;
+&lt;/bookstore&gt;
+</code></pre>
+<p>实例选取:</p>
+<div class="table-wrapper"><table><thead><tr><th style="text-align: left">路径表达式</th><th style="text-align: left">结果</th></tr></thead><tbody>
+<tr><td style="text-align: left">bookstore</td><td style="text-align: left">选取 bookstore 元素的所有子节点.</td></tr>
+<tr><td style="text-align: left">/bookstore</td><td style="text-align: left">选取根元素 bookstore.<br />注释：假如路径起始于正斜杠( / ),则此路径始终代表到某元素的绝对路径！</td></tr>
+<tr><td style="text-align: left">bookstore/book</td><td style="text-align: left">选取属于 bookstore 的子元素的所有 book 元素.</td></tr>
+<tr><td style="text-align: left">//book</td><td style="text-align: left">选取所有 book 子元素,而不管它们在文档中的位置.</td></tr>
+<tr><td style="text-align: left">bookstore//book</td><td style="text-align: left">选择属于 bookstore 元素的后代的所有 book 元素,而不管它们位于 bookstore 之下的什么位置.</td></tr>
+<tr><td style="text-align: left">//@lang</td><td style="text-align: left">选取名为 lang 的所有属性.</td></tr>
+<tr><td style="text-align: left">//@lang/text()</td><td style="text-align: left">选取名为 lang 的所有属性下的所有文本</td></tr>
+</tbody></table>
+</div></blockquote>
+<h3 id="2-谓语predicates"><a class="header" href="#2-谓语predicates">2. 谓语（Predicates）</a></h3>
+<p>谓语用来查找某个特定的节点或者包含某个指定的值的节点, 谓语被嵌在**<code>方括号[]</code>**中.</p>
+<blockquote>
+<div class="table-wrapper"><table><thead><tr><th style="text-align: left">路径表达式</th><th style="text-align: left">结果</th></tr></thead><tbody>
+<tr><td style="text-align: left">/bookstore/book[1]</td><td style="text-align: left">选取属于 bookstore 子元素的第一个 book 元素。</td></tr>
+<tr><td style="text-align: left">/bookstore/book[last()]</td><td style="text-align: left">选取属于 bookstore 子元素的最后一个 book 元素。</td></tr>
+<tr><td style="text-align: left">/bookstore/book[last()-1]</td><td style="text-align: left">选取属于 bookstore 子元素的倒数第二个 book 元素。</td></tr>
+<tr><td style="text-align: left">/bookstore/book[position()&lt;3]</td><td style="text-align: left">选取最前面的两个属于 bookstore 元素的子元素的 book 元素。</td></tr>
+<tr><td style="text-align: left">//title[@lang]</td><td style="text-align: left">选取所有拥有名为 lang 的属性的 title 元素。</td></tr>
+<tr><td style="text-align: left">//title[@lang='eng']</td><td style="text-align: left">选取所有 title 元素, 且这些元素拥有值为 eng 的 lang 属性。</td></tr>
+<tr><td style="text-align: left">/bookstore/book[price&gt;35.00]</td><td style="text-align: left">选取 bookstore 元素的所有 book 元素, 且其中的 price 元素的值须大于 35.00。</td></tr>
+<tr><td style="text-align: left">/bookstore/book[price&gt;35.00]//title</td><td style="text-align: left">选取 bookstore 元素中的 book 元素的所有 title 元素, 且其中的 price 元素的值须大于 35.00。</td></tr>
+</tbody></table>
+</div></blockquote>
+<h3 id="3-选取未知节点"><a class="header" href="#3-选取未知节点">3. 选取未知节点</a></h3>
+<p>XPath 通配符可用来选取未知的 <strong>XML 元素</strong>.</p>
+<div class="table-wrapper"><table><thead><tr><th style="text-align: left">通配符</th><th style="text-align: left">描述</th></tr></thead><tbody>
+<tr><td style="text-align: left"><code>*</code></td><td style="text-align: left">匹配任何元素节点.</td></tr>
+<tr><td style="text-align: left"><code>@*</code></td><td style="text-align: left">匹配任何属性节点.</td></tr>
+<tr><td style="text-align: left"><code>node()</code></td><td style="text-align: left">匹配任何类型的节点.</td></tr>
+</tbody></table>
+</div>
+<p>在下面的表格中,我们列出了一些路径表达式,以及这些表达式的结果：</p>
+<blockquote>
+<div class="table-wrapper"><table><thead><tr><th style="text-align: left">路径表达式</th><th style="text-align: left">结果</th></tr></thead><tbody>
+<tr><td style="text-align: left">/bookstore/*</td><td style="text-align: left">选取 bookstore 元素的所有子元素.</td></tr>
+<tr><td style="text-align: left">//*</td><td style="text-align: left">选取文档中的所有元素.</td></tr>
+<tr><td style="text-align: left">//title[@*]</td><td style="text-align: left">选取所有带有属性的 title 元素.</td></tr>
+</tbody></table>
+</div></blockquote>
+<h3 id="4-选取若干路径"><a class="header" href="#4-选取若干路径">4. 选取若干路径</a></h3>
+<p>通过在路径表达式中使用<code>"|"</code>运算符选取<strong>多个路径</strong>.</p>
+<p>在下面的表格中,我们列出了一些路径表达式,以及这些表达式的结果：</p>
+<blockquote>
+<div class="table-wrapper"><table><thead><tr><th style="text-align: left">路径表达式</th><th style="text-align: left">结果</th></tr></thead><tbody>
+<tr><td style="text-align: left">//book/title | //book/price</td><td style="text-align: left">选取 book 元素的所有 title 和 price 元素.</td></tr>
+<tr><td style="text-align: left">//title | //price</td><td style="text-align: left">选取文档中的所有 title 和 price 元素.</td></tr>
+<tr><td style="text-align: left">/bookstore/book/title | //price</td><td style="text-align: left">选取属于 bookstore 元素的 book 元素的所有 title 元素,以及文档中所有的 price 元素.</td></tr>
+</tbody></table>
+</div></blockquote>
+<h2 id="四-xpath-轴axes"><a class="header" href="#四-xpath-轴axes">四. XPath 轴（Axes）</a></h2>
+<p>轴可定义相对于当前节点的节点集.</p>
+<div class="table-wrapper"><table><thead><tr><th style="text-align: left">轴名称</th><th style="text-align: left">结果</th></tr></thead><tbody>
+<tr><td style="text-align: left">ancestor</td><td style="text-align: left">选取当前节点的所有先辈（父、祖父等）。</td></tr>
+<tr><td style="text-align: left">ancestor-or-self</td><td style="text-align: left">选取当前节点的所有先辈（父、祖父等）以及当前节点本身。</td></tr>
+<tr><td style="text-align: left">attribute</td><td style="text-align: left">选取当前节点的所有属性。</td></tr>
+<tr><td style="text-align: left">child</td><td style="text-align: left">选取当前节点的所有子元素。</td></tr>
+<tr><td style="text-align: left">descendant</td><td style="text-align: left">选取当前节点的所有后代元素（子、孙等）。</td></tr>
+<tr><td style="text-align: left">descendant-or-self</td><td style="text-align: left">选取当前节点的所有后代元素（子、孙等）以及当前节点本身。</td></tr>
+<tr><td style="text-align: left">following</td><td style="text-align: left">选取文档中当前节点的结束标签之后的所有节点。</td></tr>
+<tr><td style="text-align: left">following-sibling</td><td style="text-align: left">选取当前节点之后的所有兄弟节点</td></tr>
+<tr><td style="text-align: left">namespace</td><td style="text-align: left">选取当前节点的所有命名空间节点。</td></tr>
+<tr><td style="text-align: left">parent</td><td style="text-align: left">选取当前节点的父节点。</td></tr>
+<tr><td style="text-align: left">preceding</td><td style="text-align: left">选取文档中当前节点的开始标签之前的所有节点。</td></tr>
+<tr><td style="text-align: left">preceding-sibling</td><td style="text-align: left">选取当前节点之前的所有同级节点。</td></tr>
+<tr><td style="text-align: left">self</td><td style="text-align: left">选取当前节点</td></tr>
+</tbody></table>
+</div>
+<h2 id="五-xpath-运算符"><a class="header" href="#五-xpath-运算符">五. XPath 运算符</a></h2>
+<p>XPath 表达式可返回节点集、字符串、逻辑值以及数字</p>
+<p>下面列出了可用在 XPath 表达式中的运算符：</p>
+<div class="table-wrapper"><table><thead><tr><th style="text-align: left">运算符</th><th style="text-align: left">描述</th><th style="text-align: left">实例</th><th style="text-align: left">返回值</th></tr></thead><tbody>
+<tr><td style="text-align: left">`</td><td style="text-align: left">`</td><td style="text-align: left">计算两个节点集</td><td style="text-align: left">//book | //cd</td></tr>
+<tr><td style="text-align: left"><code>+</code></td><td style="text-align: left">加法</td><td style="text-align: left">6 + 4</td><td style="text-align: left">10</td></tr>
+<tr><td style="text-align: left"><code>-</code></td><td style="text-align: left">减法</td><td style="text-align: left">6 - 4</td><td style="text-align: left">2</td></tr>
+<tr><td style="text-align: left"><code>*</code></td><td style="text-align: left">乘法</td><td style="text-align: left">6 * 4</td><td style="text-align: left">24</td></tr>
+<tr><td style="text-align: left"><code>div</code></td><td style="text-align: left">除法</td><td style="text-align: left">8 div 4</td><td style="text-align: left">2</td></tr>
+<tr><td style="text-align: left"><code>=</code></td><td style="text-align: left">等于</td><td style="text-align: left">price=9.80</td><td style="text-align: left">如果 price 是 9.80,则返回 true.如果 price 是 9.90,则返回 false.</td></tr>
+<tr><td style="text-align: left"><code>!=</code></td><td style="text-align: left">不等于</td><td style="text-align: left">price!=9.80</td><td style="text-align: left">如果 price 是 9.90,则返回 true.如果 price 是 9.80,则返回 false.</td></tr>
+<tr><td style="text-align: left"><code>&lt;</code></td><td style="text-align: left">小于</td><td style="text-align: left">price&lt;9.80</td><td style="text-align: left">如果 price 是 9.00,则返回 true.如果 price 是 9.90,则返回 false.</td></tr>
+<tr><td style="text-align: left"><code>&lt;=</code></td><td style="text-align: left">小于或等于</td><td style="text-align: left">price&lt;=9.80</td><td style="text-align: left">如果 price 是 9.00,则返回 true.如果 price 是 9.90,则返回 false.</td></tr>
+<tr><td style="text-align: left"><code>&gt;</code></td><td style="text-align: left">大于</td><td style="text-align: left">price&gt;9.80</td><td style="text-align: left">如果 price 是 9.90,则返回 true.如果 price 是 9.80,则返回 false.</td></tr>
+<tr><td style="text-align: left"><code>&gt;=</code></td><td style="text-align: left">大于或等于</td><td style="text-align: left">price&gt;=9.80</td><td style="text-align: left">如果 price 是 9.90,则返回 true.如果 price 是 9.70,则返回 false.</td></tr>
+<tr><td style="text-align: left"><code>or</code></td><td style="text-align: left">或</td><td style="text-align: left">price=9.80 or price=9.70</td><td style="text-align: left">如果 price 是 9.80,则返回 true.如果 price 是 9.50,则返回 false.</td></tr>
+<tr><td style="text-align: left"><code>and</code></td><td style="text-align: left">与</td><td style="text-align: left">price&gt;9.00 and price&lt;9.90</td><td style="text-align: left">如果 price 是 9.80,则返回 true.如果 price 是 8.50,则返回 false.</td></tr>
+<tr><td style="text-align: left"><code>mod</code></td><td style="text-align: left">计算除法的余数</td><td style="text-align: left">5 mod 2</td><td style="text-align: left">1</td></tr>
+</tbody></table>
+</div>
+<h2 id="六-函数"><a class="header" href="#六-函数">六. 函数</a></h2>
+<p><a href="https://www.w3school.com.cn/xpath/xpath_functions.asp">函数</a></p>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="../pickup/02-promql.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+
+                            <a rel="next prefetch" href="../pickup/05-css选择器汇总.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="../pickup/02-promql.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+
+                    <a rel="next prefetch" href="../pickup/05-css选择器汇总.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+
+
+        <script>
+            window.playground_line_numbers = true;
+        </script>
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+        <script src="../ace.js"></script>
+        <script src="../mode-rust.js"></script>
+        <script src="../editor.js"></script>
+        <script src="../theme-dawn.js"></script>
+        <script src="../theme-tomorrow_night.js"></script>
+
+        <script src="../elasticlunr.min.js"></script>
+        <script src="../mark.min.js"></script>
+        <script src="../searcher.js"></script>
+
+        <script src="../clipboard.min.js"></script>
+        <script src="../highlight.js"></script>
+        <script src="../book.js"></script>
+
+        <!-- Custom JS scripts -->
+
+
+
+    </div>
+    </body>
+</html>

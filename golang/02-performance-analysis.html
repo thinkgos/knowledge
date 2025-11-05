@@ -1,0 +1,524 @@
+<!DOCTYPE HTML>
+<html lang="en" class="light sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>golang性能分析pprof - knowledge</title>
+
+
+        <!-- Custom HTML head -->
+
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="../favicon.svg">
+        <link rel="shortcut icon" href="../favicon.png">
+        <link rel="stylesheet" href="../css/variables.css">
+        <link rel="stylesheet" href="../css/general.css">
+        <link rel="stylesheet" href="../css/chrome.css">
+        <link rel="stylesheet" href="../css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="../FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="../fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" id="highlight-css" href="../highlight.css">
+        <link rel="stylesheet" id="tomorrow-night-css" href="../tomorrow-night.css">
+        <link rel="stylesheet" id="ayu-highlight-css" href="../ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+
+        <!-- MathJax -->
+        <script async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+        <!-- Provide site root and default themes to javascript -->
+        <script>
+            const path_to_root = "../";
+            const default_light_theme = "light";
+            const default_dark_theme = "navy";
+            window.path_to_searchindex_js = "../searchindex.js";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="../toc.js"></script>
+    </head>
+    <body>
+    <div id="mdbook-help-container">
+        <div id="mdbook-help-popup">
+            <h2 class="mdbook-help-title">Keyboard shortcuts</h2>
+            <div>
+                <p>Press <kbd>←</kbd> or <kbd>→</kbd> to navigate between chapters</p>
+                <p>Press <kbd>S</kbd> or <kbd>/</kbd> to search in the book</p>
+                <p>Press <kbd>?</kbd> to show this help</p>
+                <p>Press <kbd>Esc</kbd> to hide this help</p>
+            </div>
+        </div>
+    </div>
+    <div id="body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                let theme = localStorage.getItem('mdbook-theme');
+                let sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            const default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? default_dark_theme : default_light_theme;
+            let theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            let sidebar = null;
+            const sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+                sidebar_toggle.checked = false;
+            }
+            if (sidebar === 'visible') {
+                sidebar_toggle.checked = true;
+            } else {
+                html.classList.remove('sidebar-visible');
+            }
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="../toc.html"></iframe>
+            </noscript>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </label>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="default_theme">Auto</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search (`/`)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="/ s" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">knowledge</h1>
+
+                    <div class="right-buttons">
+                        <a href="../print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+                        <a href="https://github.com/thinkgos/knowledge" title="Git repository" aria-label="Git repository">
+                            <i id="git-repository-button" class="fa fa-github"></i>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <div class="search-wrapper">
+                            <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                            <div class="spinner-wrapper">
+                                <i class="fa fa-spinner fa-spin"></i>
+                            </div>
+                        </div>
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h1 id="性能优化pprof"><a class="header" href="#性能优化pprof">性能优化pprof</a></h1>
+<ul>
+<li><a href="https://mp.weixin.qq.com/s?__biz=MzAxMTA4Njc0OQ==&amp;mid=2651438010&amp;idx=5&amp;sn=9641a1dcc64b4d7b6b228c54b3da9834&amp;chksm=80bb6548b7ccec5ef4760cfe32599568c133d97a311c0eab113f14ceecaeaa3f53a07dc0f488&amp;mpshare=1&amp;scene=24&amp;srcid=&amp;sharer_sharetime=1593169627588&amp;sharer_shareid=fbafc624aa53cd09857fb0861ac2a16d&amp;exportkey=AR4ME0Tlj8P7jxFrwP7KfPs%3D&amp;pass_ticket=DDvVwMc9uE8gubEQ4Udh%2F7K9IzRY%2FCbcirMDYkaFdBlrl2%2B2VHn%2BmCXuaTNKOfGb#rd">值得收藏深度解密系列: Go语言之 pprof</a></li>
+<li><a href="https://segmentfault.com/a/1190000019222661">实战Go内存泄露</a></li>
+<li><a href="https://blog.wolfogre.com/posts/go-ppof-practice/">wolfogre 非常精彩的实战文章</a></li>
+<li><a href="https://github.com/brendangregg/FlameGraph">FlameGraph: Stack trace visualizer</a></li>
+<li><a href="https://github.com/google/pprof">google pprof</a></li>
+<li><a href="https://git.io/JfYMW">如何读懂pprof grap</a></li>
+<li><a href="https://mmcloughlin.com/posts/your-pprof-is-showing">pprof暴露的风险</a></li>
+</ul>
+<h2 id="1-shell内置time指令"><a class="header" href="#1-shell内置time指令">1. shell内置time指令</a></h2>
+<p>使用<code>time ./test</code>对执行程序做了性能分析, 得到3个指标.</p>
+<ul>
+<li><code>real</code>: 从程序开始到结束, 实际度过的时间；</li>
+<li><code>user</code>: 程序在<strong>用户态</strong>度过的时间；</li>
+<li><code>sys</code>: 程序在<strong>内核态</strong>度过的时间.</li>
+</ul>
+<p>一般情况下 <code>real</code> <strong>&gt;=</strong> <code>user</code> + <code>sys</code>, 因为系统还有其它进程(切换其他进程中间对于本进程会有空白期).</p>
+<h2 id="2-usrbintime指令"><a class="header" href="#2-usrbintime指令">2 /usr/bin/time指令</a></h2>
+<blockquote>
+<p>这个指令比内置的time更加详细一些, 使用的时候需要用绝对路径, 而且要加上参数<code>-v</code></p>
+<ul>
+<li>CPU占用率；</li>
+<li>内存使用情况；</li>
+<li>Page Fault 情况；</li>
+<li>进程切换情况；</li>
+<li>文件系统IO；</li>
+<li>Socket 使用情况</li>
+<li>...</li>
+</ul>
+</blockquote>
+<pre><code class="language-shell">$ /usr/bin/time -v ./test
+
+    Command being timed: "./test"
+    User time (seconds): 0.12
+    System time (seconds): 0.06
+    Percent of CPU this job got: 115%
+    Elapsed (wall clock) time (h:mm:ss or m:ss): 0:00.16
+    Average shared text size (kbytes): 0
+    Average unshared data size (kbytes): 0
+    Average stack size (kbytes): 0
+    Average total size (kbytes): 0
+    Maximum resident set size (kbytes): 41172
+    Average resident set size (kbytes): 0
+    Major (requiring I/O) page faults: 1
+    Minor (reclaiming a frame) page faults: 15880
+    Voluntary context switches: 897
+    Involuntary context switches: 183
+    Swaps: 0
+    File system inputs: 256
+    File system outputs: 2664
+    Socket messages sent: 0
+    Socket messages received: 0
+    Signals delivered: 0
+    Page size (bytes): 4096
+    Exit status: 0
+</code></pre>
+<h2 id="3-pprof"><a class="header" href="#3-pprof">3. pprof</a></h2>
+<p>pprof 支持四种类型的分析:</p>
+<ul>
+<li><code>CPU</code>: <code>CPU</code>分析, 采样消耗cpu的调用, 这个一般用来定位排查程序里耗费计算资源的地方；</li>
+<li><code>Memory</code>: 内存分析, 在应用程序进行堆分配时记录堆栈跟踪, 用于监视当前和历史内存使用情况, 以及检查内存泄漏;</li>
+<li><code>Block</code>: 阻塞分析, 记录 goroutine 阻塞等待同步 (包括定时器通道) 的位置</li>
+<li><code>Mutex</code>: 互斥锁分析, 采样互斥锁的竞争情况；</li>
+</ul>
+<p>明确几个重要的点:</p>
+<ul>
+<li>golang 内存<code>pprof</code>是采样的, 每512KB采样一次；</li>
+<li>golang 的内存采样的是堆栈路径, 而不是类型信息；</li>
+<li>golang 的内存采样入口一定是通过<code>mProf_Malloc</code>, <code>mProf_Free</code> 这两个函数.所以, 如果是 cgo 分配的内存, 那么是没有机会调用到这两个函数的, 所以如果是 cgo 导致的内存问题, <code>go tool pprof</code>是分析不出来的；</li>
+</ul>
+<h2 id="31-pprof的作用"><a class="header" href="#31-pprof的作用">3.1. pprof的作用</a></h2>
+<p><code>pprof</code> 是 Go 语言中可视化和分析程序运行性能的工具.
+pprof 以 <a href="https://github.com/google/pprof/blob/master/proto/profile.proto">profile.proto</a> 读取分析样本的集合, 并生成报告以可视化并帮助分析数据 (支持文本和图形报告).
+<code>profile.proto</code> 是一个 <code>Protocol Buffer v3</code> 的描述文件, 它描述了一组 <code>callstack</code> 和 <code>symbolization</code> 信息,  作用是表示统计分析的一组采样的调用栈, 是很常见的 <code>stacktrace</code> 配置文件格式.</p>
+<p>它能提供各种性能数据:</p>
+<p><img src="../assets/go-pprof-data.webp" alt="img" /></p>
+<blockquote>
+<p><code>allocs</code> 和 <code>heap</code> 采样的信息一致, 不过前者是所有对象的内存分配, 而 <code>heap</code> 则是活跃对象的内存分配.
+关于 goroutine 的信息有两个链接,</p>
+<ul>
+<li><code>goroutine</code> : 一个汇总的消息, 可以查看 goroutines 的总体情况</li>
+<li><code>full goroutine stackdump</code>可以看到每一个 goroutine 的状态.</li>
+</ul>
+<ol>
+<li>CPU Profiling: 当 CPU 性能分析启用后, Go runtime 会每 10ms 就暂停一下, 记录当前运行的 goroutine 的调用堆栈及相关数据.当性能分析数据保存到硬盘后, 我们就可以分析代码中的热点了.</li>
+<li>Memory Profiling: 内存性能分析则是在堆 (Heap) 分配的时候, 记录一下调用堆栈.默认情况下, 是每 1000 次分配, 取样一次, 这个数值可以改变.栈(Stack)分配, 由于会随时释放, 因此不会被内存分析所记录. 由于内存分析是取样方式, 并且也因为其记录的是分配内存, 而不是使用内存. 因此使用内存性能分析工具来准确判断程序具体的内存使用是比较困难的.</li>
+<li>Block Profiling: 阻塞分析是一个很独特的分析, 它有点儿类似于 CPU 性能分析, 但是它所记录的是 goroutine 等待资源所花的时间.阻塞分析对分析程序并发瓶颈非常有帮助, 阻塞性能分析可以显示出什么时候出现了大批的 goroutine 被阻塞了.阻塞性能分析是特殊的分析工具, 在排除 CPU 和内存瓶颈前, 不应该用它来分析.</li>
+<li>Mutex Profiling: 互斥锁分析, 报告互斥锁的竞争情况</li>
+</ol>
+</blockquote>
+<h3 id="311-如何使用"><a class="header" href="#311-如何使用">3.1.1 如何使用</a></h3>
+<ul>
+<li>
+<p><code>runtime/pprof</code>: 采集程序(非Server)的运行数据进行分析, 主要针对只跑一次的程序, 具体查看<code>runtime/pprof</code>相关api</p>
+</li>
+<li>
+<p><code>net/http/pprof</code>: 采集程序(Server)的运行时数据进行分析, 可提供一个HTTP接口</p>
+<blockquote>
+<p><code>http://localhost:8080/debug/pprof/</code>进入浏览器页面,查看相关的汇总信息</p>
+</blockquote>
+</li>
+</ul>
+<h3 id="312-分析"><a class="header" href="#312-分析">3.1.2 分析</a></h3>
+<p>example:</p>
+<pre><code class="language-go">package main
+
+import (
+    "fmt"
+    "math/rand"
+    "net/http"
+    "os"
+    "strconv"
+    "time"
+
+    _ "net/http/pprof"
+)
+
+func main() {
+    fmt.Println(os.Getpid())
+    fmt.Println("http://localhost:8080/debug/pprof")
+    go func() {
+        http.ListenAndServe(":8080", nil)
+    }()
+    // busy working....
+    // Force the GC to work to make the plots "move".
+    m := map[string][]byte{}
+
+    for {
+        b := make([]byte, 512+rand.Intn(16*1024))
+        m[strconv.Itoa(len(m)%(10*100))] = b
+
+        if len(m)%(10*100) == 0 {
+            m = make(map[string][]byte)
+        }
+
+        time.Sleep(10 * time.Millisecond)
+    }
+}
+</code></pre>
+<h4 id="通过命令交互分析"><a class="header" href="#通过命令交互分析">通过命令交互分析</a></h4>
+<ul>
+<li>通过得到profile文件直接进入分析</li>
+</ul>
+<pre><code class="language-shell">go tool pprof ./profile
+</code></pre>
+<ul>
+<li>通过url地址直接进入分析</li>
+</ul>
+<pre><code class="language-shell"># 下载 cpu profile, 默认从当前开始收集 30s 的 cpu 使用情况, 需要等待 30s
+go tool pprof http://localhost:8080/debug/pprof/profile
+# wait 120s
+go tool pprof http://localhost:8080/debug/pprof/profile?seconds=120     
+# 下载 heap profile
+go tool pprof http://localhost:8080/debug/pprof/heap
+# 切换内存分析的类型
+go tool pprof -sample_index=alloc_space http://localhost:8080/debug/pprof/heap
+# 下载 goroutine profile
+go tool pprof http://localhost:8080/debug/pprof/goroutine
+# 下载 block profile
+go tool pprof http://localhost:8080/debug/pprof/block
+# 下载 mutex profile
+go tool pprof http://localhost:8080/debug/pprof/mutex
+</code></pre>
+<p>命令行支持命令:</p>
+<ul>
+<li><code>callgrind</code>: <code>callgrind</code>格式主要用于<code>KCachegrind</code>工具, 可视化分析函数调用和执行情况.</li>
+<li><code>comments</code>: 输出所有的profile注释信息, 帮助开发者了解和记录性能分析的元数据.</li>
+<li><code>disasm</code>: 输出带有采样注释的汇编代码列表.此功能对于需要深入了解程序在汇编级别的性能表现非常有用.</li>
+<li><code>dot</code>: 生成DOT格式的图表. DOT格式是一种图形描述语言, 可以用于<code>Graphviz</code>工具, 进行复杂的图形可视化.</li>
+<li><code>eog</code>: 通过eog工具可视化图表.此命令将生成的图表直接在eog中打开.</li>
+<li><code>evince</code>: 通过evince工具可视化图表, 与eog类似, 但使用的是Evince文档查看器.</li>
+<li><code>gif</code>: 生成GIF格式的图像, 便于在网页和报告中嵌入性能分析图表.</li>
+<li><code>gv</code>: 通过gv工具可视化图表. gv是一个基于X11的PostScript和PDF查看器.</li>
+<li><code>kcachegrind</code>: 在<code>KCachegrind</code>工具中可视化报告. <code>KCachegrind</code>是一个强大的性能分析工具, 特别适用于处理<code>callgrind</code>格式的文件.</li>
+<li><code>list</code>: 输出与正则表达式匹配的函数的注释源代码, 帮助开发者直接在源代码级别查看性能瓶颈.</li>
+<li><code>pdf</code>: 生成PDF格式的图表, 便于打印和分享</li>
+<li><code>peek</code>: 输出与正则表达式匹配的函数的调用者和被调用者信息</li>
+<li><code>png</code>: 生成PNG格式的图像, 与GIF类似, 但适用于需要高质量静态图像的场景.</li>
+<li><code>proto</code>: 以压缩protobuf格式输出profile数据.这种格式适用于数据交换和存储.</li>
+<li><code>ps</code>: 生成PostScript格式的图表, 便于高质量打印.</li>
+<li><code>raw</code>: 输出原始profile数据的文本表示, 用于深入分析或自定义处理.</li>
+<li><code>svg</code>: 生成SVG格式的图像, 适用于需要矢量图形的场景, 如网页嵌入和缩放显示</li>
+<li><code>tags</code>: 输出profile中的所有标签信息, 帮助开发者了解和筛选性能数据</li>
+<li><code>text</code>: 以文本形式输出主要的性能数据条目, 便于快速查看和分析.</li>
+<li><code>top</code>: 以文本形式输出性能数据的主要条目, 类似于Linux中的top命令, 帮助开发者快速定位性能热点.</li>
+<li><code>topproto</code>: 以压缩protobuf格式输出主要的性能数据条目, 结合了top和proto命令的功能.</li>
+<li><code>traces</code>: 以文本形式输出所有的profile样本数据, 适用于详细的逐样本分析.</li>
+<li><code>tree</code>: 以文本形式输出调用图, 帮助开发者以树形结构查看函数调用关系.</li>
+<li><code>web</code>: 通过默认的网页浏览器可视化图表, 使得性能分析结果更易于共享和展示.</li>
+<li><code>weblist</code>: 在网页浏览器中显示带注释的源代码, 与list命令类似, 但提供了更友好的界面.</li>
+</ul>
+<h4 id="通过可视化界面需要graphviz支持"><a class="header" href="#通过可视化界面需要graphviz支持">通过可视化界面(需要<code>graphviz</code>支持)</a></h4>
+<pre><code class="language-shell">go tool pprof -http=:8080 cpu.prof
+</code></pre>
+<p>或者</p>
+<pre><code class="language-shell">go tool pprof cpu.prof
+(pprof) web
+</code></pre>
+<p>相关参数</p>
+<ul>
+<li>profile
+<ul>
+<li><code>flat</code>: 本函数的执行耗时</li>
+<li><code>flat%</code>: flat占CPU总时间的比例</li>
+<li><code>sum%</code>: 本函数累积使用CPU总比例</li>
+<li><code>cum</code>: 本函数加上调用的函数总耗时</li>
+<li><code>cum%</code>: cum占CPU总时间的比例</li>
+</ul>
+</li>
+<li>heap的flat, sum, cum与上面类似, 只不过计算的是内存大小
+<ul>
+<li><code>-inuse_space</code>: 分析应用程序的常驻内存占用情况</li>
+<li><code>-alloc_objects</code>: 分析应用程序的内存临时分配情况</li>
+</ul>
+</li>
+</ul>
+<p>在 <code>cpu profile</code> 中, 一个是方法运行的时间占比, 一个是它在采样的堆栈中出现的时间占比 (前者是 <code>flat</code> 时间, 后者则是 <code>cum</code> 时间占比); 框越大, 代表耗时越多或是内存分配越多.</p>
+<h4 id="解读调用图"><a class="header" href="#解读调用图">解读调用图</a></h4>
+<ul>
+<li>节点颜色:
+<ul>
+<li>大的正<code>cum</code>为红色.</li>
+<li>大的负<code>cum</code>为绿色, 负值最有可能出现在剖面比较中</li>
+<li><code>cum</code>接近零为灰色</li>
+</ul>
+</li>
+<li>节点字体大小:
+<ul>
+<li>字体大小越大, 表示<code>flat</code>绝对值越大.</li>
+<li>字体大小越小, 表示<code>flat</code>绝对值越小.</li>
+</ul>
+</li>
+<li>边权重:
+<ul>
+<li>边越厚, 表示在该路径上使用的资源越多.</li>
+<li>边越细, 表示在该路径上使用的资源越少.</li>
+</ul>
+</li>
+<li>边颜色:
+<ul>
+<li>大的正值为红色</li>
+<li>大的负值为绿色</li>
+<li>接近于零为灰色</li>
+</ul>
+</li>
+<li>虚线边: 删除了两个相连位置之间的一些位置.</li>
+<li>实线边, 两个相连位置是直接相关.</li>
+<li><code>(inline)</code>边标记: 调用已内联到调用程序中.</li>
+</ul>
+<h2 id="32-火焰图"><a class="header" href="#32-火焰图">3.2 火焰图</a></h2>
+<p>可视化界面已经支持火焰图(Flame Graph),位于VIEW/Flame Graph下.更老版本pprof不支持<code>-http</code>参数的,可以下载其它库来支持火焰图<code>github.com/google/pprof</code>或者<code>github.com/uber/go-torch</code></p>
+<p>如何读懂火焰图可看: 阮一峰的<a href="http://www.ruanyifeng.com/blog/2017/09/flame-graph.html">如何读懂火焰图</a></p>
+<h2 id="4-性能分析注意事项"><a class="header" href="#4-性能分析注意事项">4. 性能分析注意事项</a></h2>
+<h3 id="41-性能分析必须在一个可重复的稳定的环境中来进行"><a class="header" href="#41-性能分析必须在一个可重复的稳定的环境中来进行">4.1 性能分析必须在一个<strong>可重复的</strong>、<strong>稳定的</strong>环境中来进行</a></h3>
+<ul>
+<li>
+<p>不要在共享硬件上进行性能分析;</p>
+</li>
+<li>
+<p>不要在性能分析期间, 在同一个机器上去浏览网页</p>
+</li>
+<li>
+<p>机器必须闲置</p>
+</li>
+<li>
+<p>注意省电模式和过热保护, 如果突然进入这些模式, 会导致分析数据严重不准确</p>
+</li>
+<li>
+<p><strong>不要使用虚拟机、共享的云主机</strong>, 太多干扰因素, 分析数据会很不一致；</p>
+</li>
+<li>
+<p>关闭电源管理、过热管理;</p>
+</li>
+<li>
+<p>绝不要升级, 以保证测试的一致性, 以及具有可比性</p>
+</li>
+</ul>
+<blockquote>
+<p>如果承受得起, 购买专用的性能测试分析的硬件设备, 上架</p>
+</blockquote>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="../golang/01-quiz.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+
+                            <a rel="next prefetch" href="../golang/03-performance-trace.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="../golang/01-quiz.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+
+                    <a rel="next prefetch" href="../golang/03-performance-trace.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+
+
+        <script>
+            window.playground_line_numbers = true;
+        </script>
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+        <script src="../ace.js"></script>
+        <script src="../mode-rust.js"></script>
+        <script src="../editor.js"></script>
+        <script src="../theme-dawn.js"></script>
+        <script src="../theme-tomorrow_night.js"></script>
+
+        <script src="../elasticlunr.min.js"></script>
+        <script src="../mark.min.js"></script>
+        <script src="../searcher.js"></script>
+
+        <script src="../clipboard.min.js"></script>
+        <script src="../highlight.js"></script>
+        <script src="../book.js"></script>
+
+        <!-- Custom JS scripts -->
+
+
+
+    </div>
+    </body>
+</html>

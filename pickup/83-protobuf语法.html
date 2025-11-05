@@ -1,0 +1,458 @@
+<!DOCTYPE HTML>
+<html lang="en" class="light sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>protobuf语法 - knowledge</title>
+
+
+        <!-- Custom HTML head -->
+
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="../favicon.svg">
+        <link rel="shortcut icon" href="../favicon.png">
+        <link rel="stylesheet" href="../css/variables.css">
+        <link rel="stylesheet" href="../css/general.css">
+        <link rel="stylesheet" href="../css/chrome.css">
+        <link rel="stylesheet" href="../css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="../FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="../fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" id="highlight-css" href="../highlight.css">
+        <link rel="stylesheet" id="tomorrow-night-css" href="../tomorrow-night.css">
+        <link rel="stylesheet" id="ayu-highlight-css" href="../ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+
+        <!-- MathJax -->
+        <script async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+        <!-- Provide site root and default themes to javascript -->
+        <script>
+            const path_to_root = "../";
+            const default_light_theme = "light";
+            const default_dark_theme = "navy";
+            window.path_to_searchindex_js = "../searchindex.js";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="../toc.js"></script>
+    </head>
+    <body>
+    <div id="mdbook-help-container">
+        <div id="mdbook-help-popup">
+            <h2 class="mdbook-help-title">Keyboard shortcuts</h2>
+            <div>
+                <p>Press <kbd>←</kbd> or <kbd>→</kbd> to navigate between chapters</p>
+                <p>Press <kbd>S</kbd> or <kbd>/</kbd> to search in the book</p>
+                <p>Press <kbd>?</kbd> to show this help</p>
+                <p>Press <kbd>Esc</kbd> to hide this help</p>
+            </div>
+        </div>
+    </div>
+    <div id="body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                let theme = localStorage.getItem('mdbook-theme');
+                let sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            const default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? default_dark_theme : default_light_theme;
+            let theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            let sidebar = null;
+            const sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+                sidebar_toggle.checked = false;
+            }
+            if (sidebar === 'visible') {
+                sidebar_toggle.checked = true;
+            } else {
+                html.classList.remove('sidebar-visible');
+            }
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="../toc.html"></iframe>
+            </noscript>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </label>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="default_theme">Auto</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search (`/`)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="/ s" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">knowledge</h1>
+
+                    <div class="right-buttons">
+                        <a href="../print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+                        <a href="https://github.com/thinkgos/knowledge" title="Git repository" aria-label="Git repository">
+                            <i id="git-repository-button" class="fa fa-github"></i>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <div class="search-wrapper">
+                            <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                            <div class="spinner-wrapper">
+                                <i class="fa fa-spinner fa-spin"></i>
+                            </div>
+                        </div>
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h1 id="protobuf语法"><a class="header" href="#protobuf语法">Protobuf语法</a></h1>
+<blockquote>
+<p><a href="https://developers.google.cn/protocol-buffers">官方文档</a></p>
+</blockquote>
+<h2 id="一-定义消息类型"><a class="header" href="#一-定义消息类型">一. 定义消息类型</a></h2>
+<p><code>.proto</code>文件定义消息类型</p>
+<pre><code class="language-protobuf">syntax = "proto3";
+// option go_package = ".;pb";
+/* 查询请求*/
+message SearchRequest {
+      reserved 4, 15, 9 to 11;
+      string query = 1; // 查询
+      int32 page_number = 2;
+      int32 result_per_page = 3;
+}
+
+message SearchResponse {
+      repeated Result results = 1;
+}
+
+message Result {
+      string url = 1;
+      string title = 2;
+      repeated string snippets = 3;
+}
+</code></pre>
+<ul>
+<li>
+<p>第一行定义了使用的<code>protobuf</code>的协议的版本,如果不设置,则为proto2版本. 文件第一行必须非空,非注释行</p>
+</li>
+<li>
+<p>可选定义go的包名</p>
+</li>
+<li>
+<p>采用C/C++风格的注释,即使<code>//</code>和<code>/**/</code>.</p>
+</li>
+<li>
+<p><code>SearchRequest</code>定义了三个域(名称/值对),每个字段都有一个名称和一个类型</p>
+<ul>
+<li>
+<p>每个字段都有对应的标量类型( [scalar types](#二. 标量类型(scalar types)))</p>
+</li>
+<li>
+<p>每一个字段都定有唯一数值编号. 这些字段用于标识二进制编码的域位置,一旦定义并使用后,不应该再修改.</p>
+<blockquote>
+<ul>
+<li>
+<p>字段数值编号<strong>1-15</strong>只使用一个字节进行编码,包括字段数值编号和字段类型.</p>
+</li>
+<li>
+<p>字段数值编号<strong>16-2047</strong>将使用两个字节进行编码</p>
+</li>
+<li>
+<p>最小的字段编号为1,最大2^29 - 1, or 536,870,911.</p>
+</li>
+<li>
+<p><strong>19000-19999</strong> (<strong>FieldDescriptor::kFirstReservedNumber</strong>-<strong>FieldDescriptor::kLastReservedNumber</strong>)为<code>protobuf</code>保留字段,不可使用.</p>
+<p>对于频繁出现的消息最好使用<strong>1-15</strong>,切记为将来可能添加的频繁出现的元素留出一些空间</p>
+</li>
+</ul>
+</blockquote>
+</li>
+<li>
+<p>字段规则</p>
+<ul>
+<li><code>singular</code>: 字段为0或1个,这是默认规则.</li>
+<li><code>repeated</code>: 该字段可以在格式良好的消息中重复任意次数(包括0),重复值的顺序将保留. 在<code>proto3</code>中, 默认情况下, 标量数字类型的<code>repeated</code>字段使用打包编码</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+<p>保留字段<code>reserved</code>, 可以采用保留编号或保留字段名的方式,进行保留, 当删除一些旧的编号或字段时,可以防止后续使用,引起不必要的bug.</p>
+</li>
+<li>
+<p>可以使用其它消息类型作为字段. 如<code>Result</code>在<code>SearchResponse</code>里使用</p>
+</li>
+<li>
+<p>使用 <a href="https://developers.google.cn/protocol-buffers/docs/proto3#generating">protocol buffer compiler</a> 编译将产生对应的代码</p>
+</li>
+</ul>
+<h2 id="二-标量类型scalar-types"><a class="header" href="#二-标量类型scalar-types">二. 标量类型(scalar types)</a></h2>
+<p><a href="https://developers.google.cn/protocol-buffers/docs/proto3#scalar">scalar types</a></p>
+<div class="table-wrapper"><table><thead><tr><th style="text-align: left">.proto</th><th style="text-align: left">Notes</th><th style="text-align: left">C++</th><th style="text-align: left">Go</th><th style="text-align: left">Dart</th></tr></thead><tbody>
+<tr><td style="text-align: left"><code>double</code></td><td style="text-align: left"></td><td style="text-align: left">double</td><td style="text-align: left">float64</td><td style="text-align: left">double</td></tr>
+<tr><td style="text-align: left"><code>float</code></td><td style="text-align: left"></td><td style="text-align: left">float</td><td style="text-align: left">float32</td><td style="text-align: left">double</td></tr>
+<tr><td style="text-align: left"><code>int32</code></td><td style="text-align: left">使用变长编码,负数编码效率低下,如果字段可能有负数,使用sint32</td><td style="text-align: left">int32</td><td style="text-align: left">int32</td><td style="text-align: left">int</td></tr>
+<tr><td style="text-align: left"><code>int64</code></td><td style="text-align: left">使用变长编码,负数编码效率低下,如果字段可能有负数,使用sint64</td><td style="text-align: left">int64</td><td style="text-align: left">int64</td><td style="text-align: left">Int64</td></tr>
+<tr><td style="text-align: left"><code>uint32</code></td><td style="text-align: left">使用变长编码</td><td style="text-align: left">uint32</td><td style="text-align: left">uint32</td><td style="text-align: left">int</td></tr>
+<tr><td style="text-align: left"><code>uint64</code></td><td style="text-align: left">使用变长编码</td><td style="text-align: left">uint64</td><td style="text-align: left">uint64</td><td style="text-align: left">Int64</td></tr>
+<tr><td style="text-align: left"><code>sint32</code></td><td style="text-align: left">使用变长编码。有符号的整型。它们比int32编码负数效率更高</td><td style="text-align: left">int32</td><td style="text-align: left">int32</td><td style="text-align: left">int</td></tr>
+<tr><td style="text-align: left"><code>sint64</code></td><td style="text-align: left">使用变长编码。有符号的整型。它们比int64编码负数效率更高</td><td style="text-align: left">int64</td><td style="text-align: left">int64</td><td style="text-align: left">Int64</td></tr>
+<tr><td style="text-align: left"><code>fixed32</code></td><td style="text-align: left">固定4字节编码,如果值大于2^28比uint32编码效率更高</td><td style="text-align: left">uint32</td><td style="text-align: left">uint32</td><td style="text-align: left">int</td></tr>
+<tr><td style="text-align: left"><code>fixed64</code></td><td style="text-align: left">固定8字节编码,如果值大于2^68比uint32编码效率更高</td><td style="text-align: left">uint64</td><td style="text-align: left">uint64</td><td style="text-align: left">Int64</td></tr>
+<tr><td style="text-align: left"><code>sfixed32</code></td><td style="text-align: left">固定4字节</td><td style="text-align: left">int32</td><td style="text-align: left">int32</td><td style="text-align: left">int</td></tr>
+<tr><td style="text-align: left"><code>sfixed64</code></td><td style="text-align: left">固定8字节</td><td style="text-align: left">int64</td><td style="text-align: left">int64</td><td style="text-align: left">Int64</td></tr>
+<tr><td style="text-align: left"><code>bool</code></td><td style="text-align: left"></td><td style="text-align: left">bool</td><td style="text-align: left">bool</td><td style="text-align: left">bool</td></tr>
+<tr><td style="text-align: left"><code>string</code></td><td style="text-align: left">utf-8或ASCII编码,长度不应超过2^32</td><td style="text-align: left">string</td><td style="text-align: left">string</td><td style="text-align: left">String</td></tr>
+<tr><td style="text-align: left"><code>bytes</code></td><td style="text-align: left">包含任意的字节,长度不应超过2^32</td><td style="text-align: left">string</td><td style="text-align: left">[]byte</td><td style="text-align: left">List</td></tr>
+</tbody></table>
+</div>
+<h2 id="三-默认值"><a class="header" href="#三-默认值">三. 默认值</a></h2>
+<p>解析消息时, 如果编码的消息不包含特定的单数元素, 则已解析对象中的相应字段将设置为该字段的默认值。 这些默认值是特定于类型的：</p>
+<ul>
+<li>string: 空字符串</li>
+<li>bytes: 空字节流.</li>
+<li>bools: false.</li>
+<li>numeric types: 0</li>
+<li>enums: 枚举的第一个值,且必须为0.</li>
+<li>message fields: 取决于所用的语言(See <a href="https://developers.google.cn/protocol-buffers/docs/reference/overview">generated code guide</a>)</li>
+</ul>
+<h2 id="四-枚举"><a class="header" href="#四-枚举">四. 枚举</a></h2>
+<pre><code class="language-protobuf">message SearchRequest {
+      string query = 1;
+      int32 page_number = 2;
+      int32 result_per_page = 3;
+      enum Corpus {
+            option allow_alias = true;
+            UNIVERSAL = 0;
+            WEB = 1;
+            IMAGES = 2;
+            LOCAL = 3;
+            AliasLocal = 3,
+      }
+      Corpus corpus = 4;
+}
+</code></pre>
+<p>如您所见, Corpus枚举的第一个常量映射为零：每个枚举定义必须包含一个映射为零的常量作为其第一个元素。 这是因为：</p>
+<ul>
+<li>必须有一个零值, 以便我们可以使用0作为数字默认值。</li>
+<li>零值必须是第一个元素, 以便与<code>proto2</code>语义兼容, 其中第一个枚举值始终是默认值。</li>
+<li>您可以通过将相同的值分配给不同的枚举常量来定义别名. 首先你得设置<code>allow_alias</code>为<code>true</code></li>
+<li>枚举值的范围为32位整型,采用 <a href="https://developers.google.cn/protocol-buffers/docs/encoding">varint encoding</a> 编码,不建议采用负数.</li>
+</ul>
+<h2 id="五-导入定义"><a class="header" href="#五-导入定义">五. 导入定义</a></h2>
+<pre><code class="language-protobuf">import "myproject/other_protos.proto";
+</code></pre>
+<p>默认情况下, 您只能使用直接导入的<code>.proto</code>文件中的定义。 但是, 有时您可能需要将<code>.proto</code>文件移动到新位置。</p>
+<p>现在, 您可以直接在原始位置放置一个虚拟的<code>.proto</code>文件, 而不是直接移动<code>.proto</code>文件并一次更改所有呼叫站点, 而是使用导入<code>import public</code>将所有导入转发到新位置。</p>
+<p>任何导入包含导入<code>import public</code>的原型的人都可以可传递地依赖导入<code>import public</code>依赖项。 例如</p>
+<pre><code class="language-protobuf">// new.proto
+// All definitions are moved here
+</code></pre>
+<pre><code class="language-protobuf">// old.proto
+// This is the proto that all clients are importing.
+import public "new.proto";
+import "other.proto";
+</code></pre>
+<pre><code class="language-protobuf">// client.proto
+import "old.proto";
+// You use definitions from old.proto and new.proto, but not other.proto
+</code></pre>
+<p>协议编译器使用<code>-I /-proto_path</code>标志在协议编译器命令行中指定的一组目录中搜索导入的文件。</p>
+<p>如果未给出任何标志, 它将在调用编译器的目录中查找。 通常, 应将<code>--proto_path</code>标志设置为项目的根目录, 并对所有导入使用完全限定的名称。</p>
+<h2 id="六-其它内置类型定义"><a class="header" href="#六-其它内置类型定义">六. 其它内置类型定义</a></h2>
+<h3 id="1-any"><a class="header" href="#1-any">1. Any</a></h3>
+<p><code>Any</code>消息类型使您可以将消息用作嵌入式类型, 而无需定义它们的<code>.proto</code>。</p>
+<p><code>Any</code>包含任意序列化消息（以字节为单位）以及URL, URL作为该消息的类型并解析为该消息的类型的全局唯一标识符。</p>
+<pre><code class="language-protobuf">import "google/protobuf/any.proto";
+
+message ErrorStatus {
+      string message = 1;
+      repeated google.protobuf.Any details = 2;
+}
+</code></pre>
+<h3 id="2-oneof"><a class="header" href="#2-oneof">2. Oneof</a></h3>
+<p>如果您有一则消息包含许多字段, 并且最多可以同时设置一个字段, 则可以使用oneof功能强制执行此行为并节省内存。</p>
+<p>可以添加任何字段到<code>oneof</code>,除了<code>map</code>和<code>repeated</code></p>
+<pre><code class="language-protobuf">message SampleMessage {
+      oneof test_oneof {
+            string name = 4;
+            SubMessage sub_message = 9;
+      }
+}
+</code></pre>
+<h3 id="3-maps"><a class="header" href="#3-maps">3. Maps</a></h3>
+<p>如果要在数据定义中创建关联映射, 则协议缓冲区提供了方便的快捷方式语法：</p>
+<pre><code class="language-protobuf">map&lt;key_type, value_type&gt; map_field = N;
+</code></pre>
+<ul>
+<li><code>key_type</code>可以是任何integral或string类型(除了float和bytes之外),<code>enum</code>不是有效的<code>key_type</code></li>
+<li><code>value_type</code>可以是除<code>Maps</code>以外的任何类型。</li>
+</ul>
+<pre><code class="language-protobuf">map&lt;string, Project&gt; projects = 3;
+</code></pre>
+<ul>
+<li>
+<p>映射字段不能重复。</p>
+</li>
+<li>
+<p>map值的编码顺序和迭代顺序是未定义的, 因此您不能依赖于map处于特定的顺序。</p>
+</li>
+<li>
+<p>当为<code>.proto</code>生成文本格式时, 地图将按键排序。 数字键按数字排序。</p>
+</li>
+<li>
+<p>从数据解析或合并时, 如果存在重复的映射键, 则使用最后看到的键。 从文本格式解析时, 如果键重复, 则解析可能会失败。</p>
+</li>
+<li>
+<p>如果为映射字段提供键但没有值, 则序列化字段时的行为取决于语言。 在C ++, Java和Python中, 类型的默认值是序列化的, 而在其他语言中, 则没有序列化的值。</p>
+</li>
+</ul>
+<h2 id="七-包定义"><a class="header" href="#七-包定义">七. 包定义</a></h2>
+<p>可以在<code>.proto</code>文件中添加可选的包说明符, 以防止协议消息类型之间的名称冲突。</p>
+<pre><code class="language-protobuf">package foo.bar;
+message Open { ... }
+</code></pre>
+<p>在Go中, 除非您在<code>.proto</code>文件中明确提供了<code>go_package</code>选项, 否则该包将用作Go包名称</p>
+<h2 id="八-定义服务"><a class="header" href="#八-定义服务">八. 定义服务</a></h2>
+<p>如果要将消息类型与RPC(远程过程调用)系统一起使用, 则可以在<code>.proto</code>文件中定义RPC服务接口, 并且协议protocolbuf编译器将以您选择的语言生成服务接口代码和存根。</p>
+<p>例如, 如果要使用接收<code>SearchRequest</code>并返回<code>SearchResponse</code>的方法来定义RPC服务, 则可以在<code>.proto</code>文件中定义它, 如下所示：</p>
+<pre><code class="language-protobuf">service SearchService {
+      rpc Search(SearchRequest) returns (SearchResponse);
+}
+</code></pre>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="../pickup/82-yaml语法.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+
+                            <a rel="next prefetch" href="../pickup/84-ansible.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="../pickup/82-yaml语法.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+
+                    <a rel="next prefetch" href="../pickup/84-ansible.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+
+
+        <script>
+            window.playground_line_numbers = true;
+        </script>
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+        <script src="../ace.js"></script>
+        <script src="../mode-rust.js"></script>
+        <script src="../editor.js"></script>
+        <script src="../theme-dawn.js"></script>
+        <script src="../theme-tomorrow_night.js"></script>
+
+        <script src="../elasticlunr.min.js"></script>
+        <script src="../mark.min.js"></script>
+        <script src="../searcher.js"></script>
+
+        <script src="../clipboard.min.js"></script>
+        <script src="../highlight.js"></script>
+        <script src="../book.js"></script>
+
+        <!-- Custom JS scripts -->
+
+
+
+    </div>
+    </body>
+</html>

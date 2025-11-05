@@ -1,0 +1,428 @@
+<!DOCTYPE HTML>
+<html lang="en" class="light sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>标准trait - knowledge</title>
+
+
+        <!-- Custom HTML head -->
+
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="../favicon.svg">
+        <link rel="shortcut icon" href="../favicon.png">
+        <link rel="stylesheet" href="../css/variables.css">
+        <link rel="stylesheet" href="../css/general.css">
+        <link rel="stylesheet" href="../css/chrome.css">
+        <link rel="stylesheet" href="../css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="../FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="../fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" id="highlight-css" href="../highlight.css">
+        <link rel="stylesheet" id="tomorrow-night-css" href="../tomorrow-night.css">
+        <link rel="stylesheet" id="ayu-highlight-css" href="../ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+
+        <!-- MathJax -->
+        <script async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+        <!-- Provide site root and default themes to javascript -->
+        <script>
+            const path_to_root = "../";
+            const default_light_theme = "light";
+            const default_dark_theme = "navy";
+            window.path_to_searchindex_js = "../searchindex.js";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="../toc.js"></script>
+    </head>
+    <body>
+    <div id="mdbook-help-container">
+        <div id="mdbook-help-popup">
+            <h2 class="mdbook-help-title">Keyboard shortcuts</h2>
+            <div>
+                <p>Press <kbd>←</kbd> or <kbd>→</kbd> to navigate between chapters</p>
+                <p>Press <kbd>S</kbd> or <kbd>/</kbd> to search in the book</p>
+                <p>Press <kbd>?</kbd> to show this help</p>
+                <p>Press <kbd>Esc</kbd> to hide this help</p>
+            </div>
+        </div>
+    </div>
+    <div id="body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                let theme = localStorage.getItem('mdbook-theme');
+                let sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            const default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? default_dark_theme : default_light_theme;
+            let theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            let sidebar = null;
+            const sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+                sidebar_toggle.checked = false;
+            }
+            if (sidebar === 'visible') {
+                sidebar_toggle.checked = true;
+            } else {
+                html.classList.remove('sidebar-visible');
+            }
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="../toc.html"></iframe>
+            </noscript>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </label>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="default_theme">Auto</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search (`/`)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="/ s" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">knowledge</h1>
+
+                    <div class="right-buttons">
+                        <a href="../print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+                        <a href="https://github.com/thinkgos/knowledge" title="Git repository" aria-label="Git repository">
+                            <i id="git-repository-button" class="fa fa-github"></i>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <div class="search-wrapper">
+                            <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                            <div class="spinner-wrapper">
+                                <i class="fa fa-spinner fa-spin"></i>
+                            </div>
+                        </div>
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h1 id="标准-trait"><a class="header" href="#标准-trait">标准 trait</a></h1>
+<h2 id="1-内存相关-clonecopydrop"><a class="header" href="#1-内存相关-clonecopydrop">1. 内存相关: <code>Clone</code>/<code>Copy</code>/<code>Drop</code></a></h2>
+<h3 id="11-clone-trait"><a class="header" href="#11-clone-trait">1.1 Clone trait</a></h3>
+<pre><pre class="playground"><code class="language-rust edition2021"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>pub trait Clone {
+  fn clone(&amp;self) -&gt; Self;
+
+  fn clone_from(&amp;mut self, source: &amp;Self) {
+    *self = source.clone()
+  }
+}
+<span class="boring">}</span></code></pre></pre>
+<p><code>clone_from</code>方法在实例<code>a</code>已经存在, 在<code>clone</code>过程中会分配内存, 那么用<code>a.clone_from(&amp;b)</code>可以避免内存分配, 提高效率.</p>
+<p><code>Clone trait</code>可以通过派生宏直接实现<code>#[derive(Clone)]</code>.</p>
+<h3 id="12-copy-trait"><a class="header" href="#12-copy-trait">1.2 Copy trait</a></h3>
+<pre><pre class="playground"><code class="language-rust edition2021"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>pub trait Copy: Clone {}
+<span class="boring">}</span></code></pre></pre>
+<p>这个<code>trait</code>没有任何行为, 但它可以用作 <code>trait bound</code> 来进行类型安全检查, 所以叫 <strong>标志<code>trait</code></strong></p>
+<p><code>Copy trait</code>可以通过派生宏直接实现<code>#[derive(Copy)]</code>.</p>
+<h3 id="13-drop-trait"><a class="header" href="#13-drop-trait">1.3 Drop trait</a></h3>
+<pre><pre class="playground"><code class="language-rust edition2021"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>pub trait Drop {
+    fn drop(&amp;mut self);
+}
+<span class="boring">}</span></code></pre></pre>
+<p>大部分场景无需为数据结构提供 <code>Drop trait</code>,  系统默认会依次对数据结构的每个域做 <code>drop</code>. 但有两种情况你可能需要手工实现 <code>Drop</code>.</p>
+<ul>
+<li>希望在数据结束生命周期的时候做一些事情,  比如记日志.</li>
+<li>需要对资源回收的场景. 编译器并不知道你额外使用了哪些资源,  也就无法帮助你 <code>drop</code> 它们. 比如说锁资源的释放,  在 <code>MutexGuard </code>中实现了 <code>Drop</code> 来释放锁资源</li>
+</ul>
+<blockquote>
+<p><strong>注意</strong>:</p>
+<p><code>Copy trait</code> 和 <code>Drop trait</code> 是互斥的,  两者不能共存,  当你尝试为同一种数据类型实现 <code>Copy</code> 时,  同时也实现 <code>Drop</code>,  编译器就会报错. 这其实很好理解：**<code>Copy</code> 是按位做浅拷贝,  那么它会默认拷贝的数据没有需要释放的资源；而 <code>Drop</code> 恰恰是为了释放额外的资源而生的. **</p>
+</blockquote>
+<h2 id="2-标记-trait-sizedsendsyncunpin"><a class="header" href="#2-标记-trait-sizedsendsyncunpin">2. 标记 trait: <code>Sized</code>/<code>Send</code>/<code>Sync</code>/<code>Unpin</code></a></h2>
+<h3 id="21-sized-trait"><a class="header" href="#21-sized-trait">2.1 Sized trait</a></h3>
+<pre><pre class="playground"><code class="language-rust edition2021"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>pub trait Sized { }
+<span class="boring">}</span></code></pre></pre>
+<p><code>Sized trait</code> 用于标记有具体大小的类型. 在使用泛型参数时,  <code>Rust</code> 编译器会自动为泛型参数加上 <code>Sized</code> 约束.</p>
+<p>大部分时候,  我们都希望能自动添加这样的约束,  因为这样定义出的泛型结构,  在编译期,  大小是固定的,  可以作为参数传递给函数.</p>
+<p>在少数情况下, 需要 <code>T</code> 是可变类型的 那么需要<code>?Sized</code> 来摆脱这个约束.</p>
+<pre><pre class="playground"><code class="language-rust edition2021"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>// 这样B就可以是[T]或者str类型,大小都不固定.
+// 注意  Borrowed(&amp;'a B) 大小是固定的, 因为它是对B的一个引用, 而且引用的大小是固定的.
+pub enum Cow&lt;'a, B: ?Sized + 'a&gt; where B: ToOwned,
+{
+    // 借用的数据
+    Borrowed(&amp;'a B),
+    // 拥有的数据
+    Owned(&lt;B as ToOwned&gt;::Owned),
+}
+<span class="boring">}</span></code></pre></pre>
+<h3 id="22-sendsync"><a class="header" href="#22-sendsync">2.2 Send/Sync</a></h3>
+<pre><pre class="playground"><code class="language-rust edition2021"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>pub unsafe auto trait Send {}
+pub unsafe auto trait Sync {}
+<span class="boring">}</span></code></pre></pre>
+<p>这两个<code> trait</code> 都是 <code>unsafe auto trait</code>,  <code>auto</code> 意味着编译器会在合适的场合,  自动为数据结构添加它们的实现,  而 <code>unsafe</code> 代表实现的这个 <code>trait</code> 可能会违背 <code>Rust</code> 的内存安全准则,  如果开发者手工实现这两个 <code>trait</code> ,  要自己为它们的安全性负责.</p>
+<p><code>Send/Sync</code> 是 <code>Rust</code> 并发安全的基础：</p>
+<ul>
+<li>如果一个类型 <code>T</code> 实现了 <code>Send trait</code>,  意味着 <code>T</code> 可以安全地从一个线程移动到另一个线程,  也就是说所有权可以在线程间移动.</li>
+<li>如果一个类型 <code>T</code> 实现了 <code>Sync trait</code>,  则意味着 <code>&amp;T</code> 可以安全地在多个线程中共享. 一个类型 <code>T</code> 满足 <code>Sync trait</code>,  当且仅当 <code>&amp;T</code> 满足 <code>Send trait</code>.</li>
+</ul>
+<p>对于 <code>Send/Sync</code> 在线程安全中的作用,  可以这么看,  **如果一个类型 <code>T: Send</code>,  那么 <code>T</code> 在某个线程中的独占访问是线程安全的；如果一个类型 <code>T: Sync</code>,  那么 <code>T</code> 在线程间的只读共享是安全的. **</p>
+<p>对于我们自己定义的数据结构,  如果其内部的所有域都实现了 <code>Send</code> / <code>Sync</code>,  那么这个数据结构会被自动添加 <code>Send</code> / <code>Sync</code>.</p>
+<p>标准库中,  不支持 <code>Send</code> / <code>Sync</code> 的数据结构主要有：</p>
+<ul>
+<li>裸指针 <code>*const T</code> /<code> *mut T</code>. 它们是不安全的,  所以既不是 <code>Send</code> 也不是 <code>Sync</code>.</li>
+<li><code>UnsafeCell</code> 不支持 <code>Sync</code>. 也就是说,  任何使用了 <code>Cell</code> 或者 <code>RefCell</code> 的数据结构不支持 <code>Sync</code>.</li>
+<li>引用计数 <code>Rc</code> 不支持 <code>Send</code> 也不支持 <code>Sync</code>. 所以 <code>Rc</code> 无法跨线程.</li>
+</ul>
+<h3 id="23-unpin"><a class="header" href="#23-unpin">2.3 Unpin</a></h3>
+<p>todo.</p>
+<h2 id="3-类型转换-fromintoasrefasmut"><a class="header" href="#3-类型转换-fromintoasrefasmut">3. 类型转换: <code>From</code>/<code>Into</code>/<code>AsRef</code>/<code>AsMut</code></a></h2>
+<h3 id="31-from--into-和-tryfrom--tryinto"><a class="header" href="#31-from--into-和-tryfrom--tryinto">3.1 From / Into 和 TryFrom / TryInto</a></h3>
+<pre><pre class="playground"><code class="language-rust edition2021"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>pub trait From&lt;T&gt; {
+    fn from(T) -&gt; Self;
+}
+
+pub trait Into&lt;T&gt; {
+    fn into(self) -&gt; T;
+}
+
+// 实现 From 会自动实现 Into
+impl&lt;T, U&gt; Into&lt;U&gt; for T where U: From&lt;T&gt; {
+    fn into(self) -&gt; U {
+        U::from(self)
+    }
+}
+
+// From(Into)是自反的
+// 把类型 T 的值转换成类型 T,  会直接返回
+impl&lt;T&gt; From&lt;T&gt; for T {
+    fn from(t: T) -&gt; T {
+        t
+    }
+}
+<span class="boring">}</span></code></pre></pre>
+<p><code>From&lt;T&gt;</code> 可以根据上下文做类型推导,  使用场景更多；而且实现了 <code>From&lt;T&gt;</code> 会自动实现 <code>Into&lt;T&gt;</code>,  反之不会. 所以需要的时候,  只要实现 <code>From&lt;T&gt;</code> 即可.</p>
+<p>而且<code>From&lt;T&gt;</code>(<code>Into&lt;T&gt;</code>)是自反的, 把类型 <code>T</code> 的值转换成类型 <code>T</code>,  会直接返回, 这样在接口设计时变得灵活, 比如函数接受一个<code>IpAddr</code>为参数, 我们可以使用<code>Into&lt;IpAddr&gt;</code>让更多的类型被这个函数使用.</p>
+<pre><pre class="playground"><code class="language-rust edition2021"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>use std::net::IpAddr;
+
+fn print(v: impl Into&lt;IpAddr&gt;) {
+    println!("{:?}", v.into());
+}
+<span class="boring">}</span></code></pre></pre>
+<p>合理地使用<code>From&lt;T&gt;</code> / <code>Into&lt;T&gt;</code>,  可以让代码变得简洁,  符合 <code>Rust</code> 可读性强的风格,  更符合开闭原则.</p>
+<p>注意, 如果你的数据类型在转换过程中有可能出现错误, 可以使用 <code>TryFrom&lt;T&gt;</code> 和 <code>TryInto&lt;T&gt;</code>, 用法与<code>From&lt;T&gt;</code>/ <code>Into&lt;T&gt;</code> 一样</p>
+<pre><pre class="playground"><code class="language-rust edition2021"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>pub trait TryFrom&lt;T&gt; {
+    type Error;
+
+    fn try_from(value: T) -&gt; Result&lt;Self, Self::Error&gt;;
+}
+pub trait TryInto&lt;T&gt; {
+    type Error;
+
+    fn try_into(self) -&gt; Result&lt;T, Self::Error&gt;;
+}
+<span class="boring">}</span></code></pre></pre>
+<h3 id="32-asref--asmut"><a class="header" href="#32-asref--asmut">3.2 AsRef / AsMut</a></h3>
+<p><code>AsRef&lt;T&gt;</code> 和 <code>AsMut&lt;T&gt;</code> 就很好理解了,  用于从引用到引用的转换.</p>
+<p>在<code> trait</code> 的定义上,  都允许 <code>T</code> 使用大小可变的类型,  如 <code>str</code>、<code>[u8]</code> 等. <code>AsMut&lt;t&gt;</code> 除了使用可变引用生成可变引用外,  其它都和 <code>AsRef&lt;T&gt;</code> 一样.</p>
+<p>注意, 如果你的代码出现 <code>v.as_ref().clone()</code> 这样的语句,  也就是说你要对 <code>v</code> 进行引用转换,  然后又得到了拥有所有权的值,  那么你应该实现 <code>From&lt;T&gt;</code>,  然后做 <code>v.into()</code>.</p>
+<pre><pre class="playground"><code class="language-rust edition2021"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>pub trait AsRef&lt;T&gt; where T: ?Sized {
+    fn as_ref(&amp;self) -&gt; &amp;T;
+}
+
+pub trait AsMut&lt;T&gt; where T: ?Sized {
+    fn as_mut(&amp;mut self) -&gt; &amp;mut T;
+}
+<span class="boring">}</span></code></pre></pre>
+<h2 id="4-deref--derefmut"><a class="header" href="#4-deref--derefmut">4. <code>Deref</code> / <code>DerefMut</code></a></h2>
+<pre><pre class="playground"><code class="language-rust edition2021"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>pub trait Deref {
+    // 解引用出来的结果类型
+    type Target: ?Sized;
+    
+    fn deref(&amp;self) -&gt; &amp;Self::Target;
+}
+
+pub trait DerefMut: Deref {
+    fn deref_mut(&amp;mut self) -&gt; &amp;mut Self::Target;
+}
+<span class="boring">}</span></code></pre></pre>
+<p><img src="../assets/202211070826785.png" alt="image-20221107082655636" /></p>
+<h2 id="5-debug--display--default"><a class="header" href="#5-debug--display--default">5. <code>Debug</code> / <code>Display</code> / <code>Default</code></a></h2>
+<pre><pre class="playground"><code class="language-rust edition2021"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>pub trait Debug {
+    fn fmt(&amp;self, f: &amp;mut Formatter&lt;'_&gt;) -&gt; Result&lt;(), Error&gt;;
+}
+
+pub trait Display {
+    fn fmt(&amp;self, f: &amp;mut Formatter&lt;'_&gt;) -&gt; Result&lt;(), Error&gt;;
+}
+
+pub trait Default {
+    fn default() -&gt; Self;
+}
+<span class="boring">}</span></code></pre></pre>
+<p><code>Debug</code> 和 <code>Display</code> 两个 <code>trait</code> 的签名一样,  都接受一个 <code>&amp;self</code> 和一个 <code>&amp;mut Formatter</code>.</p>
+<ul>
+<li><code>Debug</code> 是为开发者调试打印数据结构所设计的, 可以通过派生宏直接生成.通过<code>{:?}</code>来打印.</li>
+<li><code>Display</code> 是给用户显示数据结构所设计的, 必须手工实现.通过<code>{}</code>打印.</li>
+</ul>
+<p><code>Default trait</code> 用于为类型提供缺省值. 它也可以通过 <code>derive</code> 宏 <code>#[derive(Default)]</code> 来生成实现,  前提是类型中的每个字段都实现了 <code>Default trait</code>.</p>
+<h2 id="总结"><a class="header" href="#总结">总结</a></h2>
+<p><img src="../assets/202211070834776.png" alt="image-20221107083458598" /></p>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="../rust/08-smart-pointer.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+
+                            <a rel="next prefetch" href="../rust/10-generics.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="../rust/08-smart-pointer.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+
+                    <a rel="next prefetch" href="../rust/10-generics.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+
+
+        <script>
+            window.playground_line_numbers = true;
+        </script>
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+        <script src="../ace.js"></script>
+        <script src="../mode-rust.js"></script>
+        <script src="../editor.js"></script>
+        <script src="../theme-dawn.js"></script>
+        <script src="../theme-tomorrow_night.js"></script>
+
+        <script src="../elasticlunr.min.js"></script>
+        <script src="../mark.min.js"></script>
+        <script src="../searcher.js"></script>
+
+        <script src="../clipboard.min.js"></script>
+        <script src="../highlight.js"></script>
+        <script src="../book.js"></script>
+
+        <!-- Custom JS scripts -->
+
+
+
+    </div>
+    </body>
+</html>
