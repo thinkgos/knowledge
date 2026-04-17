@@ -1,0 +1,651 @@
+<!DOCTYPE HTML>
+<html lang="en" class="light sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>(译)Rust临时生命周期和&quot;Super Let&quot; - knowledge</title>
+
+
+        <!-- Custom HTML head -->
+
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="../favicon-de23e50b.svg">
+        <link rel="shortcut icon" href="../favicon-8114d1fc.png">
+        <link rel="stylesheet" href="../css/variables-8adf115d.css">
+        <link rel="stylesheet" href="../css/general-2459343d.css">
+        <link rel="stylesheet" href="../css/chrome-ae938929.css">
+        <link rel="stylesheet" href="../css/print-9e4910d8.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="../fonts/fonts-9644e21d.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" id="mdbook-highlight-css" href="../highlight-493f70e1.css">
+        <link rel="stylesheet" id="mdbook-tomorrow-night-css" href="../tomorrow-night-4c0ae647.css">
+        <link rel="stylesheet" id="mdbook-ayu-highlight-css" href="../ayu-highlight-3fdfc3ac.css">
+
+        <!-- Custom theme stylesheets -->
+
+        <!-- MathJax -->
+        <script async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+        <!-- Provide site root and default themes to javascript -->
+        <script>
+            const path_to_root = "../";
+            const default_light_theme = "light";
+            const default_dark_theme = "navy";
+            window.path_to_searchindex_js = "../searchindex-332e6089.js";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="../toc-36ae0327.js"></script>
+    </head>
+    <body>
+    <div id="mdbook-help-container">
+        <div id="mdbook-help-popup">
+            <h2 class="mdbook-help-title">Keyboard shortcuts</h2>
+            <div>
+                <p>Press <kbd>←</kbd> or <kbd>→</kbd> to navigate between chapters</p>
+                <p>Press <kbd>S</kbd> or <kbd>/</kbd> to search in the book</p>
+                <p>Press <kbd>?</kbd> to show this help</p>
+                <p>Press <kbd>Esc</kbd> to hide this help</p>
+            </div>
+        </div>
+    </div>
+    <div id="mdbook-body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                let theme = localStorage.getItem('mdbook-theme');
+                let sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            const default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? default_dark_theme : default_light_theme;
+            let theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="mdbook-sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            let sidebar = null;
+            const sidebar_toggle = document.getElementById("mdbook-sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+                sidebar_toggle.checked = false;
+            }
+            if (sidebar === 'visible') {
+                sidebar_toggle.checked = true;
+            } else {
+                html.classList.remove('sidebar-visible');
+            }
+        </script>
+
+        <nav id="mdbook-sidebar" class="sidebar" aria-label="Table of contents">
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="../toc.html"></iframe>
+            </noscript>
+            <div id="mdbook-sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="mdbook-page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="mdbook-menu-bar-hover-placeholder"></div>
+                <div id="mdbook-menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="mdbook-sidebar-toggle" class="icon-button" for="mdbook-sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="mdbook-sidebar">
+                            <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M0 96C0 78.3 14.3 64 32 64H416c17.7 0 32 14.3 32 32s-14.3 32-32 32H32C14.3 128 0 113.7 0 96zM0 256c0-17.7 14.3-32 32-32H416c17.7 0 32 14.3 32 32s-14.3 32-32 32H32c-17.7 0-32-14.3-32-32zM448 416c0 17.7-14.3 32-32 32H32c-17.7 0-32-14.3-32-32s14.3-32 32-32H416c17.7 0 32 14.3 32 32z"/></svg></span>
+                        </label>
+                        <button id="mdbook-theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="mdbook-theme-list">
+                            <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M371.3 367.1c27.3-3.9 51.9-19.4 67.2-42.9L600.2 74.1c12.6-19.5 9.4-45.3-7.6-61.2S549.7-4.4 531.1 9.6L294.4 187.2c-24 18-38.2 46.1-38.4 76.1L371.3 367.1zm-19.6 25.4l-116-104.4C175.9 290.3 128 339.6 128 400c0 3.9 .2 7.8 .6 11.6c1.8 17.5-10.2 36.4-27.8 36.4H96c-17.7 0-32 14.3-32 32s14.3 32 32 32H240c61.9 0 112-50.1 112-112c0-2.5-.1-5-.2-7.5z"/></svg></span>
+                        </button>
+                        <ul id="mdbook-theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-default_theme">Auto</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-ayu">Ayu</button></li>
+                        </ul>
+                        <button id="mdbook-search-toggle" class="icon-button" type="button" title="Search (`/`)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="/ s" aria-controls="mdbook-searchbar">
+                            <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M416 208c0 45.9-14.9 88.3-40 122.7L502.6 457.4c12.5 12.5 12.5 32.8 0 45.3s-32.8 12.5-45.3 0L330.7 376c-34.4 25.2-76.8 40-122.7 40C93.1 416 0 322.9 0 208S93.1 0 208 0S416 93.1 416 208zM208 352c79.5 0 144-64.5 144-144s-64.5-144-144-144S64 128.5 64 208s64.5 144 144 144z"/></svg></span>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">knowledge</h1>
+
+                    <div class="right-buttons">
+                        <a href="../print.html" title="Print this book" aria-label="Print this book">
+                            <span class=fa-svg id="print-button"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M128 0C92.7 0 64 28.7 64 64v96h64V64H354.7L384 93.3V160h64V93.3c0-17-6.7-33.3-18.7-45.3L400 18.7C388 6.7 371.7 0 354.7 0H128zM384 352v32 64H128V384 368 352H384zm64 32h32c17.7 0 32-14.3 32-32V256c0-35.3-28.7-64-64-64H64c-35.3 0-64 28.7-64 64v96c0 17.7 14.3 32 32 32H64v64c0 35.3 28.7 64 64 64H384c35.3 0 64-28.7 64-64V384zm-16-88c-13.3 0-24-10.7-24-24s10.7-24 24-24s24 10.7 24 24s-10.7 24-24 24z"/></svg></span>
+                        </a>
+                        <a href="https://github.com/thinkgos/knowledge" title="Git repository" aria-label="Git repository">
+                            <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 496 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M165.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6zm-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3zm44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9zM244.8 8C106.1 8 0 113.3 0 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C428.2 457.8 496 362.9 496 252 496 113.3 383.5 8 244.8 8zM97.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1zm-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7zm32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1zm-11.4-14.7c-1.6 1-1.6 3.6 0 5.9 1.6 2.3 4.3 3.3 5.6 2.3 1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2z"/></svg></span>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="mdbook-search-wrapper" class="hidden">
+                    <form id="mdbook-searchbar-outer" class="searchbar-outer">
+                        <div class="search-wrapper">
+                            <input type="search" id="mdbook-searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="mdbook-searchresults-outer" aria-describedby="searchresults-header">
+                            <div class="spinner-wrapper">
+                                <span class=fa-svg id="fa-spin"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M304 48c0-26.5-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48s48-21.5 48-48zm0 416c0-26.5-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48s48-21.5 48-48zM48 304c26.5 0 48-21.5 48-48s-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48zm464-48c0-26.5-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48s48-21.5 48-48zM142.9 437c18.7-18.7 18.7-49.1 0-67.9s-49.1-18.7-67.9 0s-18.7 49.1 0 67.9s49.1 18.7 67.9 0zm0-294.2c18.7-18.7 18.7-49.1 0-67.9S93.7 56.2 75 75s-18.7 49.1 0 67.9s49.1 18.7 67.9 0zM369.1 437c18.7 18.7 49.1 18.7 67.9 0s18.7-49.1 0-67.9s-49.1-18.7-67.9 0s-18.7 49.1 0 67.9z"/></svg></span>
+                            </div>
+                        </div>
+                    </form>
+                    <div id="mdbook-searchresults-outer" class="searchresults-outer hidden">
+                        <div id="mdbook-searchresults-header" class="searchresults-header"></div>
+                        <ul id="mdbook-searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('mdbook-sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('mdbook-sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#mdbook-sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="mdbook-content" class="content">
+                    <main>
+                        <h1 id="译rust临时生命周期和super-let1"><a class="header" href="#译rust临时生命周期和super-let1">(译)<code>Rust</code>临时生命周期和“Super Let“<sup class="footnote-reference" id="fr-1-1"><a href="#footnote-1">1</a></sup></a></h1>
+<p>在<code>Rust</code>中, 临时变量生命周期是一个复杂但又经常被忽视的话题. 在一些简单的情况下, <code>Rust</code>会让临时变量存活足够长的时间, 这样我们就不必考虑它们了. 然而, 在很多情况下, 我们可能无法立即得到我们想要的东西.</p>
+<p>在这篇文章中, 我们将(重新)发掘临时变量生命周期的规则, 介绍一些临时生命周期扩展的用例, 并探索一种新的语言理念–<code>super let,</code>, 为我们提供更多控制.</p>
+<h2 id="临时变量"><a class="header" href="#临时变量">临时变量</a></h2>
+<p>下面是一条<code>Rust</code>语句, 没有上下文, 使用的是临时<code>String</code>:</p>
+<pre class="playground"><code class="language-rust edition2021"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>f(&amp;String::from('🦀'));
+<span class="boring">}</span></code></pre>
+<p>这个临时<code>String</code>的存活时间多长?如果我们今天设计<code>Rust</code>, 基本上有两种选择:</p>
+<ol>
+<li>在调用 <code>f</code> 之前, 字符串会被立即丢弃. 或者</li>
+<li>只有在调用 <code>f</code> 后, 字符串才会被丢弃.</li>
+</ol>
+<p>如果我们选择方案<strong>1</strong>, 那么上面的语句将始终导致借用检查错误, 因为我们不能让<code>f</code>借用已经消失的东西.
+因此, <code>Rust</code>选择了方案<strong>2</strong>: 首先分配字符串, 然后将其引用传递给<code>f</code>, 只有在<code>f</code>返回后, 我们才会丢弃临时字符串.</p>
+<h3 id="在一个-let-语句中"><a class="header" href="#在一个-let-语句中">在一个 <code>let</code> 语句中</a></h3>
+<p>现在是一个稍难的问题:</p>
+<pre class="playground"><code class="language-rust edition2021"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>let a = f(&amp;String::from('🦀'));
+…
+g(&amp;a);
+<span class="boring">}</span></code></pre>
+<p>再来: 这个临时<code>String</code>的存活时间多长?</p>
+<ol>
+<li>字符串会在 <code>let</code> 语句结束时丢弃: 即在<code>f</code>返回之后, 但在<code>g</code>被调用之前. 或者</li>
+<li>字符串会在调用<code>g</code>之后的同时<code>a</code>被丢弃.</li>
+</ol>
+<p>如果<code>f</code>被定义为 <code>fn f(s: &amp;str) -&gt; usize</code>(如<code>str::len</code>), 那么在<code>let</code>语句后立即去掉<code>String</code>就完全没问题了.</p>
+<p>但是, 如果<code>f</code>被定义为 <code>fn f(s: &amp;str) -&gt; &amp;[u8]</code>(就像 <code>str::as_bytes</code>), 那么 <code>a</code> 就会从临时变量 <code>String</code> 中借用, 因此如果我们将<code>a</code>保留较长时间, 就会出现借用检查错误.</p>
+<p>如果采用方案<strong>2</strong>, 在这两种情况下都能正常编译, 但我们可能会在超出必要的存活时间内保留一个临时变量, 这可能会浪费资源或导致微妙的错误(例如, 当<code>MutexGuard</code>比预期时间晚丢弃时会造成死锁).</p>
+<p>这听起来像是第<strong>3</strong>种选择: 让它取决于<code>f</code>的签名.</p>
+<p>但是, <code>Rust</code>的借用检查器只执行检查, 并不影响代码的行为. 出于各种原因, 这是一个非常重要和有用的属性. 举例来说, 将 <code>fn f(s:&amp;str)-&gt;&amp;[u8]</code>(返回值借用参数)改为 <code>fn f(s:&amp;str)-&gt;&amp;'static[u8]</code>(返回值不借用参数)并不会改变调用位置的任何内容, 例如临时变量被丢弃的位置.</p>
+<p>因此, 在方案<strong>1</strong>和方案<strong>2</strong>之间, <code>Rust</code>选择了方案<strong>1</strong>: 在<code>let</code>语句末尾删除临时变量. 很容易手动将<code>String</code>移到单独的<code>let</code>语句中, 让它保持更长的时间.</p>
+<pre class="playground"><code class="language-rust edition2021"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>let s = String::from('🦀'); // Moved to its own `let` to give it a longer lifetime.
+let a = f(&amp;s);
+…
+g(&amp;a);
+<span class="boring">}</span></code></pre>
+<h3 id="在嵌套调用中"><a class="header" href="#在嵌套调用中">在嵌套调用中</a></h3>
+<p>好吧, 再来一个:</p>
+<pre class="playground"><code class="language-rust edition2021"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>g(f(&amp;String::from('🦀')));
+<span class="boring">}</span></code></pre>
+<p>同样, 有两种选择:</p>
+<ol>
+<li>在调用<code>f</code>之后、调用<code>g</code>之前, 字符串被丢弃. 或者</li>
+<li>字符串会在语句结束时丢弃, 所以是在调用<code>g</code>之后.</li>
+</ol>
+<p>该代码段与前一个代码段几乎完全相同: 临时<code>String</code>的引用被传递给<code>f</code>, <code>f</code>的返回值被传递给<code>g</code>.</p>
+<p>不过, 方案<strong>1</strong>可能有效, 也可能无效, 这取决于<code>f</code>的签名, 而方案<strong>2</strong>可能会让临时变量存活更长的时间.</p>
+<p>不过, 这次方案<strong>1</strong>会给程序员带来更多惊喜. 例如, 即使是简单的 <code>String::from('🦀').as_bytes().contains(&amp;0x80)</code> 也无法编译, 因为字符串会在 <code>as_bytes(f)</code> 之后、<code>contains (g)</code> 之前被删除.</p>
+<p>也可以说, 把临时变量多存活一段时间的坏处要小得多, 因为他们在声明结束时仍然会被丢弃.</p>
+<p>因此, Rust选择了方案<strong>2</strong>: 无论<code>f</code>的签名如何, 字符串都会一直存在, 直到语句结束, 直到<code>g</code>被调用.</p>
+<h3 id="在一个-if-语句中"><a class="header" href="#在一个-if-语句中">在一个 <code>if</code> 语句中</a></h3>
+<p>现在, 我们来看看简单的 <code>if</code> 语句:</p>
+<pre class="playground"><code class="language-rust edition2021"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>if f(&amp;String::from('🦀')) {
+    …
+}
+<span class="boring">}</span></code></pre>
+<p>同样的问题: <code>String</code> 何时丢弃?</p>
+<ol>
+<li>在 <code>if</code> 的条件求值之后, 但在 <code>if</code> 的主体执行之前(即在<code>{</code>处). 或者</li>
+<li>在 <code>if</code> 主体执行之后(即在<code>}</code>处).</li>
+</ol>
+<p>在这种情况下, 就没有理由在<code>if</code>主体中保留临时值. 条件的结果是一个布尔值(只有<code>true</code>或<code>false</code>), 顾名思义, 这并不借用任何东西.</p>
+<p>因此, <code>Rust</code>选择方案<strong>1</strong>.</p>
+<p>例如, 在使用 <code>Mutex::lock</code> 时, 它就会返回一个临时<code>MutexGuard</code>, 当<code>Mutex</code>被丢弃时, 它就会解锁:</p>
+<pre class="playground"><code class="language-rust edition2021"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>fn example(m: &amp;Mutex&lt;String&gt;) {
+    if m.lock().unwrap().is_empty() {
+        println!("the string is empty!");
+    }
+}
+<span class="boring">}</span></code></pre>
+<p>在这里, <code>m.lock().unwrap()</code>中的临时<code>MutexGuard</code>会在<code>.is_empty()</code>之后丢弃, 这样<code>Mutex</code>就不会在<code>println</code>语句中被不必要地锁定.</p>
+<h3 id="在-if-let-语句中"><a class="header" href="#在-if-let-语句中">在 <code>if let</code> 语句中</a></h3>
+<p>但 <code>if let</code>(和 <code>match</code>)的情况有所不同, 因为此时我们的表达式并不一定是评估布尔值:</p>
+<pre class="playground"><code class="language-rust edition2021"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>if let … = f(&amp;String::from('🦀')) {
+    …
+}
+<span class="boring">}</span></code></pre>
+<p>再次, 有两种选择:</p>
+<ol>
+<li>在模式匹配之后、<code>if let</code> 的正文之前(即 <code>{</code> 处)删除字符串. 或者、</li>
+<li>在 <code>if let</code> 主体之后(即 <code>}</code> 处)删除字符串.</li>
+</ol>
+<p>这一次, 我们有理由选择方案<strong>2</strong>而不是方案<strong>1</strong>, 在<code>if let</code>语句或<code>match</code>中借用模式是很常见的.</p>
+<p>因此, 在这种情况下, Rust选择了方案<strong>2</strong>.</p>
+<p>例如, 如果我们有一个<code>Mutex&lt;Vec&lt;T&gt;&gt;</code>类型的<code>vec</code>, 编译起来就很好:</p>
+<pre class="playground"><code class="language-rust edition2021"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>if let Some(x) = vec.lock().unwrap().first() {
+    // The mutex is still locked here. :)
+    // This is necessary, because we're borrowing `x` from the `Vec`. (`x` is a `&amp;T`)
+    println!("first item in vec: {x}");
+}
+<span class="boring">}</span></code></pre>
+<p>我们从<code>m.lock().unwrap()</code>获得一个临时的<code>MutexGuard</code>, 并使用<code>.first()</code>方法借用第一个元素. 由于<code>MutexGuard</code>只在最后一个 <code>}</code>才被丢弃, 因此借用将持续整个<code>if let</code>主体.</p>
+<p>不过, 在有些情况下, 这并不是我们想要的. 例如, 如果我们使用<code>pop</code>代替<code>first</code>, 它返回的是值而不是引用:</p>
+<pre class="playground"><code class="language-rust edition2021"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>if let Some(x) = vec.lock().unwrap().pop() {
+    // The mutex is still locked here. :(
+    // This is unnecessary, because we don't borrow anything from the `Vec`. (`x` is a `T`)
+    println!("popped item from the vec: {x}");
+}
+<span class="boring">}</span></code></pre>
+<p>这可能会<a href="https://marabos.nl/atomics/basics.html#lifetime-of-mutexguard">令人惊讶</a>, 并导致微妙的错误或性能降低.</p>
+<p>也许这就是<code>Rust</code>选择错误方案的一个论据, 也许这就是在未来版本的<code>Rust</code>中改变这一规则的一个论据. 关于如何修改这些规则的想法, 请参阅 <a href="https://smallcultfollowing.com/babysteps/blog/2023/03/15/temporary-lifetimes/">Niko’s blog post on this topic</a>.</p>
+<p>目前, 解决方法是使用一个单独的<code>let</code> 语句, 将临时生命周期限制在该语句中:</p>
+<pre class="playground"><code class="language-rust edition2021"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>let x = vec.lock().unwrap().pop(); // The MutexGuard is dropped after this statement.
+if let Some(x) = x {
+    …
+}
+<span class="boring">}</span></code></pre>
+<h2 id="临时生命周期扩展"><a class="header" href="#临时生命周期扩展">临时生命周期扩展</a></h2>
+<p>这种情况如何?</p>
+<pre class="playground"><code class="language-rust edition2021"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>let a = &amp;String::from('🦀');
+…
+f(&amp;a);
+<span class="boring">}</span></code></pre>
+<p>两种选择:</p>
+<ol>
+<li>字符串会在 <code>let</code> 语句的末尾被丢弃. 或者</li>
+<li>在调用 <code>f</code> 后, 字符串与 <code>a</code> 同时被删除.</li>
+</ol>
+<p>方案<strong>1</strong> 总是会导致借用检查错误. 因此, 方案<strong>2</strong>可能更有意义. 如今<code>Rust</code>也确实是这样工作的: 临时生命周期被扩展了, 因此上面的代码段可以正常编译.</p>
+<p>这种临时变量生命周期长于它在声明中出现的时间的现象被称为<strong>临时生命周期扩展</strong>.</p>
+<p>临时生命周期扩展并不适用于<em><strong>所有</strong></em>出现在<code>let</code>语句中的临时字符串, 正如我们已经看到的那样: <code>let a = f(&amp;String::from('🦀'))</code>; 中的临时字符串不会超过 <code>let</code>语句的生命周期.</p>
+<p>在<code>let a = &amp;f(&amp;String::from('🦀'))</code>;(注意多出的 <code>&amp;</code>)中, 临时生命周期扩展确实适用于最外层的<code>&amp;</code>, 它借用了作为<code>f</code> 返回值的临时, 但不适用于内层的<code>&amp;</code>, 它借用了<code>String</code>.</p>
+<p>例如, 用<code>str::len</code> 代替<code>f</code>:</p>
+<pre class="playground"><code class="language-rust edition2021"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>let a: &amp;usize = &amp;String::from('a').len();
+<span class="boring">}</span></code></pre>
+<p>在这里, 字符串在 <code>let</code> 语句的末尾被删除, 但 <code>.len()</code>返回的<code>usize</code>和<code>a</code>活的一样长.</p>
+<p>这不仅限于 <code>let _ = &amp;...;</code> 语法. 例如</p>
+<pre class="playground"><code class="language-rust edition2021"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>let a = Person {
+    name: &amp;String::from('🦀'), // Extended!
+    address: &amp;String::from('🦀'), // Extended!
+};
+<span class="boring">}</span></code></pre>
+<p>在上面的代码段中, 临时字符串的生命周期将被扩展, 因为即使我们对 <code>Person</code> 类型一无所知, 我们也可以肯定, 生命周期扩展对于生成对象之后的可用性是必要的.</p>
+<p>关于 <code>let</code> 语句中哪些临时变量的生命周期会被延长, <a href="https://doc.rust-lang.org/stable/reference/destructors.html#temporary-lifetime-extension"><code>temporary lifetime extension in Rust Reference</code></a>中有详细的说明, 但实际上只适用于那些从语法上就能看出有必要延长生命周期的表达式, 而与任何类型、函数签名或特质实现无关:</p>
+<pre class="playground"><code class="language-rust edition2021"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>let a = &amp;temporary().field; // Extended!
+let a = MyStruct { field: &amp;temporary() }; // Extended!
+let a = &amp;MyStruct { field: &amp;temporary() }; // Both extended!
+let a = [&amp;temporary()]; // Extended!
+let a = { …; &amp;temporary() }; // Extended!
+
+let a = f(&amp;temporary()); // Not extended, because it might not be necessary.
+let a = temporary().f(); // Not extended, because it might not be necessary.
+let a = temporary() + temporary(); // Not extended, because it might not be necessary.
+<span class="boring">}</span></code></pre>
+<p>虽然这看起来很合理, 但当我们考虑到构造元组结构或元组变体的语法只是一个函数调用时, 确实会感到意外: 从语法上讲, <code>Some(123)</code> 是对函数 <code>Some</code> 的函数调用.</p>
+<p>例如:</p>
+<pre class="playground"><code class="language-rust edition2021"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>let a = Some(&amp;temporary()); // Not extended! (Because `Some` could have any signature...)
+let a = Some { 0: &amp;temporary() }; // Extended! (I bet you have never used this syntax.)
+<span class="boring">}</span></code></pre>
+<p>这可能会让人相当困惑.</p>
+<p>这也是值得考虑<a href="https://smallcultfollowing.com/babysteps/blog/2023/03/15/temporary-lifetimes/#design-principles">重新修订规则</a>的原因之一.</p>
+<h3 id="持续推广"><a class="header" href="#持续推广">持续推广</a></h3>
+<p>临时生命周期扩展很容易与另一种叫不断晋升的东西混淆, 后者是临时变量获得比预期生命周期长的另一种方式.</p>
+<p>在<code>&amp;123</code>和<code>&amp;None</code>这样的表达式中, 值被认定为常量（<a href="https://doc.rust-lang.org/stable/reference/destructors.html#constant-promotion">without interior mutability and without desctructors</a>）, 因此会自动晋升为永生值. 这意味着这些引用将具有<code>'static</code>生命周期.</p>
+<p>例如:</p>
+<pre class="playground"><code class="language-rust edition2021"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>let x = f(&amp;3); // The &amp;3 here is 'static, regardless if that's necessary for `f()`.
+<span class="boring">}</span></code></pre>
+<p>This even applies to simple expressions:</p>
+<pre class="playground"><code class="language-rust edition2021"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>let x = f(&amp;(1 + 2)); // The &amp;3 here is 'static.
+<span class="boring">}</span></code></pre>
+<p>在同时适用临时生命周期延长和恒定提升的情况下, 后者优先, 因为它延长的生命周期最长:</p>
+<pre class="playground"><code class="language-rust edition2021"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>let x = &amp;1; // constant promotion, not temporary lifetime extension.
+<span class="boring">}</span></code></pre>
+<p>也就是说, 在上面的代码段中, <code>x</code>是一个<code>'static</code>引用. 值<code>1</code>的寿命甚至比<code>x</code>本身还长.</p>
+<h3 id="代码块中的临时生命周期扩展"><a class="header" href="#代码块中的临时生命周期扩展">代码块中的临时生命周期扩展</a></h3>
+<p>想象一下, 我们有某种<code>Writer</code>类型, 它持有一个要写入的文件的引用:</p>
+<pre class="playground"><code class="language-rust edition2021"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>pub struct Writer&lt;'a&gt; {
+    pub file: &amp;'a File
+}
+<span class="boring">}</span></code></pre>
+<p>以下代码创建了<code>Writer</code>, 写入新创建的文件:</p>
+<pre class="playground"><code class="language-rust edition2021"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>println!("opening file...");
+let filename = "hello.txt";
+let file = File::create(filename).unwrap();
+let writer = Writer { file: &amp;file };
+<span class="boring">}</span></code></pre>
+<p>现在的作用域包含<code>filename</code>、<code>file</code>和<code>writer</code>. 然而, 后面的代码只能通过
+<code>Writer</code>写入. 理想的情况是, 在作用域中已经看不到<code>filename</code>, 尤其是<code>file</code>.</p>
+<p>由于临时生命周期扩展也适用于代码块的最终表达式, 因此我们可以通过以下方式来实现:</p>
+<pre class="playground"><code class="language-rust edition2021"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>let writer = {
+    println!("opening file...");
+    let filename = "hello.txt";
+    Writer { file: &amp;File::create(filename).unwrap() }
+};
+<span class="boring">}</span></code></pre>
+<p>现在, <code>Writer</code>的创建被整齐地封装在它自己的作用域中, 这样外层作用域只能看到 <code>writer</code>, 而看不到其他任何东西.得益于临时生命周期的扩展, 在内作用域中作为临时创建的<code>file</code>与 <code>writer</code> 一样的存活时间.</p>
+<h3 id="临时生命周期扩展的限制"><a class="header" href="#临时生命周期扩展的限制">临时生命周期扩展的限制</a></h3>
+<p>试想一下, 如果我们将<code>Writer</code>结构中的<code>file</code>字段设置为私有, 会是怎样的结果？</p>
+<pre class="playground"><code class="language-rust edition2021"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>pub struct Writer&lt;'a&gt; {
+    file: &amp;'a File
+}
+
+impl&lt;'a&gt; Writer&lt;'a&gt; {
+    pub fn new(file: &amp;'a File) -&gt; Self {
+        Self { file }
+    }
+}
+<span class="boring">}</span></code></pre>
+<p>这样, 我们就不需要对原始用法片段做太多改动了:</p>
+<pre class="playground"><code class="language-rust edition2021"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>println!("opening file...");
+let filename = "hello.txt";
+let file = File::create(filename).unwrap();
+let writer = Writer::new(&amp;file); // Only this line changed.
+<span class="boring">}</span></code></pre>
+<p>我们只需调用<code>Writer::new()</code>而不是使用<code>Writer {}</code>语法来构建.</p>
+<p>不过, 这对作用域版本无效:</p>
+<pre class="playground"><code class="language-rust edition2021"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>let writer = {
+    println!("opening file...");
+    let filename = "hello.txt";
+    Writer::new(&amp;File::create(filename).unwrap()) // Error: Does not live long enough!
+};
+
+writer.something(); // Error: File no longer alive here!
+<span class="boring">}</span></code></pre>
+<p>正如我们之前看到的, 虽然临时生命周期扩展会通过<code>Writer {}</code>结构语法传播, 但不会通过<code>Writer::new()</code>函数调用语法传播. (例如, 签名可以是<code>fn new(&amp;File) -&gt; Self&lt;'static&gt;</code>或<code>fn new(&amp;File) -&gt; i32</code>, 这样就不需要扩展临时生命周期了).</p>
+<p>遗憾的是, 我们无法明确选择临时生命周期扩展.我们必须在最外层作用域中设置一个<code>let file</code>.目前我们能做的最好的办法就是使用延迟初始化:</p>
+<pre class="playground"><code class="language-rust edition2021"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>let file;
+let writer = {
+    println!("opening file...");
+    let filename = "hello.txt";
+    file = File::create(filename).unwrap();
+    Writer::new(&amp;file)
+};
+<span class="boring">}</span></code></pre>
+<p>但这会使<code>file</code>回到作用域中, 而这正是我们想要避免的.</p>
+<p>虽然可以说把<code>let file</code>放在作用域外部并不是什么大问题, 但对于大多数<code>Rust</code>程序员来说, 这种变通方法并不明显.延迟初始化并不是一个常用的功能, 编译器目前在给出临时生命周期错误时也不会建议采用这种变通方法. 即使编译器可以这样做, 这也不是一个小改动.</p>
+<p>如果能以某种方式解决这个问题就好了</p>
+<h3 id="macros宏"><a class="header" href="#macros宏">Macros宏</a></h3>
+<p>如果有一个函数既能创建文件, 又能返回一个 <code>Writer</code> 文件, 可能会很有用.比如</p>
+<pre class="playground"><code class="language-rust edition2021"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>let writer = Writer::new_file("hello.txt");
+<span class="boring">}</span></code></pre>
+<p>但是, 由于 <code>Writer</code> 只借用<code>file</code>, 这就要求 <code>new_file</code> 将<code>File</code>存储在某个地方.它可以<code>leak</code>这个<code>File</code>或以某种方式将其存储在<code>static</code>中, 但(目前)它没有办法让<code>file</code>与返回的 <code>Writer</code> 一样长存.</p>
+<p>因此, 我们可以使用宏来定义文件和写入器, 无论它在哪里被调用:</p>
+<pre class="playground"><code class="language-rust edition2021"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>macro_rules! let_writer_to_file {
+    ($writer:ident, $filename:expr) =&gt; {
+        let file = std::fs::File::create($filename).unwrap();
+        let $writer = Writer::new(&amp;file);
+    };
+}
+<span class="boring">}</span></code></pre>
+<p>使用方法如下:</p>
+<pre class="playground"><code class="language-rust edition2021"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>let_writer_to_file!(writer, "hello.txt");
+
+writer.something();
+<span class="boring">}</span></code></pre>
+<p>由于<a href="https://veykril.github.io/tlborm/decl-macros/minutiae/hygiene.html">宏的卫生性</a>, 在此范围内无法访问<code>file</code>.</p>
+<p>这样做是可行的, 但如果它看起来更像一个普通的函数调用, 不是更好吗？</p>
+<pre class="playground"><code class="language-rust edition2021"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>et writer = writer_to_file!("hello.txt");
+
+writer.something();
+<span class="boring">}</span></code></pre>
+<p>正如我们之前所见, 在 <code>let writer = ...;</code>语句中创建一个存活时间足够长的临时<code>File</code>的方法是使用临时生命周期扩展:</p>
+<pre class="playground"><code class="language-rust edition2021"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>macro_rules! writer_to_file {
+    ($filename:expr) =&gt; {
+        Writer { file: &amp;File::create($filename).unwrap() }
+    };
+}
+
+let writer = writer_to_file!("hello.txt");
+<span class="boring">}</span></code></pre>
+<p>这将扩展成:</p>
+<pre class="playground"><code class="language-rust edition2021"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>let writer = Writer { file: &amp;File::create("hello.txt").unwrap() };
+<span class="boring">}</span></code></pre>
+<p>这将在必要时延长临时<code>File</code>的生命周期.</p>
+<p>但如果<code>file</code>不是公开, 我们就不能这样做, 而需要使用 <code>Writer::new()</code> 代替.宏需要在调用它的 <code>let writer = ...;</code>语句之前插入 <code>let file</code>;.这是不可能的.</p>
+<h4 id="format_args"><a class="header" href="#format_args">format_args!()</a></h4>
+<p>这个问题也是(现在)<code>format_args!()</code> 的结果不能存储在 <code>let</code> 语句中的原因:</p>
+<pre class="playground"><code class="language-rust edition2021"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>let f = format_args!("{}", 1); // Error!
+something.write_fmt(f);
+<span class="boring">}</span></code></pre>
+<p>原因是 <code>format_args!()</code> 会扩展为类似 <code>fmt::Arguments::new(&amp;Argument::display(&amp;arg), ...)</code> 的内容, 其中一些参数是对临时变量的引用.</p>
+<p>临时生命周期扩展不适用于函数调用的参数, 因此 <code>fmt::Arguments</code> 对象只能在同一语句中使用.</p>
+<h4 id="pin"><a class="header" href="#pin">pin!()</a></h4>
+<p>另一种经常通过宏创建的类型是 <code>Pin</code>.粗略地说, 它表示对某个永远不会移动的东西的引用.(具体细节很复杂, 但现在不是很重要).</p>
+<p>它是通过一个名为 <code>Pin::new_unchecked</code> 的<code>unsafe</code>函数创建的, 因为我们需要保证它所引用的值即使在 <code>Pin</code> 本身消失后也不会被移动.</p>
+<p>使用该函数的最佳方法是使用<a href="https://doc.rust-lang.org/rust-by-example/variable_bindings/scope.html"><code>shadowing</code></a>:</p>
+<pre class="playground"><code class="language-rust edition2021"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>let mut thing = Thing { … };
+let thing = unsafe { Pin::new_unchecked(&amp;mut thing) };
+<span class="boring">}</span></code></pre>
+<p>因为第二个<code>thing</code>会对第一个<code>thing</code>产生<code>shadow</code>, 所以第一个<code>thing</code>(仍然存在)不能再被命名.因为它不能被命名, 所以我们可以确定它不能被移动(即使在放弃第二个<code>thing</code>后), 这正是我们在<code>unsafe</code>块中所承诺的.</p>
+<p>因为这是一种常见的模式, 所以通常用宏来捕获这种模式.</p>
+<p>例如, 我们可以定义一个 <code>let_pin</code> 宏如下:</p>
+<pre class="playground"><code class="language-rust edition2021"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>macro_rules! let_pin {
+    ($name:ident, $init:expr) =&gt; {
+        let mut $name = $init;
+        let $name = unsafe { Pin::new_unchecked(&amp;mut $name) };
+    };
+}
+<span class="boring">}</span></code></pre>
+<p>使用方法与之前的 <code>let_writer_to_file</code> 宏类似:</p>
+<pre class="playground"><code class="language-rust edition2021"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>let_pin!(thing, Thing { … });
+
+thing.something();
+<span class="boring">}</span></code></pre>
+<p>这样做可以很好地封装和隐藏不安全代码.</p>
+<p>但是, 就像我们的 <code>Writer</code> 示例一样, 如果它能像下面这样工作, 不是更好吗？</p>
+<pre class="playground"><code class="language-rust edition2021"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>let thing = pin!(Thing { … });
+<span class="boring">}</span></code></pre>
+<p>我们都知道, 要做到这一点, 我们必须利用临时生命周期扩展功能, 使<code>Thing</code>的生命周期足够长.而要做到这一点, 我们必须使用 <code>Pin {}</code> 语法来构造 <code>Pin:Pin { pinned: &amp;mut Thing { ... }}</code> 会调用临时生命周期扩展, 但 P<code>in::new_unchecked(&amp;mut Thing { ... })</code> 不会.</p>
+<p>这就意味着要将 <code>Pin</code> 的字段公开, 这就违背了 <code>Pin</code> 的初衷.只有在字段是私有的情况下, 它才能提供有意义的保证.</p>
+<p>这意味着, 不幸的是, (如今)不可能自己编写这样一个 <code>pin!()</code> 宏.</p>
+<p>标准库还是这么做了, 犯了一个可怕的罪行:<code>Pin</code> 的 “私有 “字段实际上被定义为 <code>pub</code>, 但也被标记为 “不稳定”, 如果你试图使用它, 编译器就会抱怨.</p>
+<p>如果不需要这种黑客手段就好了.</p>
+<h2 id="super-let"><a class="header" href="#super-let"><code>super let</code></a></h2>
+<h3 id="用户体验和诊断"><a class="header" href="#用户体验和诊断">用户体验和诊断</a></h3>
+<h3 id="可能的扩展"><a class="header" href="#可能的扩展">可能的扩展</a></h3>
+<p>未来可能的扩展是允许在函数作用域中使用<code>super let</code>. 也就是说, “super“指的是函数的调用者.</p>
+<p>正如<a href="https://hachyderm.io/@lorepozo@tech.lgbt/111499621692587962">@lorepozo@tech.lgbt</a>在Mastodon上提到的, 这将使 <code>pin!()</code> 成为一个函数而不是宏. 同样, 它也能让 <code>Writer::new_file(...)</code> 成为可能, 而不必使用宏.</p>
+<p>这样做的有效方式是允许某些函数将对象放入调用者的堆栈框架中, 然后可以从返回值中引用这些对象. 这在任何普通的旧函数中都是行不通的；通常情况下, 调用者不会为函数预留放置对象的空间. 这需要成为函数签名的一部分.</p>
+<p>也许可以这样?</p>
+<pre class="playground"><code class="language-rust edition2021"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>pub placing fn new_file(filename: &amp;str) -&gt; Writer {
+    super let mut file = File::create(filename).unwrap(); // Placed into caller's stack frame
+    Writer::new(&amp;file) // So we can borrow it in the return value!
+}
+<span class="boring">}</span></code></pre>
+<p>这不是我现在提出的建议的一部分, 但想想也很有趣. ）</p>
+<h2 id="临时生命周期-2024-rfc"><a class="header" href="#临时生命周期-2024-rfc">临时生命周期 2024 RFC</a></h2>
+<p>几个月前, 我与<em>Niko Matsakis</em>和<em>Ding Xiang Fei</em>分享了我的想法–<code>super let</code>.他们一直在努力制定<code>super let</code>的确切定义和详细规则, 以及下一版<code>Rust</code>的临时生命周期的一些新规则.</p>
+<p>这项名为 <a href="https://rust-lang.zulipchat.com/#narrow/stream/403629-t-lang.2Ftemporary-lifetimes-2024"><code>“temporary lifetimes 2024” effort</code></a>的联合工作正在促成一项RFC, 该RFC主要建议尽可能减少临时生命周期, 以防止 <code>if let</code> 或匹配中的临时 <code>MutexGuard</code> 导致的死锁, 并添加 <code>super let</code> 作为选择更长生命周期的一种方式.</p>
+<h2 id="反馈"><a class="header" href="#反馈">反馈</a></h2>
+<p>你是否有意识地使用过临时延长寿命的方法？或者你被它咬过吗？</p>
+<p>你怎么看<code>super let</code>？你会使用它吗？或者你有更好的主意？</p>
+<p>请在下面的评论或 <code>GitHub</code> 上告诉我, 或加入 <code>Reddit``、Twitter</code> 或 <code>Mastodon</code> 上的讨论.</p>
+<h2 id="引用"><a class="header" href="#引用">引用</a></h2>
+<hr>
+<ol class="footnote-definition">
+<li id="footnote-1">
+<p><a href="https://blog.m-ou.se/super-let/">Rust Temporary Lifetimes and “Super Let”</a> <a href="#fr-1-1">↩</a></p>
+</li>
+</ol>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="../daily-rust/01-using-immut-vec.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M41.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l160 160c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L109.3 256 246.6 118.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-160 160z"/></svg></span>
+                            </a>
+
+                            <a rel="next prefetch" href="../daily-rust/03-macro.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M278.6 233.4c12.5 12.5 12.5 32.8 0 45.3l-160 160c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3L210.7 256 73.4 118.6c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l160 160z"/></svg></span>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="../daily-rust/01-using-immut-vec.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M41.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l160 160c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L109.3 256 246.6 118.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-160 160z"/></svg></span>
+                    </a>
+
+                    <a rel="next prefetch" href="../daily-rust/03-macro.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M278.6 233.4c12.5 12.5 12.5 32.8 0 45.3l-160 160c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3L210.7 256 73.4 118.6c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l160 160z"/></svg></span>
+                    </a>
+            </nav>
+
+        </div>
+
+        <template id=fa-eye><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M288 32c-80.8 0-145.5 36.8-192.6 80.6C48.6 156 17.3 208 2.5 243.7c-3.3 7.9-3.3 16.7 0 24.6C17.3 304 48.6 356 95.4 399.4C142.5 443.2 207.2 480 288 480s145.5-36.8 192.6-80.6c46.8-43.5 78.1-95.4 93-131.1c3.3-7.9 3.3-16.7 0-24.6c-14.9-35.7-46.2-87.7-93-131.1C433.5 68.8 368.8 32 288 32zM432 256c0 79.5-64.5 144-144 144s-144-64.5-144-144s64.5-144 144-144s144 64.5 144 144zM288 192c0 35.3-28.7 64-64 64c-11.5 0-22.3-3-31.6-8.4c-.2 2.8-.4 5.5-.4 8.4c0 53 43 96 96 96s96-43 96-96s-43-96-96-96c-2.8 0-5.6 .1-8.4 .4c5.3 9.3 8.4 20.1 8.4 31.6z"/></svg></span></template>
+        <template id=fa-eye-slash><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M38.8 5.1C28.4-3.1 13.3-1.2 5.1 9.2S-1.2 34.7 9.2 42.9l592 464c10.4 8.2 25.5 6.3 33.7-4.1s6.3-25.5-4.1-33.7L525.6 386.7c39.6-40.6 66.4-86.1 79.9-118.4c3.3-7.9 3.3-16.7 0-24.6c-14.9-35.7-46.2-87.7-93-131.1C465.5 68.8 400.8 32 320 32c-68.2 0-125 26.3-169.3 60.8L38.8 5.1zM223.1 149.5C248.6 126.2 282.7 112 320 112c79.5 0 144 64.5 144 144c0 24.9-6.3 48.3-17.4 68.7L408 294.5c5.2-11.8 8-24.8 8-38.5c0-53-43-96-96-96c-2.8 0-5.6 .1-8.4 .4c5.3 9.3 8.4 20.1 8.4 31.6c0 10.2-2.4 19.8-6.6 28.3l-90.3-70.8zm223.1 298L373 389.9c-16.4 6.5-34.3 10.1-53 10.1c-79.5 0-144-64.5-144-144c0-6.9 .5-13.6 1.4-20.2L83.1 161.5C60.3 191.2 44 220.8 34.5 243.7c-3.3 7.9-3.3 16.7 0 24.6c14.9 35.7 46.2 87.7 93 131.1C174.5 443.2 239.2 480 320 480c47.8 0 89.9-12.9 126.2-32.5z"/></svg></span></template>
+        <template id=fa-copy><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M502.6 70.63l-61.25-61.25C435.4 3.371 427.2 0 418.7 0H255.1c-35.35 0-64 28.66-64 64l.0195 256C192 355.4 220.7 384 256 384h192c35.2 0 64-28.8 64-64V93.25C512 84.77 508.6 76.63 502.6 70.63zM464 320c0 8.836-7.164 16-16 16H255.1c-8.838 0-16-7.164-16-16L239.1 64.13c0-8.836 7.164-16 16-16h128L384 96c0 17.67 14.33 32 32 32h47.1V320zM272 448c0 8.836-7.164 16-16 16H63.1c-8.838 0-16-7.164-16-16L47.98 192.1c0-8.836 7.164-16 16-16H160V128H63.99c-35.35 0-64 28.65-64 64l.0098 256C.002 483.3 28.66 512 64 512h192c35.2 0 64-28.8 64-64v-32h-47.1L272 448z"/></svg></span></template>
+        <template id=fa-play><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M73 39c-14.8-9.1-33.4-9.4-48.5-.9S0 62.6 0 80V432c0 17.4 9.4 33.4 24.5 41.9s33.7 8.1 48.5-.9L361 297c14.3-8.7 23-24.2 23-41s-8.7-32.2-23-41L73 39z"/></svg></span></template>
+        <template id=fa-clock-rotate-left><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M75 75L41 41C25.9 25.9 0 36.6 0 57.9V168c0 13.3 10.7 24 24 24H134.1c21.4 0 32.1-25.9 17-41l-30.8-30.8C155 85.5 203 64 256 64c106 0 192 86 192 192s-86 192-192 192c-40.8 0-78.6-12.7-109.7-34.4c-14.5-10.1-34.4-6.6-44.6 7.9s-6.6 34.4 7.9 44.6C151.2 495 201.7 512 256 512c141.4 0 256-114.6 256-256S397.4 0 256 0C185.3 0 121.3 28.7 75 75zm181 53c-13.3 0-24 10.7-24 24V256c0 6.4 2.5 12.5 7 17l72 72c9.4 9.4 24.6 9.4 33.9 0s9.4-24.6 0-33.9l-65-65V152c0-13.3-10.7-24-24-24z"/></svg></span></template>
+
+
+        <script>
+            window.playground_line_numbers = true;
+        </script>
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+        <script src="../ace-2a3cd908.js"></script>
+        <script src="../mode-rust-2c9d5c9a.js"></script>
+        <script src="../editor-16ca416c.js"></script>
+        <script src="../theme-dawn-4493f9c8.js"></script>
+        <script src="../theme-tomorrow_night-9dbe62a9.js"></script>
+
+        <script src="../elasticlunr-ef4e11c1.min.js"></script>
+        <script src="../mark-09e88c2c.min.js"></script>
+        <script src="../searcher-c2a407aa.js"></script>
+
+        <script src="../clipboard-1626706a.min.js"></script>
+        <script src="../highlight-abc7f01d.js"></script>
+        <script src="../book-a0b12cfe.js"></script>
+
+        <!-- Custom JS scripts -->
+
+
+
+    </div>
+    </body>
+</html>
